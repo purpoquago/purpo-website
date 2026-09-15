@@ -1,0 +1,66 @@
+<!doctype html><html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PURPO — Parallax Test</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#111}body{touch-action:none}
+.scene{--mx:0;--my:0;position:fixed;inset:0;overflow:hidden;perspective:1200px;background:#ef9437}
+.layer{position:absolute;inset:-3%;width:106%;height:106%;object-fit:cover;object-position:center;pointer-events:none;user-select:none;will-change:transform;transform-origin:center}
+.background{z-index:1;transform:translate3d(calc(var(--mx)*-7px),calc(var(--my)*-5px),-35px) scale(1.04)}
+.middleground{z-index:2;transform:translate3d(calc(var(--mx)*9px),calc(var(--my)*7px),20px) scale(1.025)}
+.foreground{z-index:3;transform:translate3d(calc(var(--mx)*19px),calc(var(--my)*14px),55px) scale(1.015)}
+@media(prefers-reduced-motion:reduce){.layer{transform:none!important;inset:0;width:100%;height:100%}}
+.hint{position:fixed;left:18px;bottom:16px;z-index:20;margin:0;color:#fff;font:11px system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;pointer-events:none;mix-blend-mode:difference}
+@media(hover:none),(pointer:coarse){.hint{display:none}}
+
+.ui-vignette{position:fixed;z-index:90;left:0;right:0;top:0;height:180px;pointer-events:none;background:linear-gradient(to bottom,rgba(0,0,0,.5),rgba(0,0,0,.12) 45%,transparent);opacity:1;transition:opacity .45s ease}
+.site-nav{position:fixed;z-index:100;top:0;left:0;width:100%;display:flex;justify-content:space-between;align-items:flex-start;gap:30px;padding:22px 34px 0;opacity:1;transition:opacity .45s ease,transform .45s ease;pointer-events:none}
+.site-nav.ui-dimmed{opacity:.10;transform:translateY(-4px)}.site-nav a{pointer-events:auto}
+.nav-left{display:flex;align-items:flex-start}.logo-link{display:block;width:168px}.logo-link img{display:block;width:100%;height:auto}
+.menu{display:flex;align-items:center;margin-top:7px}.nav-item{position:relative;display:block;text-decoration:none;height:44px}.nav-item+.nav-item{margin-left:46px}
+.nav-item+.nav-item:before{content:"";position:absolute;left:-24px;top:4px;width:2px;height:34px;background:rgba(0,0,0,.48);transform:rotate(4deg)}
+.nav-art{position:relative;display:block;width:100%;height:100%}.nav-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;transition:opacity .18s ease,transform .18s ease,filter .18s ease}
+.nav-art .base{opacity:1}.nav-art .pink{opacity:0}.nav-item:hover .base,.nav-item:focus-visible .base{opacity:0}.nav-item:hover .pink,.nav-item:focus-visible .pink{opacity:1}
+.hover-pink{filter:brightness(0) saturate(100%) invert(45%) sepia(94%) saturate(3922%) hue-rotate(310deg) brightness(101%) contrast(101%)}
+.nav-sa{width:286px}.nav-fade{width:185px}.nav-malilig{width:148px}.nav-visuals{width:116px}.nav-about{width:98px}
+@media(max-width:800px),(hover:none) and (pointer:coarse){
+ .layer{inset:-8%;width:116%;height:116%;object-position:52% center}
+ .background{transform:translate3d(calc(var(--mx)*-3px),calc(var(--my)*-2px),-20px) scale(1.03)}
+ .middleground{transform:translate3d(calc(var(--mx)*7px),calc(var(--my)*5px),15px) scale(1.02)}
+ .foreground{transform:translate3d(calc(var(--mx)*13px),calc(var(--my)*9px),35px) scale(1.01)}
+ .site-nav{left:0;right:0;width:100%;padding:16px 16px 0;display:flex;flex-direction:row;justify-content:space-between;align-items:flex-start;gap:12px}
+ .nav-left{width:auto;justify-content:flex-start}.logo-link{width:112px;margin:0}
+ .menu{flex-direction:column;align-items:flex-end;gap:4px;margin:0}.nav-item{height:34px;margin:0}.nav-item+.nav-item{margin-left:0}.nav-item+.nav-item:before{display:none}
+ .nav-art img{object-position:right center}.nav-sa{width:188px}.nav-fade{width:122px}.nav-malilig{width:98px}.nav-visuals{width:76px}.nav-about{width:64px}
+ .ui-vignette{height:220px;background:linear-gradient(to bottom,rgba(0,0,0,.52),rgba(0,0,0,.14) 52%,transparent)}
+ .site-nav.ui-dimmed{opacity:.10;transform:translateY(-4px)}
+}
+</style></head><body>
+<main class="scene" id="scene">
+<img class="layer background" src="assets/background.jpg" alt="">
+<img class="layer middleground" src="assets/middleground.png" alt="">
+<img class="layer foreground" src="assets/foreground.png" alt="">
+</main>
+<div class="ui-vignette" id="uiVignette" aria-hidden="true"></div>
+<nav class="site-nav" id="siteNav" aria-label="Primary navigation">
+ <div class="nav-left"><a class="logo-link" href="./" aria-label="PURPO home"><img src="assets/ui/purpo-logo-white.png" alt="PURPO"></a></div>
+ <div class="menu">
+  <a class="nav-item nav-sa" href="sa-gitna-ng-lahat/" aria-label="Sa Gitna ng Lahat EP"><span class="nav-art"><img class="base" src="assets/ui/sa-gitna-white.png" alt=""><img class="pink" src="assets/ui/sa-gitna-pink.png" alt=""></span></a>
+  <a class="nav-item nav-fade" href="fade-away/" aria-label="Fade Away EP"><span class="nav-art"><img class="base" src="assets/ui/fade-away-white.png" alt=""><img class="pink hover-pink" src="assets/ui/fade-away-white.png" alt=""></span></a>
+  <a class="nav-item nav-malilig" href="#malilig" aria-label="Malilig LP"><span class="nav-art"><img class="base" src="assets/ui/malilig-white.png" alt=""><img class="pink hover-pink" src="assets/ui/malilig-white.png" alt=""></span></a>
+  <a class="nav-item nav-visuals" href="#visuals" aria-label="Visuals"><span class="nav-art"><img class="base" src="assets/ui/visuals-white.png" alt=""><img class="pink hover-pink" src="assets/ui/visuals-white.png" alt=""></span></a>
+  <a class="nav-item nav-about" href="#about" aria-label="About"><span class="nav-art"><img class="base" src="assets/ui/about-white.png" alt=""><img class="pink hover-pink" src="assets/ui/about-white.png" alt=""></span></a>
+ </div>
+</nav>
+<script>
+(()=>{const s=document.getElementById('scene'),nav=document.getElementById('siteNav'),vig=document.getElementById('uiVignette'),reduce=matchMedia('(prefers-reduced-motion:reduce)');let tx=0,ty=0,cx=0,cy=0,raf=0,drag=false;
+const mobile=()=>matchMedia('(max-width:800px),(hover:none) and (pointer:coarse)').matches;
+function setTarget(x,y){tx=Math.max(-1,Math.min(1,(x/innerWidth-.5)*2));ty=Math.max(-1,Math.min(1,(y/innerHeight-.5)*2));if(!raf)raf=requestAnimationFrame(tick)}
+function tick(){raf=0;if(reduce.matches)return;cx+=(tx-cx)*.14;cy+=(ty-cy)*.14;s.style.setProperty('--mx',cx.toFixed(4));s.style.setProperty('--my',cy.toFixed(4));if(Math.abs(tx-cx)>.001||Math.abs(ty-cy)>.001)raf=requestAnimationFrame(tick)}
+function ui(y){const near=y<=innerHeight*.18;nav.classList.toggle('ui-dimmed',!near);vig.style.opacity=near?'1':'0'}
+addEventListener('pointermove',e=>{if(!mobile()&&(e.pointerType==='mouse'||e.pointerType==='pen')){setTarget(e.clientX,e.clientY);ui(e.clientY)}} ,{passive:true});
+addEventListener('pointerleave',()=>{if(!mobile()){tx=ty=0;if(!raf)raf=requestAnimationFrame(tick)}});
+addEventListener('touchstart',e=>{drag=true;const t=e.touches[0];if(t){setTarget(t.clientX,t.clientY);ui(t.clientY)}},{passive:true});
+addEventListener('touchmove',e=>{if(!drag)return;const t=e.touches[0];if(t)setTarget(t.clientX,t.clientY)},{passive:true});
+addEventListener('touchend',()=>{drag=false},{passive:true});
+})();
+</script></body></html>
