@@ -1,0 +1,4616 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PURPO — Fade Away</title>
+<style>
+:root{
+  --yellow:#f0c900;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:#000;color:#fff}
+body{overflow-x:hidden}
+
+.hero-scroll{
+  position:relative;
+  height:4800svh;
+  background:#07090a;
+}
+
+.hero{
+  position:sticky;
+  top:0;
+  width:100%;
+  height:100svh;
+  min-height:600px;
+  overflow:hidden;
+  background:#07090a;
+}
+.hero-video{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  z-index:0;
+}
+.hero-shade{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  background:linear-gradient(to bottom,rgba(0,0,0,.12),transparent 35%,rgba(0,0,0,.12));
+}
+
+/* Real <img> elements instead of CSS masks.
+   This is much more reliable when index.html is opened directly from disk. */
+.site-nav{
+  position:absolute;
+  z-index:70;
+  top:0;
+  left:0;
+  width:100%;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:30px;
+  padding:22px 34px 0;
+}
+
+/* Top UI auto-fade:
+   On desktop, the navigation gently fades when the pointer leaves
+   the top portion of the viewport, and returns when the pointer
+   moves back near the top. */
+.site-nav{
+  opacity:1;
+  transition:opacity .45s ease, transform .45s ease;
+  will-change:opacity, transform;
+}
+
+.site-nav.ui-dimmed{
+  opacity:.10;
+  transform:translateY(-4px);
+}
+
+/* Keep it fully visible while keyboard focus is inside the nav. */
+.site-nav:focus-within{
+  opacity:1 !important;
+  transform:none !important;
+}
+
+.logo-link{
+  display:block;
+  width:168px;
+  flex:0 0 auto;
+}
+.logo-link img{
+  display:block;
+  width:100%;
+  height:auto;
+}
+
+.menu{
+  display:flex;
+  align-items:center;
+  margin-top:7px;
+}
+
+.nav-item{
+  position:relative;
+  display:block;
+  text-decoration:none;
+  height:44px;
+}
+.nav-item + .nav-item{
+  margin-left:46px;
+}
+.nav-item + .nav-item::before{
+  content:"";
+  position:absolute;
+  left:-24px;
+  top:4px;
+  width:2px;
+  height:34px;
+  background:rgba(255,255,255,.48);
+  transform:rotate(4deg);
+}
+
+.nav-art{
+  position:relative;
+  display:block;
+  width:100%;
+  height:100%;
+}
+.nav-art img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  object-position:center;
+  transition:opacity .18s ease, transform .18s ease;
+}
+.nav-art .yellow{opacity:0}
+.nav-item:hover .white,
+.nav-item:focus-visible .white{opacity:0}
+.nav-item:hover .yellow,
+.nav-item:focus-visible .yellow{opacity:1}
+.nav-item:hover .nav-art,
+.nav-item:focus-visible .nav-art{transform:translateY(-1px)}
+
+.nav-item.active .white{opacity:0}
+.nav-item.active .yellow{opacity:1}
+
+.nav-sa{width:286px}
+.nav-fade{width:185px}
+.nav-malilig{width:148px}
+.nav-visuals{width:116px}
+.nav-about{width:98px}
+
+/* =========================
+   TRACK LIST — REVEALS ON SCROLL
+   ========================= */
+.track-list{
+  position:absolute;
+  z-index:50;
+  pointer-events:none;
+  top:25%;
+  left:69.2%;
+  width:21%;
+  min-width:240px;
+
+  font-family:"EB Garamond", Garamond, "Times New Roman", serif;
+  font-weight:400;
+  text-align:center;
+}
+
+.track-list a{
+  display:block;
+  width:max-content;
+  max-width:100%;
+  margin:0 auto clamp(48px, 5.3vh, 76px);
+
+  color:#f1f1ee;
+  text-decoration:none;
+  font-size:clamp(17px, 1.05vw, 22px);
+  line-height:1;
+
+  opacity:0;
+  transform:translateY(22px);
+  filter:blur(2px);
+
+  will-change:opacity, transform, filter;
+  position:relative;
+  z-index:1;
+  pointer-events:auto;
+  cursor:pointer;
+  touch-action:manipulation;
+}
+
+.track-list a:hover,
+.track-list a:focus-visible{
+  color:var(--yellow);
+  outline:none;
+}
+
+
+/* PAGE 1 → PAGE 2 — magazine page-flip transition */
+.pageflip-layer{
+  position:absolute;
+  inset:0;
+  z-index:60;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  background:#000;
+  transition:opacity .28s ease, visibility 0s linear .28s;
+  will-change:opacity;
+}
+.pageflip-layer.is-active{
+  opacity:1;
+  visibility:visible;
+  transition:opacity .28s ease, visibility 0s linear 0s;
+}
+.pageflip-video{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+}
+
+/* =========================
+   PAGE 2 — RECEPTION
+   ========================= */
+.page2-layer{
+  position:absolute;
+  inset:0;
+  z-index:9;
+  opacity:0;
+  pointer-events:none;
+  background:#000;
+  will-change:opacity;
+}
+
+.page2-bg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+}
+
+/* subtle right-side readability shade, matching the mockup */
+.page2-layer::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  background:linear-gradient(
+    to right,
+    rgba(0,0,0,0) 0%,
+    rgba(0,0,0,0) 51%,
+    rgba(0,0,0,.18) 60%,
+    rgba(0,0,0,.42) 100%
+  );
+}
+
+/*
+  One shared column establishes the alignment.
+  Header, subhead, body, section title, icons and amenity copy
+  all begin/end on these same bounds.
+*/
+.page2-panel{
+  position:absolute;
+  z-index:2;
+  top:15.5%;
+  left:57.4%;
+  width:36.9%;
+  color:#f5eee2;
+}
+
+.page2-heading{
+  display:block;
+  width:100%;
+  height:auto;
+  margin:0 0 8px;
+}
+
+.page2-subhead{
+  display:block;
+  width:100%;
+  height:auto;
+  margin:0 0 24px;
+}
+
+.page2-intro{
+  font-family:"EB Garamond", Garamond, "Times New Roman", serif;
+  font-size:clamp(13px, .92vw, 18px);
+  line-height:1.34;
+  color:#f3eee7;
+}
+.page2-intro p{margin:0 0 18px}
+
+.page2-section-title{
+  margin:30px 0 24px;
+  text-align:center;
+  font-family:"Arial Narrow", Impact, sans-serif;
+  font-size:clamp(18px, 1.35vw, 28px);
+  line-height:1;
+  letter-spacing:.015em;
+  color:#f4e3bd;
+}
+
+/* The grid itself uses the exact same 100% width as the top section. */
+.amenities{
+  width:100%;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  column-gap:28px;
+  row-gap:25px;
+}
+
+.amenity{
+  min-width:0;
+  display:grid;
+  grid-template-columns:clamp(72px, 5.2vw, 102px) 1fr;
+  gap:12px;
+  align-items:center;
+}
+
+.amenity img{
+  display:block;
+  width:100%;
+  max-height:92px;
+  object-fit:contain;
+}
+
+.amenity h3{
+  margin:0 0 5px;
+  font-family:"Arial Narrow", Impact, sans-serif;
+  font-size:clamp(13px, .92vw, 18px);
+  line-height:1;
+  font-weight:700;
+  color:#f5ead5;
+}
+
+.amenity p{
+  margin:0;
+  font-family:"EB Garamond", Garamond, "Times New Roman", serif;
+  font-size:clamp(10px, .70vw, 14px);
+  line-height:1.23;
+  color:#f5eee2;
+}
+
+/* Every Page 2 item begins hidden. JS reveals them progressively. */
+.page2-reveal{
+  opacity:0;
+  transform:translateY(20px);
+  filter:blur(1.5px);
+  will-change:opacity, transform, filter;
+}
+
+@media (max-width: 900px){
+  .page2-panel{
+    top:10%;
+    left:38%;
+    width:57%;
+  }
+
+  .page2-layer::after{
+    background:linear-gradient(to right, rgba(0,0,0,.10), rgba(0,0,0,.68));
+  }
+
+  .amenities{
+    grid-template-columns:1fr;
+    row-gap:13px;
+  }
+
+  .amenity{
+    grid-template-columns:62px 1fr;
+  }
+
+  .amenity img{
+    max-height:58px;
+  }
+}
+
+.fade-to-black{
+  position:absolute;
+  inset:0;
+  z-index:50;
+  background:#000;
+  opacity:0;
+  pointer-events:none;
+  will-change:opacity;
+}
+
+.scroll-cue{
+  position:absolute;
+  z-index:5;
+  left:50%;
+  bottom:22px;
+  transform:translateX(-50%);
+  font:10px/1 Arial,sans-serif;
+  letter-spacing:.34em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.58);
+}
+.scroll-cue::after{
+  content:"";
+  display:block;
+  width:1px;
+  height:34px;
+  background:rgba(255,255,255,.45);
+  margin:10px auto 0;
+}
+
+.after{
+  min-height:100svh;
+  display:grid;
+  place-items:center;
+  padding:80px 24px;
+  background:#080808;
+}
+.after p{
+  max-width:650px;
+  text-align:center;
+  color:#8f8f8f;
+  font:15px/1.7 Arial,sans-serif;
+}
+
+@media (max-width:1450px){
+  .site-nav{padding:18px 26px 0}
+  /* Top UI auto-fade:
+   On desktop, the navigation gently fades when the pointer leaves
+   the top portion of the viewport, and returns when the pointer
+   moves back near the top. */
+.site-nav{
+  opacity:1;
+  transition:opacity .45s ease, transform .45s ease;
+  will-change:opacity, transform;
+}
+
+.site-nav.ui-dimmed{
+  opacity:.10;
+  transform:translateY(-4px);
+}
+
+/* Keep it fully visible while keyboard focus is inside the nav. */
+.site-nav:focus-within{
+  opacity:1 !important;
+  transform:none !important;
+}
+
+.logo-link{width:138px}
+  .menu{
+    transform-origin:top right;
+    transform:scale(.78);
+  }
+}
+
+@media (max-width:800px){
+  .site-nav{padding:18px 18px 0}
+  /* Top UI auto-fade:
+   On desktop, the navigation gently fades when the pointer leaves
+   the top portion of the viewport, and returns when the pointer
+   moves back near the top. */
+.site-nav{
+  opacity:1;
+  transition:opacity .45s ease, transform .45s ease;
+  will-change:opacity, transform;
+}
+
+.site-nav.ui-dimmed{
+  opacity:.10;
+  transform:translateY(-4px);
+}
+
+/* Keep it fully visible while keyboard focus is inside the nav. */
+.site-nav:focus-within{
+  opacity:1 !important;
+  transform:none !important;
+}
+
+.logo-link{width:124px}
+  .menu{display:none}
+  .hero-video{object-position:36% center}
+
+  .hero-scroll{
+    height:1080svh;
+  }
+
+  .track-list{
+    left:auto;
+    right:24px;
+    top:24%;
+    width:auto;
+    min-width:150px;
+    text-align:right;
+  }
+
+  .track-list a{
+    margin-left:auto;
+    font-size:17px;
+    margin-bottom:46px;
+  }
+}
+
+.page3-layer{position:absolute;inset:0;z-index:10;opacity:0;pointer-events:none;overflow:hidden}.page3-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}.page3-vignette{position:absolute;inset:0;background:linear-gradient(90deg,transparent 48%,rgba(0,0,0,.06) 56%,rgba(0,0,0,.24) 75%,rgba(0,0,0,.12));pointer-events:none}.page3-article{position:absolute;left:57.4%;top:25.4%;width:36.8%;color:#fff}.page3-header{display:block;width:100%;height:auto;margin:0 0 1.55rem}.page3-body{width:91%;margin:0 0 0 3.8%;font-family:Garamond,"Adobe Garamond Pro","Times New Roman",serif;font-size:clamp(15px,1.02vw,20px);line-height:1.22;font-weight:400;text-shadow:0 1px 3px rgba(0,0,0,.6)}.page3-reveal{opacity:0;transform:translateY(20px);filter:blur(1.5px);will-change:opacity,transform,filter}
+
+/* =========================
+   EXPERIMENTAL DESKTOP SNAP SCROLL
+   One deliberate wheel gesture advances one content beat.
+   Existing scroll-driven animations are preserved because the page
+   still animates through the original progress ranges.
+   ========================= */
+html.snap-mode{
+  scroll-behavior:auto;
+}
+.snap-indicator{
+  position:fixed;
+  right:24px;
+  bottom:20px;
+  z-index:40;
+  padding:7px 10px;
+  border:1px solid rgba(255,255,255,.22);
+  background:rgba(0,0,0,.28);
+  color:rgba(255,255,255,.62);
+  font:11px/1.2 Arial, sans-serif;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  pointer-events:none;
+  backdrop-filter:blur(4px);
+  transition:opacity .35s ease;
+}
+@media (max-width:800px), (hover:none), (pointer:coarse){
+  .snap-indicator{display:none}
+}
+
+
+/* PAGE 4 — centered editorial canvas */
+.page4-layer{
+  position:absolute;
+  inset:0;
+  z-index:11;
+  opacity:0;
+  overflow:hidden;
+  pointer-events:none;
+  background:#f7f5f1;
+  color:#171313;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:3.2vh 2vw;
+  box-sizing:border-box;
+}
+
+.page4-spread{
+  position:relative;
+  width:min(95vw, 1840px);
+  height:min(88vh, 950px);
+  display:grid;
+  grid-template-columns:15.5% 14.5% 14.5% 1fr;
+  grid-template-rows:49% 1fr;
+  column-gap:2%;
+  row-gap:2.5%;
+  font-family:"EB Garamond", Garamond, "Times New Roman", serif;
+  align-items:start;
+}
+
+.page4-quote{
+  grid-column:1;
+  grid-row:1 / 3;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:100%;
+}
+.page4-quote img{
+  display:block;
+  width:94%;
+  height:auto;
+}
+
+.page4-copy{
+  font-size:clamp(14px, .92vw, 17px);
+  line-height:1.18;
+}
+.page4-copy p{
+  margin:0 0 .88em;
+}
+
+.page4-copy-a{
+  grid-column:2;
+  grid-row:1 / 3;
+}
+.page4-copy-b{
+  grid-column:3;
+  grid-row:1 / 3;
+}
+
+.page4-copy .dropcap::first-letter{
+  float:left;
+  font-size:3.1em;
+  line-height:.76;
+  padding:.08em .07em 0 0;
+}
+
+.page4-photo-block{
+  grid-column:4;
+  grid-row:1;
+  margin:0;
+  align-self:start;
+}
+.page4-photo-block img{
+  display:block;
+  width:100%;
+  height:auto;
+}
+.page4-photo-block figcaption{
+  margin:1.2% 2.2% 0;
+  font-family:"EB Garamond", Garamond, "Times New Roman", serif;
+  font-style:italic;
+  font-size:clamp(12px, .78vw, 15px);
+  line-height:1.15;
+}
+
+.page4-lower{
+  grid-column:4;
+  grid-row:2;
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:3.5%;
+  align-self:start;
+}
+
+.page4-reveal{
+  opacity:0;
+  transform:translateY(16px);
+  filter:blur(1px);
+  will-change:opacity,transform,filter;
+}
+
+.fade-to-white{
+  position:absolute;
+  inset:0;
+  z-index:50;
+  background:#fff;
+  opacity:0;
+  pointer-events:none;
+  will-change:opacity;
+}
+
+@media (min-width:1400px) and (max-height:900px){
+  .page4-spread{
+    height:min(90vh, 820px);
+  }
+  .page4-copy{
+    font-size:clamp(13px, .82vw, 16px);
+    line-height:1.15;
+  }
+  .page4-photo-block figcaption{
+    font-size:clamp(11px, .7vw, 14px);
+  }
+}
+
+@media(max-width:800px){
+  .page4-layer{
+    display:block;
+    padding:5vh 7vw;
+    overflow:auto;
+  }
+  .page4-spread{
+    display:block;
+    width:100%;
+    height:auto;
+  }
+  .page4-quote,
+  .page4-copy,
+  .page4-photo-block,
+  .page4-lower{
+    margin-bottom:2rem;
+  }
+  .page4-lower{
+    display:block;
+  }
+  .page4-copy{
+    font-size:16px;
+    line-height:1.28;
+  }
+}
+
+
+/* PAGE 5 — SONG PAGE */
+.page5-layer{
+  position:absolute; inset:0; z-index:13; opacity:0; overflow:hidden;
+  pointer-events:none; background:#07150f; will-change:opacity;
+}
+.page5-bg{
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; object-position:center;
+}
+.page5-overlay{
+  position:absolute; left:0; top:50%; width:100%; height:100%;
+  object-fit:cover; pointer-events:none; opacity:0;
+  transform:translateY(calc(-50% + 14px)) scale(.75); transform-origin:left center; filter:blur(1px);
+  will-change:opacity,transform,filter;
+}
+.page5-player{
+  position:absolute; right:3.2%; bottom:4.2%;
+  width:min(380px,28vw); height:152px; z-index:5;
+  opacity:0; transform:translateY(14px); pointer-events:none;
+  will-change:opacity,transform;
+}
+.page5-player iframe{
+  display:block; width:100%; height:152px; border:0; border-radius:12px;
+}
+.track-list a[data-song-snap]{
+  cursor:pointer;
+}
+@media(max-width:800px){
+  .page5-player{width:88vw; right:6vw; bottom:4vh;}
+}
+
+
+
+
+
+
+/* PAGE 6 — A VISITOR FROM THE SOUTH */
+.page6-layer{
+  position:absolute; inset:0; z-index:14; opacity:0; overflow:hidden;
+  pointer-events:none; background:#07130f; will-change:opacity;
+}
+.page6-bg{
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; object-position:center;
+}
+.page6-editorial{
+  position:absolute;
+  left:4.15%;
+  top:25.5%;
+  width:20.2%;
+  z-index:3;
+  color:#f3efe4;
+}
+.page6-header{
+  display:block;
+  width:100%;
+  height:auto;
+  opacity:0;
+  transform:translateY(14px);
+  filter:blur(1px);
+  will-change:opacity,transform,filter;
+}
+.page6-copy{
+  width:94%;
+  margin:1.2vh 0 0 calc(.8% + 10px);
+  font-family:"EB Garamond", Georgia, serif;
+  font-size:clamp(15px,.96vw,18px);
+  line-height:1.10;
+  font-weight:500;
+  text-shadow:0 1px 2px rgba(0,0,0,.62);
+  opacity:0;
+  transform:translateY(14px);
+  filter:blur(1px);
+  will-change:opacity,transform,filter;
+}
+.page6-copy p{ margin:0 0 .92em; }
+.page6-copy strong{ font-weight:800; }
+.page6-quote{
+  position:absolute;
+  right:7.65%;
+  top:31.8%;
+  width:min(326px,17vw);
+  height:auto;
+  z-index:3;
+  opacity:0;
+  transform:translateY(14px);
+  filter:blur(1px);
+  will-change:opacity,transform,filter;
+  pointer-events:none;
+}
+@media(max-width:800px){
+  .page6-editorial{left:6vw; top:18vh; width:88vw;}
+  .page6-copy{font-size:15px; line-height:1.15;}
+  .page6-quote{right:6vw; top:auto; bottom:5vh; width:42vw;}
+}
+
+
+/* PAGE 7 — CONTINUED INTERVIEW / EDITORIAL SPREAD */
+.page7-layer{
+  position:absolute; inset:0; z-index:15; opacity:0; overflow:hidden;
+  pointer-events:none; background:#f7f5f1; color:#161616; will-change:opacity;
+}
+.page7-spread{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%) scale(var(--page7-scale,1));
+  transform-origin:center center;
+  width:1760px;
+  height:905px;
+  display:grid;
+  grid-template-columns:17.5% 29% 17.3% 17.3% 17.3%;
+  column-gap:.4%;
+  padding:0;
+  box-sizing:border-box;
+}
+.page7-left,
+.page7-right-col{
+  font-family:"EB Garamond", Georgia, serif;
+  font-size:clamp(13.5px,.82vw,16px);
+  line-height:1.05;
+  font-weight:400;
+  opacity:0;
+  transform:translateY(14px);
+  filter:blur(1px);
+  will-change:opacity,transform,filter;
+}
+.page7-left{ padding:0 .85vw 0 .35vw; }
+.page7-right-col{ padding:0 .55vw; }
+.page7-spread p{ margin:0 0 .60em; }
+.page7-spread strong{
+  font-weight:800;
+  line-height:1.05;
+  color:#284840;
+}
+.page7-inset{
+  position:relative;
+  height:100%;
+  overflow:hidden;
+  opacity:0;
+  transform:translateY(14px);
+  filter:blur(1px);
+  will-change:opacity,transform,filter;
+}
+.page7-inset-bg{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover;
+  object-position:center;
+}
+.page7-inset-copy{
+  position:absolute;
+  z-index:2;
+  top:4.4%;
+  left:5.2%;
+  right:5.2%;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:5.5%;
+  color:#f4f0e7;
+  font-family:"EB Garamond", Georgia, serif;
+  font-size:clamp(12px,.70vw,13.8px);
+  line-height:1.04;
+  font-weight:500;
+  text-shadow:0 1px 2px rgba(0,0,0,.45);
+}
+.page7-inset-copy p{ margin:0 0 .58em; }
+.page7-inset-copy strong{ font-weight:800; color:#67b3af; }
+@media(max-width:800px){
+  .page7-spread{
+    /* Desktop master-canvas scaling remains authoritative for now.
+       Mobile gets its own art direction later. */
+  }
+  .page7-left,.page7-right-col{font-size:15px; line-height:1.2;}
+  .page7-inset{height:110vh; margin:5vh 0;}
+  .page7-inset-copy{font-size:13px;}
+}
+
+
+/* TEST: dark top UI on white editorial pages */
+.site-nav .logo-link img,
+.site-nav .nav-art .white,
+.site-nav .sound-toggle img{
+  transition:filter .28s ease, opacity .22s ease;
+}
+.site-nav .sound-divider{
+  transition:background .28s ease;
+}
+.site-nav.on-light .logo-link img,
+.site-nav.on-light .nav-art .white,
+.site-nav.on-light .sound-toggle img{
+  filter:invert(1);
+}
+.site-nav.on-light .sound-divider{
+  background:rgba(0,0,0,.72);
+}
+.site-nav.on-light .nav-art .yellow{
+  filter:none;
+}
+
+
+/* PAGE 8 — STUCK ON REWIND */
+.page8-layer{position:absolute;inset:0;z-index:16;opacity:0;overflow:hidden;pointer-events:none;background:#000;will-change:opacity}
+.page8-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+.page8-loop{opacity:0}
+.page8-overlay{position:absolute;top:50%;right:4.2%;width:min(34vw,650px);height:auto;transform:translateY(calc(-50% + 14px));transform-origin:right center;opacity:0;pointer-events:none;filter:blur(1px);will-change:opacity,transform,filter}
+.page8-player{position:absolute;right:5.2%;bottom:6.2%;width:min(380px,28vw);height:152px;opacity:0;transform:translateY(14px);pointer-events:none;will-change:opacity,transform}
+.page8-player iframe{width:100%;height:152px;border:0;border-radius:12px}
+
+
+/* PAGE 9 — CORRESPONDENT FEATURE: ANNIKA */
+.page9-layer{position:absolute;inset:0;z-index:17;opacity:0;overflow:hidden;pointer-events:none;background:#000;will-change:opacity}
+.page9-bg,.page9-zoom{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+.page9-bg{opacity:0}
+.page9-zoom{z-index:1}
+.page9-editorial{position:absolute;z-index:3;left:calc(3.35% + 20px);bottom:7.4%;width:min(616px,37.5vw);color:#f7f2e8;opacity:0;transform:translateY(14px);filter:blur(1px);will-change:opacity,transform,filter}
+.page9-header{display:block;width:min(406px,67%);height:auto;margin:0 0 1.2vh 0}
+.page9-copy{font-family:"EB Garamond",Georgia,serif;font-size:clamp(16.5px,.99vw,19.7px);line-height:1.06;font-weight:500;text-shadow:0 1px 2px rgba(0,0,0,.55)}
+.page9-copy p{margin:0 0 .9em}
+@media(max-width:800px){
+  .page9-editorial{left:5vw;right:5vw;bottom:6vh;width:auto}
+  .page9-header{width:min(300px,75vw)}
+  .page9-copy{font-size:14px;line-height:1.12}
+}
+
+.page10-layer{
+  position:absolute;inset:0;z-index:18;opacity:0;overflow:hidden;
+  pointer-events:none;background:#fafafa
+}
+.page10-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.page10-canvas{
+  position:absolute;left:50%;top:50%;width:1920px;height:1080px;
+  transform:translate(-50%,-50%) scale(var(--page10-scale,1));
+  transform-origin:center center;color:#111
+}
+.page10-item{
+  position:absolute;opacity:0;transform:translateY(12px);
+  filter:blur(.8px);will-change:opacity,transform,filter
+}
+.page10-header{left:87px;top:90px;width:515px;height:auto}
+.page10-quote{
+  left:831px;top:148px;width:258px;
+  font-family:"Alfa Slab One",Impact,serif;
+  font-size:22.5px;line-height:1.02;font-weight:400;
+  color:#d91c56;text-align:center;letter-spacing:-.01em
+}
+.page10-card{
+  position:absolute;margin:0;
+  font-family:"EB Garamond",Georgia,serif;text-align:center
+}
+.page10-card.landscape{width:520px;height:412px}
+.page10-card .page10-photo{
+  position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain
+}
+.page10-card.landscape figcaption{
+  position:absolute;left:30px;right:30px;bottom:0;height:86px;z-index:3;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14.5px;line-height:1.04;font-weight:500
+}
+.page10-card.landscape figcaption p{margin:0}
+.page10-card1{left:90px;top:145px}
+.page10-card2{left:110px;top:578px}
+.page10-card4{left:1310px;top:125px}
+.page10-card5{left:1310px;top:570px}
+.page10-card3{
+  left:710px;top:410px;width:500px;height:625px
+}
+.page10-card3 .page10-photo{
+  position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain
+}
+.page10-card3-caption{
+  position:absolute;
+  left:55%;
+  top:12%;
+  width:38%;
+  transform:translateX(-50%);
+  z-index:3;
+  margin:0;
+  font-family:"EB Garamond",Georgia,serif;
+  text-align:center;
+  font-size:14px;
+  line-height:1.04;
+  font-weight:500;
+}
+
+/* INTEGRATED SOUND CONTROL */
+.nav-left{
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+  flex:0 0 auto;
+}
+.sound-toggle{
+  position:relative;
+  display:block;
+  flex:0 0 auto;
+  width:140px;
+  height:32px;
+  margin-top:1px;
+  padding:0;
+  border:0;
+  background:transparent;
+  cursor:pointer;
+}
+.sound-toggle img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  object-position:left center;
+  pointer-events:none;
+  transition:opacity .22s ease;
+}
+.sound-toggle .sound-on-img{opacity:0;}
+.sound-toggle .sound-off-img{opacity:1;}
+.sound-toggle[aria-pressed="true"] .sound-on-img{opacity:1;}
+.sound-toggle[aria-pressed="true"] .sound-off-img{opacity:0;}
+.sound-toggle:focus-visible{
+  outline:1px solid rgba(255,255,255,.9);
+  outline-offset:4px;
+}
+
+
+/* SOUND CONTROL — inline with SA GITNA NG LAHAT */
+.sound-divider{
+  display:block;
+  flex:0 0 auto;
+  width:1px;
+  height:34px;
+  margin:0 13px;
+  background:rgba(255,255,255,.72);
+  transform:skewX(-11deg);
+  align-self:center;
+}
+.sound-toggle{
+  position:relative;
+  display:block;
+  flex:0 0 140px;
+  width:140px;
+  height:32px;
+  margin:0;
+  padding:0;
+  border:0;
+  background:transparent;
+  cursor:pointer;
+  align-self:center;
+}
+.sound-toggle img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  object-position:left center;
+  pointer-events:none;
+}
+
+
+/* SOUND NAV SPACING REFINEMENT */
+.sound-toggle{
+  margin-right:14px !important;
+  transform:translateX(-30px);
+}
+.sound-divider{
+  margin-left:0 !important;
+  margin-right:13px !important;
+}
+
+
+/* PAGE 11 — ALRIGHT SONG PAGE */
+.page11-layer{
+  position:absolute;inset:0;z-index:19;opacity:0;overflow:hidden;
+  pointer-events:none;background:#090909;will-change:opacity
+}
+.page11-bg{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:center
+}
+.page11-title{
+  position:absolute;left:3.2%;top:41.2%;
+  width:min(360px,19vw);height:auto;
+  opacity:0;transform:translateY(14px);
+  filter:blur(1px);will-change:opacity,transform,filter
+}
+.page11-lyrics{
+  position:absolute;right:7.2%;top:12.8%;
+  height:min(70vh,756px);width:auto;max-width:37vw;
+  opacity:0;transform:translateY(14px);
+  filter:blur(1px);will-change:opacity,transform,filter
+}
+.page11-player{
+  position:absolute;right:3.2%;bottom:2.6%;
+  width:min(380px,28vw);height:152px;
+  z-index:4;opacity:0;transform:translateY(14px);
+  filter:blur(1px);will-change:opacity,transform,filter
+}
+.page11-player iframe{
+  display:block;width:100%;height:152px;border:0;border-radius:12px
+}
+@media(max-width:800px){
+  .page11-title{left:5vw;top:32vh;width:44vw}
+  .page11-lyrics{right:4vw;top:16vh;height:56vh;max-width:48vw}
+  .page11-player{right:5vw;left:5vw;bottom:4vh;width:auto}
+}
+
+
+/* PAGE 12 — FADE AWAY BAR & RESTAURANT */
+.page12-layer,
+.page13-layer,
+.page14-layer,
+.page15-layer{
+  position:absolute;inset:0;opacity:0;overflow:hidden;
+  pointer-events:none;will-change:opacity;background:#090909
+}
+.page12-layer{z-index:20}
+.page13-layer{z-index:21}
+.page14-layer{z-index:22}
+.page15-layer{z-index:23}
+
+.page12-bg,.page13-bg,.page14-bg,.page15-bg{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:center
+}
+.page12-header{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:center;
+  opacity:0;transform:translateY(10px);filter:blur(.7px);
+  will-change:opacity,transform,filter
+}
+.page12-copy{
+  position:absolute;left:5.9%;top:calc(76.2% + 30px);
+  width:min(650px,35vw);
+  font-family:"EB Garamond",Georgia,serif;
+  font-size:clamp(15px,.92vw,18px);line-height:1.08;font-weight:400;
+  color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.55);
+  opacity:0;transform:translateY(10px);filter:blur(.7px);
+  will-change:opacity,transform,filter
+}
+.page12-copy p{margin:0}
+
+/* PAGE 13 — UNREACHABLE SONG */
+.page13-header{
+  position:absolute;
+  right:7.2%;
+  top:5.8%;
+  width:min(760px,42vw);
+  height:auto;
+  opacity:0;transform:translateY(12px);filter:blur(.9px);
+  will-change:opacity,transform,filter
+}
+.page13-player{
+  position:absolute;left:3.2%;bottom:2.6%;
+  width:min(380px,28vw);height:152px;z-index:4;
+  opacity:0;transform:translateY(14px);filter:blur(1px);
+  will-change:opacity,transform,filter
+}
+.page13-player iframe,
+.page15-player iframe{
+  display:block;width:100%;height:152px;border:0;border-radius:12px
+}
+
+/* PAGE 14 — COURTYARD POOL */
+.page14-header{
+  position:absolute;left:4.85%;top:62.4%;
+  width:min(449px,24vw);height:auto;
+  opacity:0;transform:translateY(10px);filter:blur(.7px);
+  will-change:opacity,transform,filter
+}
+.page14-copy{
+  position:absolute;left:4.85%;top:67.0%;
+  width:min(735px,39vw);
+  font-family:"EB Garamond",Georgia,serif;
+  font-size:clamp(15px,.92vw,18px);line-height:1.08;font-weight:400;
+  color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.58);
+  opacity:0;transform:translateY(10px);filter:blur(.7px);
+  will-change:opacity,transform,filter
+}
+.page14-caption{
+  position:absolute;left:4.85%;top:85.5%;
+  width:min(720px,38vw);
+  font-family:"EB Garamond",Georgia,serif;
+  font-size:clamp(14px,.84vw,16.5px);line-height:1.12;
+  font-weight:400;font-style:italic;
+  color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.6);
+  opacity:0;transform:translateY(10px);filter:blur(.7px);
+  will-change:opacity,transform,filter
+}
+.page14-copy p,.page14-caption p{margin:0}
+
+/* PAGE 15 — AGAIN SONG */
+.page15-video{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:center
+}
+.page15-overlay{
+  position:absolute;left:1.9%;top:6.2%;
+  width:min(1300px,68vw);height:auto;
+  opacity:0;transform:translateY(12px);filter:blur(.9px);
+  will-change:opacity,transform,filter
+}
+.page15-title{
+  position:absolute;right:4.4%;top:7.2%;
+  width:min(320px,16.7vw);height:auto;
+  opacity:0;transform:translateY(12px);filter:blur(.9px);
+  will-change:opacity,transform,filter
+}
+.page15-player{
+  position:absolute;right:3.2%;bottom:2.6%;
+  width:min(380px,28vw);height:152px;z-index:4;
+  opacity:0;transform:translateY(14px);filter:blur(1px);
+  will-change:opacity,transform,filter
+}
+
+@media(max-width:1000px){
+  .page12-copy{width:40vw;font-size:clamp(14px,1.3vw,17px)}
+  .page14-copy{width:44vw;font-size:clamp(14px,1.3vw,17px)}
+  .page14-caption{width:44vw;font-size:clamp(13px,1.15vw,15px)}
+  .page13-player,.page15-player{width:min(360px,34vw)}
+}
+
+
+/* PAGES 16–18 */
+.page16-layer,.page17-layer,.page18-layer{position:absolute;inset:0;opacity:0;overflow:hidden;pointer-events:none;will-change:opacity;background:#07111f}
+.page16-layer{z-index:24}.page17-layer{z-index:25}.page18-layer{z-index:26}
+.page16-bg,.page17-bg,.page18-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+.page17-dim{position:absolute;inset:0;background:rgba(0,0,0,.48)}
+.editorial-master{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform:translate(-50%,-50%) scale(var(--editorial-scale,1));transform-origin:center center;color:#fff;font-family:"EB Garamond",Georgia,serif}
+.page16-content,.page17-content{opacity:0;transform:translateY(10px);filter:blur(.7px);will-change:opacity,transform,filter}
+.page16-header{position:absolute;left:39px;top:610px;width:820px;height:auto}
+.page16-caption{position:absolute;left:540px;top:55px;width:365px;font-size:15px;line-height:1.08;font-style:italic;text-align:center}
+.page16-intro{position:absolute;left:46px;top:690px;width:520px;height:300px;columns:2;column-gap:32px;font-size:15.2px;line-height:1.08}
+.page16-journals{position:absolute;left:600px;top:55px;width:1275px;height:965px;columns:5;column-gap:24px;column-fill:auto;font-size:15px;line-height:1.065}
+.journal-entry{break-inside:avoid;margin:0 0 12px}.journal-entry h3{font-family:"Alfa Slab One",Impact,serif;color:#d91c56;font-size:17px;line-height:1.05;font-weight:400;margin:0 0 5px}.journal-entry p{margin:0 0 9px}
+.page17-master{padding:55px 32px 32px;box-sizing:border-box}
+.page17-columns{height:965px;columns:7;column-gap:25px;column-fill:auto;font-size:15.1px;line-height:1.065}
+.page17-note{break-inside:avoid;background:rgba(238,238,238,.88);color:#111;padding:12px 12px 8px;font-style:italic;font-size:12.5px;line-height:1.12}.page17-note h4{font-style:normal;margin:0 0 9px;font-size:13px}
+.page18-overlay{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0;transform:translateY(12px);filter:blur(.9px);will-change:opacity,transform,filter}
+.page18-player{position:absolute;right:3.2%;bottom:2.6%;width:min(380px,28vw);height:152px;z-index:4;opacity:0;transform:translateY(14px);filter:blur(1px);will-change:opacity,transform,filter}
+.page18-player iframe{display:block;width:100%;height:152px;border:0;border-radius:12px}
+
+
+/* P16–18 layout correction */
+.page16-content{
+  position:absolute!important;left:50%!important;top:50%!important;
+  width:1920px!important;height:1080px!important;
+  transform:translate(-50%,-50%) scale(var(--editorial-scale,1))!important;
+  transform-origin:center center!important;
+}
+.page16-header{left:39px!important;top:608px!important;width:820px!important}
+.page16-caption{left:540px!important;top:56px!important;width:365px!important}
+.page16-intro{
+  left:46px!important;top:690px!important;width:520px!important;height:310px!important;
+  columns:2!important;column-gap:32px!important;
+}
+.page16-journals{
+  left:600px!important;top:55px!important;width:1275px!important;height:970px!important;
+  columns:5!important;column-gap:24px!important;column-fill:auto!important;
+}
+.page17-content{
+  position:absolute!important;left:50%!important;top:50%!important;
+  width:1920px!important;height:1080px!important;
+  box-sizing:border-box!important;padding:55px 32px 32px!important;
+  transform:translate(-50%,-50%) scale(var(--editorial-scale,1))!important;
+  transform-origin:center center!important;
+}
+.page17-columns{
+  width:100%!important;height:965px!important;
+  columns:7!important;column-gap:25px!important;column-fill:auto!important;
+}
+/* Epilogue overlay is artwork at its intended reference size, not a cover image. */
+.page18-overlay{
+  left:53.7%!important;right:auto!important;top:5.2%!important;bottom:auto!important;
+  width:min(620px,37vw)!important;height:auto!important;
+  object-fit:contain!important;object-position:center!important;
+}
+
+
+/* PAGE 16–17 template-locked editorial layout */
+.page16-content,.page17-content{
+  position:absolute!important;left:50%!important;top:50%!important;
+  width:1920px!important;height:1080px!important;
+  transform:translate(-50%,-50%) scale(var(--editorial-scale,1))!important;
+  transform-origin:center center!important;padding:0!important;
+  box-sizing:border-box!important;
+}
+.page16-caption{left:542px!important;top:55px!important;width:360px!important;font-size:14.5px!important;line-height:1.08!important}
+.page16-header{left:40px!important;top:608px!important;width:820px!important}
+.page16-intro{
+  left:46px!important;top:690px!important;width:525px!important;height:300px!important;
+  columns:2!important;column-gap:30px!important;font-size:15px!important;line-height:1.07!important;
+}
+.page16-journals,.page17-columns{position:absolute!important;inset:0!important;width:auto!important;height:auto!important;columns:auto!important}
+.page16-journals .journal-entry,.page17-columns .journal-entry{position:absolute!important;margin:0!important;break-inside:auto!important;font-size:15px!important;line-height:1.055!important}
+.page16-journals .journal-entry h3,.page17-columns .journal-entry h3{font-size:17px!important;margin:0 0 5px!important}
+.page16-journals .journal-entry p,.page17-columns .journal-entry p{margin:0 0 8px!important}
+
+/* P16 follows the supplied mockup's five editorial text lanes on the right. */
+.page16-journals .journal-entry:nth-child(1){left:604px;top:690px;width:370px}
+.page16-journals .journal-entry:nth-child(2){left:1005px;top:355px;width:280px}
+.page16-journals .journal-entry:nth-child(3){left:1307px;top:55px;width:280px}
+.page16-journals .journal-entry:nth-child(4){left:1603px;top:55px;width:280px}
+.page16-journals .journal-entry:nth-child(5){left:1603px;top:745px;width:280px}
+.page16-journals .journal-entry:nth-child(6){left:1603px;top:880px;width:280px}
+
+/* P17 is a full seven-column continuation, centered with equal gutters. */
+.page17-columns .journal-entry:nth-child(1){left:32px;top:58px;width:242px}
+.page17-columns .journal-entry:nth-child(2){left:302px;top:58px;width:242px}
+.page17-columns .journal-entry:nth-child(3){left:572px;top:58px;width:242px}
+.page17-columns .journal-entry:nth-child(4){left:842px;top:58px;width:242px}
+.page17-columns .journal-entry:nth-child(5){left:1112px;top:58px;width:242px}
+.page17-columns .journal-entry:nth-child(6){left:1382px;top:58px;width:242px}
+.page17-columns .journal-entry:nth-child(7){left:1652px;top:58px;width:236px}
+.page17-note{
+  position:absolute!important;left:1652px!important;top:835px!important;width:236px!important;
+  box-sizing:border-box!important;margin:0!important;
+}
+
+
+/* PAGE 16–17: layout-driven editorial flow */
+.page16-content,
+.page17-content{
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  width:1920px!important;
+  height:1080px!important;
+  transform:translate(-50%,-50%) scale(var(--editorial-scale,1))!important;
+  transform-origin:center center!important;
+  box-sizing:border-box!important;
+}
+
+/* Page 16 uses a true editorial grid: title/intro, lead journal, and auto-flow journal frame. */
+.page16-content{
+  display:grid!important;
+  grid-template-columns: 540px 360px 1fr!important;
+  grid-template-rows: 150px 430px 1fr!important;
+  column-gap:28px!important;
+  row-gap:20px!important;
+  padding:46px 44px 42px!important;
+}
+.page16-caption{
+  position:static!important;
+  grid-column:2!important;
+  grid-row:1!important;
+  align-self:start!important;
+  justify-self:center!important;
+  width:340px!important;
+  font-size:14.5px!important;
+  line-height:1.08!important;
+  text-align:center!important;
+}
+.page16-header{
+  position:static!important;
+  grid-column:1 / span 2!important;
+  grid-row:3!important;
+  align-self:start!important;
+  width:820px!important;
+  margin-top:5px!important;
+}
+.page16-intro{
+  position:static!important;
+  grid-column:1!important;
+  grid-row:3!important;
+  align-self:start!important;
+  width:520px!important;
+  height:300px!important;
+  margin-top:82px!important;
+  columns:2!important;
+  column-gap:30px!important;
+  column-fill:auto!important;
+  font-size:15px!important;
+  line-height:1.07!important;
+}
+.page16-journal-lead{
+  grid-column:2!important;
+  grid-row:3!important;
+  align-self:start!important;
+  width:350px!important;
+  margin-top:76px!important;
+  font-size:15px!important;
+  line-height:1.055!important;
+}
+.page16-journal-flow{
+  grid-column:3!important;
+  grid-row:1 / span 3!important;
+  align-self:stretch!important;
+  width:100%!important;
+  height:992px!important;
+  columns:4!important;
+  column-gap:24px!important;
+  column-fill:auto!important;
+  font-size:15px!important;
+  line-height:1.055!important;
+  overflow:hidden!important;
+}
+
+/* Page 17 is one real seven-column text frame. */
+.page17-content{
+  padding:54px 34px 34px!important;
+}
+.page17-columns{
+  position:static!important;
+  width:100%!important;
+  height:965px!important;
+  columns:7!important;
+  column-gap:24px!important;
+  column-fill:auto!important;
+  font-size:15px!important;
+  line-height:1.055!important;
+  overflow:hidden!important;
+}
+.page17-columns .journal-entry,
+.page16-journal-flow .journal-entry,
+.page16-journal-lead .journal-entry{
+  position:static!important;
+  width:auto!important;
+  margin:0 0 11px!important;
+  break-inside:auto!important;
+}
+.page17-columns .journal-entry h3,
+.page16-journal-flow .journal-entry h3,
+.page16-journal-lead .journal-entry h3{
+  font-family:"Alfa Slab One",Impact,serif!important;
+  color:#d91c56!important;
+  font-size:17px!important;
+  line-height:1.05!important;
+  font-weight:400!important;
+  margin:0 0 5px!important;
+  break-after:avoid!important;
+}
+.page17-columns .journal-entry p,
+.page16-journal-flow .journal-entry p,
+.page16-journal-lead .journal-entry p{
+  margin:0 0 8px!important;
+  orphans:2!important;
+  widows:2!important;
+}
+.page17-note{
+  position:static!important;
+  width:auto!important;
+  margin:8px 0 0!important;
+  break-inside:avoid!important;
+  background:rgba(238,238,238,.88)!important;
+  color:#111!important;
+  padding:12px!important;
+  box-sizing:border-box!important;
+}
+
+
+/* PAGE 16–17 structural autoflow fix */
+.page16-content{
+  display:block!important;
+  position:absolute!important;
+  left:50%!important;top:50%!important;
+  width:1920px!important;height:1080px!important;
+  padding:0!important;
+  transform:translate(-50%,-50%) scale(var(--editorial-scale,1))!important;
+  transform-origin:center center!important;
+  box-sizing:border-box!important;
+}
+.page16-header{
+  position:absolute!important;
+  left:42px!important;top:610px!important;
+  width:820px!important;height:auto!important;
+  margin:0!important;
+}
+.page16-caption{
+  position:absolute!important;
+  left:540px!important;top:55px!important;
+  width:360px!important;
+  font-size:14.5px!important;line-height:1.08!important;
+  text-align:center!important;
+}
+.page16-intro{
+  position:absolute!important;
+  left:46px!important;top:690px!important;
+  width:520px!important;height:300px!important;
+  margin:0!important;
+  columns:2!important;column-gap:30px!important;column-fill:auto!important;
+  font-size:15px!important;line-height:1.07!important;
+  overflow:hidden!important;
+}
+.page16-journal-flow{
+  position:absolute!important;
+  left:620px!important;top:55px!important;
+  width:1255px!important;height:970px!important;
+  margin:0!important;
+  columns:5!important;column-gap:24px!important;column-fill:auto!important;
+  font-size:15px!important;line-height:1.055!important;
+  overflow:hidden!important;
+}
+/* Reserve the upper portion of the first journal column, matching the template's
+   open sky/caption area. All journal text still flows automatically after this. */
+.page16-journal-flow::before{
+  content:"";
+  display:block;
+  height:560px;
+}
+.page16-journal-flow .journal-entry{
+  position:static!important;width:auto!important;
+  margin:0 0 11px!important;
+  break-inside:auto!important;
+}
+.page16-journal-flow .journal-entry h3{
+  font-family:"Alfa Slab One",Impact,serif!important;
+  color:#d91c56!important;
+  font-size:17px!important;line-height:1.05!important;
+  font-weight:400!important;
+  margin:0 0 5px!important;
+  break-after:avoid!important;
+}
+.page16-journal-flow .journal-entry p{
+  margin:0 0 8px!important;orphans:2!important;widows:2!important;
+}
+
+/* Page 17: one centered seven-column flow frame, no manually placed columns. */
+.page17-content{
+  position:absolute!important;
+  left:50%!important;top:50%!important;
+  width:1920px!important;height:1080px!important;
+  padding:52px 34px 34px!important;
+  transform:translate(-50%,-50%) scale(var(--editorial-scale,1))!important;
+  transform-origin:center center!important;
+  box-sizing:border-box!important;
+}
+.page17-columns{
+  position:static!important;
+  width:100%!important;height:968px!important;
+  margin:0!important;
+  columns:7!important;column-gap:24px!important;column-fill:auto!important;
+  font-size:15px!important;line-height:1.055!important;
+  overflow:hidden!important;
+}
+.page17-columns .journal-entry{
+  position:static!important;width:auto!important;
+  margin:0 0 11px!important;break-inside:auto!important;
+}
+.page17-columns .journal-entry h3{
+  font-family:"Alfa Slab One",Impact,serif!important;
+  color:#d91c56!important;
+  font-size:17px!important;line-height:1.05!important;font-weight:400!important;
+  margin:0 0 5px!important;break-after:avoid!important;
+}
+.page17-columns .journal-entry p{
+  margin:0 0 8px!important;orphans:2!important;widows:2!important;
+}
+.page17-note{
+  position:static!important;width:auto!important;
+  margin:8px 0 0!important;padding:12px!important;
+  box-sizing:border-box!important;break-inside:avoid!important;
+}
+
+
+/* PAGE 16 alignment refinements */
+.page16-journal-flow::before{
+  /* Page 16 flow starts at y=55px. 635px spacer => first journal starts
+     at y=690px, matching the top edge of the foreword container. */
+  height:635px!important;
+}
+.page16-caption{
+  /* Keep the caption in the open sky area and lock its right edge
+     to the right edge of the third editorial lane. */
+  left:auto!important;
+  right:742px!important;
+  width:360px!important;
+}
+
+/* PAGE 17 Publisher's Note treatment */
+.page17-note{
+  background:rgba(0,0,0,.30)!important;
+  color:#fff!important;
+}
+.page17-note h4{
+  color:#fff!important;
+}
+
+
+/* Final Page 16 caption alignment */
+.page16-caption{
+  left:1003.4px!important;
+  right:auto!important;
+  width:360px!important;
+}
+
+
+/* Correct caption alignment — use the template/editorial columns, not journal-flow columns */
+.page16-caption{
+  left:540px!important;
+  right:auto!important;
+  width:365px!important;
+}
+
+
+/* Page 16 caption: preserve left alignment, tighten width to clear column 4 */
+.page16-caption{
+  left:540px!important;
+  right:auto!important;
+  width:340px!important;
+  max-width:340px!important;
+}
+
+/* Page 17 dim layer is animated independently while the Page 17 background
+   itself stays fully opaque, preventing Page 1 from flashing through. */
+.page17-dim{
+  opacity:0;
+  will-change:opacity;
+}
+
+
+/* Page 16 caption: hard-bound it to the first 3 columns of the journal grid */
+.page16-caption-zone{
+  position:absolute!important;
+  left:620px!important;
+  top:55px!important;
+  width:1255px!important;
+  height:auto!important;
+  display:grid!important;
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  column-gap:24px!important;
+  pointer-events:none!important;
+}
+.page16-caption-zone .page16-caption{
+  position:static!important;
+  left:auto!important;
+  right:auto!important;
+  top:auto!important;
+  grid-column:1 / 4!important;
+  justify-self:end!important;
+  width:340px!important;
+  max-width:100%!important;
+  margin:0!important;
+  font-size:14.5px!important;
+  line-height:1.08!important;
+  text-align:center!important;
+  font-style:italic!important;
+}
+
+
+/* FINAL caption geometry: lock to the foreword/editorial columns */
+.page16-caption-zone{
+  position:absolute!important;
+  left:46px!important;
+  top:55px!important;
+  width:795px!important; /* 3 x 245px columns + 2 x 30px gaps */
+  display:grid!important;
+  grid-template-columns:repeat(3,245px)!important;
+  column-gap:30px!important;
+  height:auto!important;
+  pointer-events:none!important;
+}
+.page16-caption-zone .page16-caption{
+  position:static!important;
+  grid-column:2 / 4!important;
+  justify-self:end!important;
+  width:300px!important;
+  max-width:300px!important;
+  left:auto!important;
+  right:auto!important;
+  top:auto!important;
+  margin:0!important;
+  text-align:center!important;
+}
+
+
+/* Restrained song side rail prototype */
+.side-rail{
+  position:fixed;
+  right:18px;
+  top:50%;
+  transform:translateY(-50%);
+  z-index:68;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:10px;
+  padding:8px 0;
+  pointer-events:auto;
+  opacity:.58;
+  transition:opacity .22s ease, transform .22s ease;
+}
+.side-rail:hover,
+.side-rail:focus-within{
+  opacity:1;
+}
+.side-rail a{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:9px;
+  min-height:14px;
+  color:#fff;
+  text-decoration:none;
+  font-family:"EB Garamond", Georgia, serif;
+  font-size:11px;
+  line-height:1;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  white-space:nowrap;
+  outline:none;
+}
+.side-rail .rail-mark{
+  order:2;
+  display:block;
+  width:11px;
+  height:1px;
+  background:currentColor;
+  opacity:.78;
+  transform-origin:right center;
+  transition:width .18s ease, height .18s ease, opacity .18s ease, background-color .18s ease;
+}
+.side-rail .rail-label{
+  order:1;
+  opacity:0;
+  transform:translateX(6px);
+  pointer-events:none;
+  transition:opacity .18s ease, transform .18s ease;
+  text-shadow:0 1px 3px rgba(0,0,0,.55);
+}
+.side-rail:hover .rail-label,
+.side-rail:focus-within .rail-label{
+  opacity:.88;
+  transform:translateX(0);
+}
+.side-rail a:hover .rail-mark,
+.side-rail a:focus-visible .rail-mark{
+  width:18px;
+  opacity:1;
+}
+.side-rail a.active{
+  color:#f2d300;
+}
+.side-rail a.active .rail-mark{
+  width:20px;
+  height:2px;
+  opacity:1;
+}
+.side-rail.on-light a{
+  color:#111;
+}
+.side-rail.on-light a.active{
+  color:#f2d300;
+}
+.side-rail.on-light .rail-label{
+  text-shadow:none;
+}
+@media(max-width:800px){
+  .side-rail{display:none;}
+}
+
+
+.side-rail a.rail-article .rail-mark{
+  width:7px;
+  opacity:.48;
+}
+.side-rail a.rail-article .rail-label{
+  font-style:italic;
+  opacity:0;
+}
+.side-rail:hover a.rail-article .rail-label,
+.side-rail:focus-within a.rail-article .rail-label{
+  opacity:.68;
+}
+.side-rail a.rail-song .rail-mark{
+  width:12px;
+}
+.side-rail a.rail-article:hover .rail-mark,
+.side-rail a.rail-article:focus-visible .rail-mark{
+  width:14px;
+  opacity:.9;
+}
+.side-rail a.rail-song:hover .rail-mark,
+.side-rail a.rail-song:focus-visible .rail-mark{
+  width:19px;
+}
+.side-rail a.active .rail-mark{
+  width:20px;
+  height:2px;
+  opacity:1;
+}
+
+
+/* PAGE 19 — FINAL CREDITS / PLAYLIST */
+.page19-layer{
+  position:absolute;inset:0;z-index:27;
+  opacity:0;overflow:hidden;pointer-events:none;
+  will-change:opacity;background:#07111f;
+}
+.page19-bg{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:center;
+}
+.page19-master{
+  pointer-events:none;
+}
+.page19-credits{
+  position:absolute;
+  left:245px;
+  top:177px;
+  width:540px;
+  color:#f7f3e9;
+  font-family:"EB Garamond",Georgia,serif;
+  font-size:15.5px;
+  line-height:1.08;
+  text-align:center;
+  font-weight:400;
+  text-shadow:0 1px 2px rgba(0,0,0,.36);
+  opacity:0;
+  transform:translateY(10px);
+  filter:blur(.7px);
+  will-change:opacity,transform,filter;
+}
+.page19-credits p{margin:0 0 26px}
+.page19-credits .page19-edition{margin-bottom:27px}
+.page19-credits .page19-ep{margin-top:4px;margin-bottom:25px}
+.page19-credits strong{font-weight:700}
+.page19-player{
+  position:absolute;
+  left:1268px;
+  top:370px;
+  width:340px;
+  height:352px;
+  z-index:4;
+  opacity:0;
+  transform:translateY(12px);
+  filter:blur(.8px);
+  will-change:opacity,transform,filter;
+  pointer-events:none;
+}
+.page19-player iframe{
+  display:block;
+  width:100%;
+  height:352px;
+  border:0;
+  border-radius:12px;
+}
+@media(max-width:800px){
+  .page19-credits{
+    left:6vw;top:10vh;width:88vw;
+    font-size:14px;
+  }
+  .page19-player{
+    left:6vw;right:6vw;top:auto;bottom:5vh;
+    width:auto;height:352px;
+  }
+}
+
+/* There is intentionally no content after the final sticky scene. */
+html,body{overscroll-behavior-y:none}
+
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+
+<style id="late-overlay-credit-fixes">
+.page13-header{
+  left:auto!important;
+  right:7.5%!important;
+  top:5.8%!important;
+  width:min(760px,42vw)!important;
+  max-width:760px!important;
+  height:auto!important;
+  object-fit:contain!important;
+  object-position:center!important;
+}
+
+.page18-overlay{
+  left:53.7%!important;
+  right:auto!important;
+  top:5.2%!important;
+  bottom:auto!important;
+  width:min(620px,37vw)!important;
+  max-width:620px!important;
+  height:auto!important;
+  object-fit:contain!important;
+  object-position:center!important;
+}
+
+.page19-credits{
+  top:50%!important;
+  transform:translateY(-50%)!important;
+}
+.page19-player{
+  top:50%!important;
+  transform:translateY(-50%)!important;
+}
+</style>
+
+
+<style id="minor-ui-overlay-adjustments">
+/* Side rail: editorial/article destinations recede so songs remain primary. */
+.side-rail a.rail-article{
+  opacity:.60!important;
+}
+.side-rail a.rail-song{
+  opacity:1!important;
+}
+.side-rail a.rail-article.active,
+.side-rail a.rail-article:hover,
+.side-rail a.rail-article:focus-visible{
+  opacity:.60!important;
+}
+
+/* Unreachable: align horizontally like Epilogue and center vertically. */
+.page13-header{
+  left:53.7%!important;
+  right:auto!important;
+  top:50%!important;
+  bottom:auto!important;
+  width:min(760px,42vw)!important;
+  max-width:760px!important;
+  height:auto!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  transform:translateY(-50%)!important;
+}
+
+/* Epilogue: preserve horizontal placement, center vertically. */
+.page18-overlay{
+  left:53.7%!important;
+  right:auto!important;
+  top:50%!important;
+  bottom:auto!important;
+  width:min(620px,37vw)!important;
+  max-width:620px!important;
+  height:auto!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  transform:translateY(-50%)!important;
+}
+</style>
+
+
+<style id="spotify-song-position-lock">
+/* All song pages share one Spotify position. Page 19 playlist remains separate. */
+.page5-player,
+.page8-player,
+.page11-player,
+.page13-player,
+.page15-player,
+.page18-player{
+  position:absolute!important;
+  left:auto!important;
+  right:3.2%!important;
+  top:auto!important;
+  bottom:2.6%!important;
+  width:min(380px,28vw)!important;
+  height:152px!important;
+}
+</style>
+
+
+<style id="desktop-layout-consistency-pass">
+/* RECORD OF AN EXPLORER
+   Preserve the 1920x1080 editorial master, but move the whole composition
+   36 master-canvas pixels right for a more optically centered spread. */
+.page16-content,
+.page17-content{
+  left:50%!important;
+  right:auto!important;
+  transform:
+    translate(-50%,-50%)
+    scale(var(--editorial-scale,1))
+    translateX(36px)!important;
+  transform-origin:center center!important;
+}
+
+/* PAGE 12
+   Header artwork and copy now share one fixed 1920x1080 coordinate system.
+   This removes aspect-ratio-dependent spacing caused by a cover-scaled header
+   combined with viewport-percentage copy placement. */
+.page12-master{
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  width:1920px!important;
+  height:1080px!important;
+  transform:translate(-50%,-50%) scale(var(--editorial-scale,1))!important;
+  transform-origin:center center!important;
+  pointer-events:none!important;
+}
+.page12-master .page12-header{
+  position:absolute!important;
+  inset:0!important;
+  width:1920px!important;
+  height:1080px!important;
+  object-fit:contain!important;
+  object-position:center!important;
+}
+.page12-master .page12-copy{
+  position:absolute!important;
+  left:113px!important;
+  top:853px!important;
+  width:672px!important;
+  font-size:18px!important;
+  line-height:1.08!important;
+}
+
+/* HANDWRITTEN SONG OVERLAYS
+   Use Alright's successful vertical sizing logic as the reference:
+   56% of viewport height with a 605px desktop cap.
+   Width follows the artwork's native aspect ratio. */
+.page8-overlay,
+.page13-header,
+.page18-overlay{
+  top:50%!important;
+  bottom:auto!important;
+  height:min(56vh,605px)!important;
+  max-height:605px!important;
+  width:auto!important;
+  max-width:40vw!important;
+  object-fit:contain!important;
+  object-position:center!important;
+}
+
+/* Keep Stuck on Rewind right-aligned while protecting the Spotify zone. */
+.page8-overlay{
+  left:auto!important;
+  right:4.2%!important;
+  transform:translateY(-50%)!important;
+  transform-origin:right center!important;
+}
+
+/* Unreachable + Epilogue share the same horizontal anchor and vertical center. */
+.page13-header,
+.page18-overlay{
+  left:53.7%!important;
+  right:auto!important;
+  transform:translateY(-50%)!important;
+  transform-origin:left center!important;
+}
+</style>
+
+
+<style id="adaptive-handwritten-overlay-sizing">
+/*
+  Adaptive desktop sizing for the handwritten song overlays.
+  Formula: 50vh + 80px, bounded between 500px and 780px.
+  This keeps laptop layouts restrained while allowing the artwork
+  to grow naturally again on larger/taller desktop monitors.
+*/
+.page8-overlay,
+.page13-header,
+.page18-overlay{
+  height:clamp(500px, calc(50vh + 80px), 780px)!important;
+  max-height:780px!important;
+  width:auto!important;
+  max-width:40vw!important;
+}
+
+/* Keep the existing page-specific placement logic. */
+.page8-overlay{
+  top:50%!important;
+  left:auto!important;
+  right:4.2%!important;
+  bottom:auto!important;
+  transform:translateY(-50%)!important;
+  transform-origin:right center!important;
+}
+
+.page13-header,
+.page18-overlay{
+  top:50%!important;
+  left:53.7%!important;
+  right:auto!important;
+  bottom:auto!important;
+  transform:translateY(-50%)!important;
+  transform-origin:left center!important;
+}
+</style>
+
+
+<style id="safezone-handwritten-overlay-sizing">
+.page8-overlay,
+.page13-header,
+.page18-overlay{
+  top:var(--overlay-center-y,50vh)!important;
+  bottom:auto!important;
+  height:min(calc(var(--overlay-safe-height,700px) * .82),780px)!important;
+  max-height:780px!important;
+  width:auto!important;
+  max-width:40vw!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  transform:translateY(-50%)!important;
+}
+.page8-overlay{
+  left:auto!important;
+  right:4.2%!important;
+  transform-origin:right center!important;
+}
+.page13-header,
+.page18-overlay{
+  left:53.7%!important;
+  right:auto!important;
+  transform-origin:left center!important;
+}
+</style>
+
+
+<style id="safezone-handwritten-overlay-maxfill">
+.page8-overlay,
+.page13-header,
+.page18-overlay{
+  height:var(--overlay-safe-height,700px)!important;
+  max-height:none!important;
+  width:auto!important;
+  object-fit:contain!important;
+  object-position:center!important;
+}
+.page8-overlay{max-width:42vw!important;}
+.page13-header{max-width:42vw!important;}
+.page18-overlay{max-width:40vw!important;}
+</style>
+
+
+<style id="detail-alignment-pass">
+/* COURTYARD POOL — compensate for transparent pixels in the header PNG. */
+.page14-header{
+  left:calc(4.85% - 10px)!important;
+}
+
+/* BAR & RESTAURANT — the visible header artwork ends around y=805
+   in the 1080px master. Pull the copy up so the gap matches the tighter
+   editorial spacing used elsewhere. */
+.page12-master .page12-copy{
+  top:816px!important;
+}
+
+/* RECORD OF AN EXPLORER — remove the browser's default first-paragraph
+   top margin, which was creating the apparent extra line at the start. */
+.page16-intro p:first-child{
+  margin-top:0!important;
+}
+
+/* Center the full 1920x1080 editorial canvases themselves.
+   No internal layout changes. */
+.page16-content,
+.page17-content{
+  left:50%!important;
+  right:auto!important;
+  transform:translate(-50%,-50%) scale(var(--editorial-scale,1))!important;
+  transform-origin:center center!important;
+}
+
+/* CREDITS — one centered two-column container. */
+.page19-grid{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:1020px;
+  display:grid;
+  grid-template-columns:540px 340px;
+  column-gap:140px;
+  align-items:center;
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+}
+.page19-grid .page19-credits{
+  position:static!important;
+  left:auto!important;
+  top:auto!important;
+  width:540px!important;
+  transform:none!important;
+  justify-self:center;
+  align-self:center;
+}
+.page19-grid .page19-player{
+  position:static!important;
+  left:auto!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:auto!important;
+  width:340px!important;
+  height:352px!important;
+  transform:none!important;
+  justify-self:center;
+  align-self:center;
+}
+</style>
+
+
+<style id="page1-page12-layout-refinement">
+/* BAR & RESTAURANT — align its visible left edge to Courtyard Pool (~4.85vw). */
+.page12-master .page12-header{
+  inset:auto!important;
+  left:-18px!important;
+  top:0!important;
+  width:1920px!important;
+  height:1080px!important;
+}
+.page12-master .page12-copy{
+  left:93px!important; /* 4.84% of the 1920px master */
+}
+
+/* PAGE 1 — treat the composition like a two-page spread.
+   The song list occupies the second half and is centered in that half,
+   both horizontally and vertically. */
+@media (min-width:801px){
+  .track-list{
+    left:50%!important;
+    right:auto!important;
+    top:50%!important;
+    width:50%!important;
+    min-width:0!important;
+    transform:translateY(-50%)!important;
+    text-align:center!important;
+    box-sizing:border-box!important;
+    padding:0!important;
+  }
+  .track-list a{
+    margin-left:auto!important;
+    margin-right:auto!important;
+  }
+}
+</style>
+
+
+<style id="record-six-column-refinement">
+/*
+  RECORD OF AN EXPLORER — continuation page:
+  remove the unused seventh column and center the six-column editorial block.
+  Text/layout inside the columns is otherwise unchanged.
+*/
+.page17-content{
+  width:1640px!important;
+  padding:52px 34px 34px!important;
+  left:50%!important;
+  right:auto!important;
+  transform:translate(-50%,-50%) scale(var(--editorial-scale,1))!important;
+  transform-origin:center center!important;
+}
+.page17-columns{
+  columns:6!important;
+  column-gap:24px!important;
+}
+</style>
+
+
+<style id="record-page16-four-column-centering">
+/*
+  RECORD OF AN EXPLORER — first page:
+  the fifth journal column is unused at the current copy length.
+  Preserve the existing column width, remove that unused column,
+  then optically center the occupied editorial composition.
+*/
+.page16-journal-flow{
+  width:1000px!important;
+  columns:4!important;
+  column-gap:24px!important;
+}
+
+/* The occupied layout now runs roughly x=46..1620 in the 1920 master.
+   Shift the complete page composition right by half the freed width,
+   without altering its internal relationships. */
+.page16-content{
+  transform:
+    translate(-50%,-50%)
+    scale(var(--editorial-scale,1))
+    translateX(127px)!important;
+  transform-origin:center center!important;
+}
+</style>
+
+
+<style id="purpo-desktop-crt-480line">
+/* =========================================================
+   PURPO CRT TEST — 480-LINE RASTER FEEL
+   Desktop only. Keeps site layout/interaction full-resolution.
+   ========================================================= */
+@media (min-width:801px) and (hover:hover) and (pointer:fine){
+  :root{
+    /* Approximate a 480-line raster regardless of desktop height */
+    --crt-line: calc(100vh / 480);
+  }
+
+  .crt480-vignette,
+  .crt480-mask,
+  .crt480-scan{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+  }
+
+  .crt480-vignette{
+    z-index:9996;
+    box-shadow:
+      inset 0 0 70px rgba(0,0,0,.20),
+      inset 0 0 170px rgba(0,0,0,.45),
+      inset 0 0 300px rgba(0,0,0,.18);
+    transform:translateZ(0);
+  }
+
+  /* RGB aperture / phosphor texture */
+  .crt480-mask{
+    z-index:9997;
+    background:
+      repeating-linear-gradient(
+        90deg,
+        rgba(255,35,35,.050) 0,
+        rgba(255,35,35,.050) calc(var(--crt-line) * .34),
+        rgba(35,255,90,.032) calc(var(--crt-line) * .34),
+        rgba(35,255,90,.032) calc(var(--crt-line) * .67),
+        rgba(60,85,255,.050) calc(var(--crt-line) * .67),
+        rgba(60,85,255,.050) var(--crt-line)
+      );
+    opacity:.34;
+    mix-blend-mode:screen;
+    transform:translateZ(0);
+  }
+
+  /* Main 480-line raster */
+  .crt480-scan{
+    z-index:9998;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,.025) 0,
+        rgba(255,255,255,.025) calc(var(--crt-line) * .72),
+        rgba(0,0,0,.16) calc(var(--crt-line) * .72),
+        rgba(0,0,0,.16) var(--crt-line)
+      );
+    mix-blend-mode:overlay;
+    opacity:.92;
+    transform:translateZ(0);
+    animation:purpoCrt480Flicker 6.8s steps(1,end) infinite;
+  }
+
+  /* Extremely subtle occasional brightness instability */
+  @keyframes purpoCrt480Flicker{
+    0%, 16%, 18%, 52%, 54%, 82%, 84%, 100%{opacity:.92}
+    17%{opacity:.84}
+    53%{opacity:.97}
+    83%{opacity:.88}
+  }
+
+  /* Slightly soften the visual output without touching layout geometry */
+  body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:9995;
+    pointer-events:none;
+    backdrop-filter:blur(.5px) saturate(.96) contrast(var(--crt-contrast,1.08));
+    -webkit-backdrop-filter:blur(.5px) saturate(.96) contrast(var(--crt-contrast,1.08));
+  }
+}
+
+@media (max-width:800px), (hover:none), (pointer:coarse){
+  .crt480-vignette,
+  .crt480-mask,
+  .crt480-scan{
+    display:none!important;
+  }
+  body::after{
+    display:none!important;
+  }
+}
+</style>
+
+
+<style id="purpo-crt-rgb-displacement-test">
+@media (min-width:801px) and (hover:hover) and (pointer:fine){
+  /*
+    Chromatic displacement test:
+    Red:  +2px horizontally
+    Blue: -2px horizontally
+    Implemented as subtle full-screen edge/color bleed overlays.
+  */
+  .crt480-rgb-displace{
+    position:fixed;
+    inset:0;
+    z-index:9994;
+    pointer-events:none;
+    overflow:hidden;
+    transform:translateZ(0);
+  }
+
+  .crt480-rgb-displace::before,
+  .crt480-rgb-displace::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    mix-blend-mode:screen;
+  }
+
+  .crt480-rgb-displace::before{
+    transform:translateX(2px);
+    box-shadow:inset 2px 0 0 rgba(255,0,0,.18);
+    background:linear-gradient(90deg,rgba(255,0,0,.035),transparent 3px);
+  }
+
+  .crt480-rgb-displace::after{
+    transform:translateX(-2px);
+    box-shadow:inset -2px 0 0 rgba(0,80,255,.18);
+    background:linear-gradient(270deg,rgba(0,80,255,.035),transparent 3px);
+  }
+}
+@media (max-width:800px), (hover:none), (pointer:coarse){
+  .crt480-rgb-displace{display:none!important;}
+}
+</style>
+
+
+<style id="purpo-crt-bloom-test">
+@media (min-width:801px) and (hover:hover) and (pointer:fine){
+  /*
+    Lightweight CRT bloom approximation.
+    Positioned UNDER phosphor + scanline layers.
+    Target: ~4px radius / 20% intensity.
+  */
+  .crt480-bloom{
+    position:fixed;
+    inset:0;
+    z-index:9993;
+    pointer-events:none;
+    opacity:.20;
+    mix-blend-mode:screen;
+    backdrop-filter:
+      blur(4px)
+      brightness(1.16)
+      contrast(var(--crt-contrast,1.08));
+    -webkit-backdrop-filter:
+      blur(4px)
+      brightness(1.16)
+      contrast(var(--crt-contrast,1.08));
+    transform:translateZ(0);
+  }
+}
+
+@media (max-width:800px), (hover:none), (pointer:coarse){
+  .crt480-bloom{
+    display:none!important;
+  }
+}
+</style>
+
+
+<style id="purpo-crt-scanline-blur-test">
+@media (min-width:801px) and (hover:hover) and (pointer:fine){
+  .crt480-scan{
+    filter:blur(.4px);
+  }
+}
+</style>
+
+
+<style id="purpo-crt-noise-test">
+@media (min-width:801px) and (hover:hover) and (pointer:fine){
+  .crt480-noise{
+    position:fixed;
+    inset:-40%;
+    pointer-events:none;
+    opacity:.04;
+    mix-blend-mode:screen;
+    transform:translate3d(0,0,0);
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    background-size:180px 180px;
+    animation:purpoCrtNoiseShift .18s steps(2,end) infinite;
+    will-change:transform;
+  }
+
+  @keyframes purpoCrtNoiseShift{
+    0%   {transform:translate3d(-2%, 1%,0)}
+    20%  {transform:translate3d( 1%,-2%,0)}
+    40%  {transform:translate3d(-1%, 2%,0)}
+    60%  {transform:translate3d( 2%, 1%,0)}
+    80%  {transform:translate3d( 1%,-1%,0)}
+    100% {transform:translate3d(-2%, 1%,0)}
+  }
+}
+@media (max-width:800px), (hover:none), (pointer:coarse){
+  .crt480-noise{display:none!important;}
+}
+</style>
+
+<style id="purpo-crt-final-layer-order-test">
+@media (min-width:801px) and (hover:hover) and (pointer:fine){
+  /* Explicit CRT post-process stack */
+  body::after{ z-index:9991!important; }       /* general 0.5px blur */
+  .crt480-bloom{ z-index:9992!important; }    /* bloom */
+  .crt480-rgb-displace{ z-index:9993!important; }
+  .crt480-mask{ z-index:9994!important; }     /* phosphor */
+  .crt480-noise{ z-index:9995!important; }    /* noise */
+  .crt480-scan{ z-index:9996!important; }     /* scanlines + 0.4px blur */
+  .crt480-vignette{ z-index:9997!important; } /* vignette */
+}
+</style>
+
+
+
+
+<style id="purpo-crt-luminance-flicker-test">
+@media (min-width:801px) and (hover:hover) and (pointer:fine){
+  .crt480-luminance-flicker{
+    display:none!important;
+    position:fixed;
+    inset:0;
+    z-index:9998;
+    pointer-events:none;
+    background:rgba(255,255,255,.14);
+    mix-blend-mode:screen;
+    opacity:.055;
+    transform:translateZ(0);
+    transition:opacity 55ms linear;
+  }
+}
+@media (max-width:800px), (hover:none), (pointer:coarse){
+  .crt480-luminance-flicker{display:none!important;}
+}
+</style>
+
+
+
+</head>
+<body>
+<section class="hero-scroll" id="fade-away">
+  <div class="hero">
+  <video class="hero-video" autoplay muted loop playsinline preload="metadata">
+    <source src="assets/signage-loop.mp4" type="video/mp4">
+  </video>
+  <div class="hero-shade"></div>
+
+  <nav class="site-nav" aria-label="Primary navigation">
+    <div class="nav-left">
+      
+      <a class="logo-link" href="../" aria-label="PURPO home">
+        <img src="assets/purpo-logo-white.png" alt="PURPO">
+      </a>
+    </div>
+
+    <div class="menu">
+      <button class="sound-toggle" id="soundToggle" type="button" aria-pressed="false" aria-label="Turn ambient sound on">
+        <img class="sound-off-img" src="assets/sound-off.png" alt="">
+        <img class="sound-on-img" src="assets/sound-on.png" alt="">
+      </button>
+      <span class="sound-divider" aria-hidden="true"></span>
+      <a class="nav-item nav-sa" href="../sa-gitna-ng-lahat/" aria-label="Sa Gitna ng Lahat EP">
+        <span class="nav-art">
+          <img class="white" src="assets/sa-gitna-white.png" alt="">
+          <img class="yellow" src="assets/sa-gitna-yellow.png" alt="">
+        </span>
+      </a>
+
+      <a class="nav-item nav-fade active" href="./" aria-label="Fade Away EP">
+        <span class="nav-art">
+          <img class="white" src="assets/fade-away-white.png" alt="">
+          <img class="yellow" src="assets/fade-away-yellow.png" alt="">
+        </span>
+      </a>
+
+      <a class="nav-item nav-malilig" href="#malilig" aria-label="Malilig LP">
+        <span class="nav-art">
+          <img class="white" src="assets/malilig-white.png" alt="">
+          <img class="yellow" src="assets/malilig-yellow.png" alt="">
+        </span>
+      </a>
+
+      <a class="nav-item nav-visuals" href="#visuals" aria-label="Visuals">
+        <span class="nav-art">
+          <img class="white" src="assets/visuals-white.png" alt="">
+          <img class="yellow" src="assets/visuals-yellow.png" alt="">
+        </span>
+      </a>
+
+      <a class="nav-item nav-about" href="#about" aria-label="About">
+        <span class="nav-art">
+          <img class="white" src="assets/about-white.png" alt="">
+          <img class="yellow" src="assets/about-yellow.png" alt="">
+        </span>
+      </a>
+    </div>
+  </nav>
+
+  <div class="track-list" aria-label="Fade Away track list">
+    <a href="#page5" data-song-snap="8">fade away</a>
+    <a href="#page8" data-song-snap="13">stuck on rewind</a>
+    <a href="#page11" data-song-snap="18">alright</a>
+    <a href="#page13" data-song-snap="22">unreachable</a>
+    <a href="#page15" data-song-snap="26">again</a>
+    <a href="#page18" data-song-snap="31">epilogue</a>
+  </div>
+
+  
+  <!-- PAGE 2: Fade Away Hotel reception -->
+  <div class="pageflip-layer" id="pageFlipLayer" aria-hidden="true">
+      <video class="pageflip-video" id="pageFlipVideo" muted playsinline preload="auto">
+        <source src="assets/page1-page2-flip.mp4" type="video/mp4">
+      </video>
+    </div>
+    <section class="page2-layer" id="page2">
+    <img class="page2-bg" src="assets/page2-bg.webp" alt="Fade Away Hotel reception">
+
+    <div class="page2-panel">
+      <img class="page2-reveal page2-heading" src="assets/page2-heading.png"
+           alt="Fade Away Hotel Restaurant and Bar">
+      <img class="page2-reveal page2-subhead" src="assets/page2-subhead.png"
+           alt="So good, you'll never want to leave">
+
+      <div class="page2-reveal page2-intro">
+        <p>Tucked just between the city’s edge and Rizal’s Sierra Madre mountains, the Fade Away Hotel has been welcoming travelers for generations. Whether you’ve been on the road for days or years, Fade Away offers a place to rest, refuel, and remember what it feels like to stay awhile.</p>
+        <p>From warm meals to quiet rooms, this is the kind of stop you didn’t know you were looking for—until you found it!</p>
+      </div>
+
+      <h2 class="page2-reveal page2-section-title">WHAT YOU’LL FIND AT THE FADE AWAY!</h2>
+
+      <div class="amenities">
+        <article class="page2-reveal amenity">
+          <img src="assets/icon-room.png" alt="">
+          <div>
+            <h3>COMFORTABLE ROOMS</h3>
+            <p>Clean beds, cool air, working televisions, solid walls, and hot showers. A good night’s sleep makes all the difference.</p>
+          </div>
+        </article>
+
+        <article class="page2-reveal amenity">
+          <img src="assets/icon-restaurant.png" alt="">
+          <div>
+            <h3>FULL-SERVICE RESTAURANT</h3>
+            <p>Hot meals served daily! Local recipes, familiar flavors, and satisfying portions meant to fill you up after that long hike.</p>
+          </div>
+        </article>
+
+        <article class="page2-reveal amenity">
+          <img src="assets/icon-jukebox.png" alt="">
+          <div>
+            <h3>VINTAGE JUKEBOX</h3>
+            <p>A rotating selection of classics and long-forgotten tracks. Pick a song. Sit down and let it play.</p>
+          </div>
+        </article>
+
+        <article class="page2-reveal amenity">
+          <img src="assets/icon-pool.png" alt="">
+          <div>
+            <h3>COURTYARD POOL</h3>
+            <p>Our centerpiece! Cool off, and meet other travelers, or just sit by the water. Recently renovated and well-maintained.</p>
+          </div>
+        </article>
+
+        <article class="page2-reveal amenity">
+          <img src="assets/icon-rooftop.png" alt="">
+          <div>
+            <h3>ROOFTOP ACCESS</h3>
+            <p>Open views, fresh air, and space to think. Majestic views of both Metro Manila and the Sierra Madre mountains!</p>
+          </div>
+        </article>
+
+        <article class="page2-reveal amenity">
+          <img src="assets/icon-social.png" alt="">
+          <div>
+            <h3>SOCIAL AREAS</h3>
+            <p>Hikers, weekend warriors, solo travelers, and long-haulers all pass through here. Be prepared to socialize!</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="page3-layer" id="page3">
+    <img class="page3-bg" src="assets/page3-bg.webp" alt="Motel room afterparty">
+    <div class="page3-vignette"></div>
+    <article class="page3-article">
+      <img class="page3-reveal page3-header" src="assets/page3-header.png" alt="Just Passing Through — Inside the last motel still standing at the edge of the city">
+      <p class="page3-reveal page3-body">I drove most of the afternoon, hugging the old service roads that run south of what used to be the metro. No signage out here. No working gas stations. Just long stretches of cracked pavement and the occasional skeleton of a billboard, advertising to no one. You don’t stumble on the Fade Away—you have to know it’s there. After the last bend, it just... appears. A solitary and imposing neon sign propped up against the dusk. I parked in the gravel lot out front. The lights in the reception window were already on.</p>
+    </article>
+  </section>
+  
+    <!-- PAGE 4 — EDITORIAL SPREAD -->
+    <section class="page4-layer" id="page4" aria-label="Fade Away Hotel article continuation">
+      <div class="page4-spread">
+        <aside class="page4-quote page4-reveal">
+          <img src="assets/page4-grab-quote.png" alt="">
+        </aside>
+
+        <div class="page4-copy page4-copy-a page4-reveal">
+          <p class="dropcap">There’s no check-in process and strangely, no receptionist. Just a taped sign that reads: LEAVE PAYMENT and WAIT.</p>
+          <p>I slid a few bills on the desk—enough for a small room, probably. Lit a cigarette and waited outside. A couple of minutes later, I heard footsteps and the sound of drawers opening. When I came back, a single brass key with a red tag sat atop the reception desk: Room 6.</p>
+          <p>The hallway lights were working—dim and old, but steady. I passed the bar on the way up. No bartender. The stools were all there, but in disarray. Bottles long gone. The performer’s stage lit by a single spotlight, as if waiting for someone to step out from behind the curtain.</p>
+          <p>Room 6 was clean. Sparse. Concrete walls covered in vintage wallpaper. The AC hummed softly from a unit mounted above the window. A curtain pulled tight against the dusk. There was an old TV set that worked, but no channels were running—I had no reason to turn it on. No telephone. Just a mirror, a nightstand, and a power outlet that buzzed a bit when I plugged in my laptop. The sheets were crisp. Someone—or something—keeps this place running.</p>
+          <p>Dinner was whatever I was able to purchase from a roadside caravan a few 40 kms back: An assortment of bottled preserves, stale bread, a warm bottle of water. The restaurant here shut down a long time ago, like everything else after the Silence. The closest restaurant was 3 hours away so guests are expected to bring their own food.</p>
+        </div>
+
+        <div class="page4-copy page4-copy-b page4-reveal">
+          <p>Around 9, I went for a walk. The pool was dry but eerily pristine, like it hadn’t been used in years—but hadn’t decayed either. The laundromat still worked, though no one was there. Someone had left clothes spinning, at least giving a sense of life to the empty place.</p>
+          <p>I met a group hanging outside Room 13. A mixed bunch, drawn here by the legendary mystique of the motel. They came with an overflowing supply of beer and pizza. One last party before exploring the void, I guess.</p>
+          <p>Aice, was a veteran explorer of the city and is very familiar of the motel’s history.</p>
+          <p>“The motel’s a bit far from the usual entry point into the city,” he said. “You’ve got to take a detour—it adds maybe 30 or 40 kilometers to the trip. It’s a hassle, especially with how bad the roads are. But I’ve come to love the place. So I always include it in the itinerary.”</p>
+          <p>“This place wasn’t always this quiet,” he continued. “Back before the Great Silence, the motel was a last-minute kind of spot—wrong turns, trysts, afterparties that got out of hand. No one actually plans to come here, but you end up here if you want the party to never end.”</p>
+          <p>“We accidentally found this place more than a decade ago. My buddies and I lost our jobs thanks to some brilliant government fuckery. So we drove out of the city that night and ended up here. Best layoff of my life. Haha.”</p>
+          <p>Aice then veered into stories from his party days in the city before the Great Silence—which probably warrant an article of their own.</p>
+          <p>Mickey, a newbie explorer, chimed in—her voice bright and curious, untouched by the weight the others carried.</p>
+        </div>
+
+        <figure class="page4-photo-block page4-reveal">
+          <img src="assets/page4-photo.png" alt="The original Fade Away Hotel">
+          <figcaption>The original Fade Away Hotel, pictured here before its remodeling in the late 1980s. This is the only known surviving photo of the original building before it was replaced by the structure that stands today. Situated on the eastern edge of Metro Manila, the modest and unremarkable hotel served as a quiet stopover for travelers heading toward the Sierra Madre mountain range. An additional wing and the pool were added in the mid ‘90s. With the pool came a shift in design — the owners reoriented the entire layout to face inward.</figcaption>
+        </figure>
+
+        <div class="page4-lower page4-reveal">
+          <div class="page4-copy">
+            <p>“I still can’t believe this place is real,” she said. “I used to read stories about the Fade Away on old forums. You know, the ones that looked abandoned but somehow still had active comment sections?”</p>
+            <p>“There’s this user, papa_w1ns—they posted a full floorplan and photos of the motel back in 2012. It matches perfectly. Even the busted vending machine is still busted!” Mickey laughed. “The graffiti outside? Already there in those photos. Which is fucking prophetic. No one could’ve predicted that. I joined this trip specifically to see that tag. In person, it’s nothing special, but if you know the history, it’s full-on Nostradamus shit. Props to the artist.”</p>
+            <p>I stuck around the party a bit. Got myself a few free beers and a supplemental slice of pizza to top off my humble dinner.</p>
+          </div>
+          <div class="page4-copy">
+            <p>There was a lot of buzz about the trip into the city tomorrow. A few people hung out by the empty pool, lighting a bonfire with other guests. Others climbed to the roof, hoping to catch a glimpse of the ruins.</p>
+            <p>There are no rules here. But there’s a strange order. Everyone cleans up. No one steals and no one dares trash the place. Maybe it’s because no one wants to be the one to break this sole reminder of the old world.</p>
+            <p>Back in my room, the AC cooled the space into something quiet and almost clean. I lay on the bed, wide awake. The silence was occasionally broken by laughter outside, then faded into stillness. I left the window cracked, letting the hum of the compressor lull me to sleep.</p>
+            <p>In the morning, I passed by Room 13. I meant to say goodbye, but it seemed they were still out cold from the night before.</p>
+          </div>
+          <div class="page4-copy">
+            <p>I bumped into a couple from the room next door who were already up—they gave me a quick nod. I dropped the key back in the reception desk. Still no one there.</p>
+            <p>Then it was on to the car. Just the soft crunch of gravel under my tires as I pulled away.</p>
+            <p>The road ahead was empty. Very few people dare venture into the old city anymore— except for these daring outliers and their fancy masks, chasing the next adrenaline rush. The world felt a little more distant than it did yesterday.</p>
+            <p>The Fade Away stayed behind me—quiet, comfortingly intact, exactly as I found it.</p>
+            <p>No one is meant to stay here.<br>But for one night, it feels like you could.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- PAGE 5 — FADE AWAY SONG -->
+    <section class="page5-layer" id="page5" aria-label="Fade Away song page">
+      <img class="page5-bg" src="assets/page5-bg.webp" alt="">
+      <img class="page5-overlay" id="page5Overlay" src="assets/page5-overlay.png" alt="Fade Away lyrics">
+      <div class="page5-player" id="page5Player">
+        <iframe id="sharedSpotify"
+          title="Spotify player"
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy"></iframe>
+      </div>
+    </section>
+
+    <!-- PAGE 6 — A VISITOR FROM THE SOUTH -->
+    <section class="page6-layer" id="page6" aria-label="A Visitor From The South">
+      <img class="page6-bg" src="assets/page6-bg.webp" alt="">
+      <div class="page6-editorial">
+        <img class="page6-header page6-reveal" src="assets/page6-textheader.png" alt="A Visitor From The South">
+        <div class="page6-copy page6-reveal">
+          <p>This is a brief excerpt from my conversation with Jeck, an explorer from the south. We talked at the Fade Away Hotel, where he and his group were staying for a few days while preparing to return to the city. The Fade Away Hotel is located in the eastern border of the capital, and Jeck’s group has to pass through numerous singularities to get here.</p>
+
+          <p><strong>Can you introduce yourself to our readers?</strong><br>
+          Im Jeck. I’m an explorer from Lipa. I specialize in climbing, survival, and rescue.</p>
+
+          <p><strong>You must’ve taken a while to get here. Can you tell us how you got to the Fade Away Hotel?</strong><br>
+          We arrived yesterday. I came in with a large group from the South. We skirted the city’s perimeter through the lake, but that route passes too close to the Taguig singularity, so we had to take a detour, and had to go through a lot of rough paranormal shit just to get here.</p>
+
+          <p>I don’t think that route’s worth using anymore. I used to think it was possible to approach the business district from that side, but after going over it again, there’s too much risk for too little reward. It took us four days of navigating through the city just to get here.</p>
+        </div>
+      </div>
+      <img class="page6-quote page6-reveal" src="assets/page6-grabquote.png" alt="That’s how I remembered my name. It kept getting called back to me.">
+    </section>
+
+
+    <!-- PAGE 7 — CONTINUED INTERVIEW -->
+    <section class="page7-layer" id="page7" aria-label="Interview with Jeck, continued">
+      <div class="page7-spread">
+        <article class="page7-left page7-reveal">
+          <p><strong>Why take the risk to come here? Is this where you usually base yourself, or just for now?</strong><br>
+          It’s actually my first time here. This isn’t on my usual route, since it’s more of a jump-off point for people coming in from the north. I kept hearing from other travelers that a lot of people gather here before heading into the city, and we got curious. It’s also nice to meet explorers coming from the other side.</p>
+          <p>You can still feel the city’s effects this close in, so I was kind of surprised to see this many people willing to stick around near it.</p>
+          <p><strong>You carry a bit more than the usual explorer with all that rope and that unusual choice of footwear. Is there a reason for this?</strong></p>
+          <p>I believe I came from an outdoor background, before all this happened, so I still rely on a lot of those instincts when I’m in the city. Areas closer to the singularities tend to be heavily deteriorated and distorted, and the rope helps with getting through those sections.</p>
+          <p>The rubber boots are mostly a precaution. Some of the sunken areas are still live somehow, and I don’t feel like getting electrocuted. I also carry a lot of calories. Food’s unreliable once you’re in the distorted zones, and having enough food and water gives you more room to move and think.</p>
+          <p><strong>Why explore the city, when there’s a high risk of getting incapacitated, or even dying?</strong><br>
+          The city is the ultimate adventure! Nothing beats the adrenaline of encountering anomalies and going through them, or meeting and interacting with the city’s strange creatures. The views are amazing, and you also get to find a lot of useful objects.</p>
+          <p>Exploring the city is also helpful in restoring some of my memories. A scene or a series of movements sometimes act as triggers. I remember much about what I did in the past through these sensations. Sometimes I go in looking for equipment. I help my community by looking for stuff that we need that can only be found in the cities.</p>
+          <p>I love the outdoors, the forests and everything but there’s so much to do in the city that not going feels criminal.</p>
+        </article>
+
+        <aside class="page7-inset page7-reveal">
+          <img class="page7-inset-bg" src="assets/page7-inset-image.png" alt="">
+          <div class="page7-inset-copy">
+            <div>
+              <p><strong>Can you explain your gear for us?</strong></p>
+              <p>Sure. I’ve got my climbing setup here. It’s pretty minimalist. A 60-meter rope, a harness, an ascender, a figure eight, a few carabiners, and a basic foot loop.</p>
+              <p>A one-liter water bottle is essential. I carry a change of clothes too—usually just one spare, plus a clean set for sleeping. Flip-flops. Food for three to four days, mostly stuff that travels well. These dried fish I picked up from a roaming seller near the Sucat entry point.</p>
+              <p>I’ve got some candy bars and my box of smokes here too. They’re rare now, but there’s still a lot preserved closer to the singularities. Some people go deep into the city just for those.</p>
+            </div>
+            <div>
+              <p>I also have my mask. I’ had it modelled after a wild boar, in honor of my outdoor background.</p>
+              <p>I carry two headlamps in case I get stuck somewhere with no light. An umbrella. A lightweight blanket. And then the usual essentials—my toiletries.</p>
+              <p>I also carry a balisong. It’s mostly for food prep: paring fruit, that kind of thing. It’s small, easy to clean, and I know how it behaves. I haven’t had to use it for self-defense so far, but you never know.</p>
+              <p>That’s about it. The beauty is, anything else I need, I’d likely find it in the city. Travelling light saves my knees for the long journey.</p>
+            </div>
+          </div>
+        </aside>
+
+        <article class="page7-right-col page7-reveal">
+          <p><strong>Have you found out anything about the world on your travels?</strong><br>
+          We probably all came from the city originally. Then one day, because of some event, we all lost our memories and woke up outside it. Now the city’s unlivable, at least according to the few people who still remember. I think there used to be a lot more people. That’s why cities exist at all.</p>
+          <p><strong>Have you met anyone who actually remembers what it was like before?</strong><br>
+          There’s one in our community, he’s also an explorer. Anything I know about the world, I mostly learned from him. The most amazing thing he told me was that we people used to live and work our whole lives inside those tall buildings in the cities. Ain’t that something?</p>
+          <p>If you ever head south, I can introduce you. You might already know him. He runs a small printing press just outside Lucena. You should interview him too.</p>
+          <p><strong>Yeah, I think I met him before I started this publication. He’s the one who organizes remembrance events and prints all the posters. Pretty opinionated guy. I guess that comes with being someone who actually remembers the past.</strong><br>
+          Yeah, he’s pretty funny too. The first time I met him, he acted all serious and told me he remembered working with me before the Silence. Said we used to climb together, named a route, even described a fall I supposedly took. I didn’t remember any of it, obviously, but he sounded convincing enough that I figured it was just another gap. Me and my polite, amnesiac ass just didn’t say anything.</p>
+          <p>He kept it going for weeks. Would bring it up casually, like it was normal, always with a straight face. Then one day, we were out drinking and he admitted he made the whole thing up just to see how long I’d go along with it.</p>
+          <p>It was funny. Also pretty embarrassing.</p>
+          <p><strong>Wait, so he’s that kind of joker. He once told me there are areas in the city where, if you get caught inside, you can end up stuck in a loop. Is that actually a real thing?</strong></p>
+        </article>
+
+        <article class="page7-right-col page7-reveal">
+          <p>Yeah, I’ve seen those. There are places where you can actually get stuck in a time loop, doing the same thing over and over. We rescued a pair of explorers once—they were stuck arguing about a pet that didn’t even exist.</p>
+          <p>What really messed with me was that the effect still went through the mask. The loop effect took a while to really set in, so I was able to run to them and tie them down with a rope. That’s how useful the rope is.</p>
+          <p>I tied myself down too, so by the time the loop kicked in, my companions were already pulling us back out of the affected area. I don’t actually remember what I was stuck doing, but my friends told me I looked pretty funny.</p>
+          <p><strong>With all the weird stuff going on inside the city, are your rules written down, or do you keep them in your head?</strong><br>
+          When I started out four years ago, there wasn’t really a system. I was one of the first people who went back into the city to explore. Back then, we were going in without masks. People were losing it, seeing stranger and stranger things, and some of them just walked straight into the void.</p>
+          <p>One explorer was worried about running into poisonous gas, so he wore a gas mask. Somehow, he wasn’t affected at all. For a while, we thought it was something in the air. It took a lot of trial and error before we realized the singularities were responding to us directly, and that they recognize people by their faces.</p>
+          <p>A lot of the rules came from that period. We didn’t write them down. You just kept them in your head if you wanted to make it back out. These days, some of the newer explorers document things and post them on the boards. It’s kind of amazing how detailed it’s gotten. People even track the waves and the weather-like patterns of some of the anomalies. It’s made exploring a lot safer than it used to be.</p>
+          <p><strong>Do you believe the city remembers people?</strong><br>
+          I don’t think the city remembers people, but the singularities definitely do. They can create pretty elaborate visions in your head when you’re near them, and sometimes they even call out to you. That’s how I remembered my name. It keeps getting callled back to me.</p>
+        </article>
+
+        <article class="page7-right-col page7-reveal">
+          <p><strong>Do you think we’ll ever return to how things are before the Great Silence?</strong><br>
+          The Great Silence. Yeah, that’s a pretty apt name for it. But no, I don’t think we’ll ever be the same. For one thing, there are just too few people now. There had to be a lot more of us for cities like these to exist in the first place.</p>
+          <p>We lost a lot of basic knowledge—how to keep things running, how to organize ourselves. There are only a few people left who actually remember how things work.</p>
+          <p>Some of that(older knowledge) still applies. Some of it doesn’t. This isn’t the same environment anymore.</p>
+          <p>Take cars, for example. I’ve noticed a lot more running here in the north, so someone knows how to keep them working. But the roads are in bad shape, and that’s not something one person can fix. You’d need a lot of coordination and expertise for that. People, time, materials. I don’t think we’re there yet.</p>
+          <p>That’s why it’s good that people like you are collecting stories. Even if nothing else comes out of it, at least it means we’re not forgetting everything.</p>
+          <p><strong>Do you think you’ll ever stop exploring?</strong><br>
+          I’m not sure. Maybe if I find enough from the past, it would help me settle down.<br>
+          Or maybe someday, i’ll just have to accept that this is how things are now and stop looking for answers.</p>
+          <p>There’s this journal that’s been going around. The one from the guy who went all the way in. He believed that there’s something beyond the void, and he sounded very sure. It kind of stuck with me. Can we explore beyond the singularities? Is that the final frontier?</p>
+          <p>Honestly I don’t know. Nobody’s come back.</p>
+          <p>Either way, there’s still a lot to see out there, and as long as that’s true. I’ve got lots to do.</p>
+        </article>
+      </div>
+    </section>
+
+
+    <section class="page8-layer" id="page8" aria-label="Stuck on Rewind">
+      <canvas class="page8-video page8-racking" id="page8RackingCanvas" aria-hidden="true"></canvas>
+      <video class="page8-video page8-loop" id="page8Loop" muted playsinline loop preload="auto">
+        <source src="assets/stuck-on-rewind-play-loop.mp4" type="video/mp4">
+      </video>
+      <img class="page8-overlay" id="page8Overlay" src="assets/page8-overlay.png" alt="Stuck on Rewind">
+      <div class="page8-player" id="page8Player"></div>
+    </section>
+
+    <section class="page9-layer" id="page9" aria-label="Correspondent Feature: Annika">
+      <canvas class="page9-zoom" id="page9ZoomCanvas" aria-hidden="true"></canvas>
+      <img class="page9-bg" id="page9Bg" src="assets/page9-bg.webp" alt="">
+      <div class="page9-editorial" id="page9Editorial">
+        <img class="page9-header" src="assets/page9-overlay.png" alt="Correspondent Feature: Annika">
+        <div class="page9-copy">
+          <p>Annika is the featured photographer for this special edition of the magazine. As one of the region’s remaining practicing photographers, her work centers on people—capturing candid moments and ordinary interactions instead of the monumental cityscapes and ruins that usually define our coverage.</p>
+          <p>She is particularly drawn to the Fade Away Hotel, which serves as a gathering hub for adventurers, explorers, traders, and other travelers operating near the city’s outskirts. Rather than documenting the city itself, her work centers on the social life that forms around it: preparations for departure, informal meetings, and the rituals that are born of repeated journeys and shared waiting.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="page10-layer" id="page10" aria-label="Correspondent Feature: Annika photo spread">
+      <img class="page10-bg" src="assets/page10-bg.webp" alt="">
+      <div class="page10-canvas" id="page10Canvas">
+        <img class="page10-header page10-item" src="assets/page10-header.png" alt="Correspondent Feature: Annika">
+        <figure class="page10-card landscape page10-card1 page10-item"><img class="page10-photo" src="assets/page10-photo1.png" alt=""><figcaption><p>“I took this cityscape from the top of the Fade Away sign. You can see at least four smaller singularities in the city. There’s actually a larger one that contains these four but it’s really faint and is only visible at a certain distance.”</p></figcaption></figure>
+        <figure class="page10-card landscape page10-card2 page10-item"><img class="page10-photo" src="assets/page10-photo2.png" alt=""><figcaption><p>“This is one of the many bulletin boards around the perimeter of the city. People post info here, and some other people grab them and post them online. This was taken from a moving car, we we’re a bit too close to the city and we can feel the buzzing in our heads!”</p></figcaption></figure>
+        <figure class="page10-card page10-card3 page10-item"><img class="page10-photo" src="assets/page10-photo3.png" alt=""><figcaption class="page10-card3-caption">“We encountered this man exiting from Pasay. He carried a shovel and wore something resembling a Moriones helmet, with no mask beneath it. He had no water and no visible supplies. We tried to approach him, but he didn’t acknowledge us. Something about him felt off.”</figcaption></figure>
+        <figure class="page10-card landscape page10-card4 page10-item"><img class="page10-photo" src="assets/page10-photo4.png" alt=""><figcaption><p>“One of the many mobile talipapas roaming the perimeter of the city.  You can buy cheap fruits and veggies from them. They also accept trades with items from inside the city.”</p></figcaption></figure>
+        <figure class="page10-card landscape page10-card5 page10-item"><img class="page10-photo" src="assets/page10-photo5.png" alt=""><figcaption><p>“This is Gari. She drives me around. She’s been to the city three times already and knows the functional in-roads that cut through it. The farthest she’s gone so far is the old Katipunan road in QC. She says she wants to see more of the north next— Caloocan, Malabon. Those places still feel alien to her.”</p></figcaption></figure>
+        <div class="page10-quote page10-item">“I very rarely go near the city. So this trip to the Fade Away felt like a big adventure to me. I didn’t expect to get this close. So I took a few snaps with my Instax camera while we were passing through.”</div>
+      </div>
+    </section>
+
+    <!-- PAGE 11 — ALRIGHT SONG -->
+    <section class="page11-layer" id="page11" aria-label="Alright song page">
+      <img class="page11-bg" src="assets/page11-bg.jpg" alt="">
+      <img class="page11-title" id="page11Title" src="assets/page11-overlay1.png" alt="Alright">
+      <img class="page11-lyrics" id="page11Lyrics" src="assets/page11-overlay2.png" alt="Alright lyrics">
+      <div class="page11-player" id="page11Player"></div>
+    </section>
+
+
+    <!-- PAGE 12 — FADE AWAY BAR & RESTAURANT -->
+    <section class="page12-layer" id="page12" aria-label="Fade Away Bar and Restaurant">
+      <img class="page12-bg" src="assets/page12-bg.webp" alt="">
+      <div class="editorial-master page12-master">
+        <img class="page12-header" id="page12Header" src="assets/page12-header.png" alt="The Fade Away Bar and Restaurant">
+        <div class="page12-copy" id="page12Copy"><p>The Fade Away Restaurant and Bar was once a hotspot for the Metro’s hottest bands. With a wide selection of liquor and good food, weekend crowds filled the place. After the Great Silence, the restaurant and bar ceased operations. The venue remains largely functional, standing as a reminder of better days. Now, with virtually no corkage fee and a recently added videoke set on the stage, visitors can live out their rock-and-roll dreams of belting out their favorite songs on the once-popular stage.</p></div>
+      </div>
+    </section>
+
+    <!-- PAGE 13 — UNREACHABLE SONG -->
+    <section class="page13-layer" id="page13" aria-label="Unreachable song page">
+      <img class="page13-bg" src="assets/page13-bg.webp" alt="">
+      <img class="page13-header" id="page13Header" src="assets/page13-handwritten.png" alt="Unreachable lyrics">
+      <div class="page13-player" id="page13Player"></div>
+    </section>
+
+    <!-- PAGE 14 — COURTYARD POOL -->
+    <section class="page14-layer" id="page14" aria-label="The Courtyard Pool">
+      <img class="page14-bg" src="assets/page14-bg.webp" alt="">
+      <img class="page14-header" id="page14Header" src="assets/page14-header.png" alt="The Courtyard Pool">
+      <div class="page14-copy" id="page14Copy"><p>The courtyard pool was the last major addition to the Fade Away Hotel, built in 1995 and renovated as recently as 2015. It met the same fate as the restaurant and bar, eventually falling out of use. Yet the space found a second life in another form. In the early days after the Great Silence, it became a popular camping spot for the more outdoorsy visitors. Today, the drained pool serves as a common gathering place and the usual venue for the Fade Away’s legendary bonfire parties.</p></div>
+      <div class="page14-caption" id="page14Caption"><p>In the photo: A group of adventurers gathers at the courtyard pool, planning an early departure to run the Gravity Mile Anomaly along the Old Katipunan Road .<br>A 1.3-kilometer stretch of road must be crossed in under four minutes and thirty seconds—after which gravity gives out, throwing anyone still on the segment into the air.</p></div>
+    </section>
+
+    <!-- PAGE 15 — AGAIN SONG -->
+    <section class="page15-layer" id="page15" aria-label="Again song page">
+      <video class="page15-video" id="page15Video" autoplay muted loop playsinline preload="metadata">
+        <source src="assets/page15-again-bg-loop.mp4" type="video/mp4">
+      </video>
+      <img class="page15-overlay" id="page15Overlay" src="assets/page15-overlay.png" alt="Again lyrics">
+      <img class="page15-title" id="page15Title" src="assets/page15-overlay-header.png" alt="Again">
+      <div class="page15-player" id="page15Player"></div>
+    </section>
+
+
+    <section class="page16-layer" id="page16" aria-label="Record of an Explorer, Year Five">
+      <img class="page16-bg" src="assets/page16-bg.webp" alt="">
+      <div class="editorial-master page16-content" id="page16Content">
+        <img class="page16-header" src="assets/page16-header.png" alt="Record of an Explorer, Year Five">
+        <div class="page16-caption-zone"><div class="page16-caption">Below: An explorer relaxes beneath the rooftop signage of the Fade Away Hotel. The rooftop is a favored observation point for viewing the singularities across the city. Observers note that the closer one approaches them, the less visible they become.</div></div>
+        <div class="page16-intro"><p>This journal has circulated among explorer communities for some time. References to it appear in travel logs, message boards, and secondhand accounts, often inconsistently. What survives here is a complete transcription of the material as it was recovered.</p><p>The author is not identified. Internal references suggest they traveled with a small, semi-permanent group and retained an unusual degree of memory continuity compared to most survivors.</p><p>The final journal entries that we feature here are widely believed to be the last written before the author’s disappearance. No confirmed records place them after this point.</p><p>The entries were written intermittently, often during periods of rest or enforced waiting. Variations in clarity and consistency have been preserved.</p><p>Several passages describe the author’s mental state and observations near singularity zones. The publisher makes no claim regarding the accuracy of these accounts.</p><p>Names used in the journal have been altered to protect the identities of individuals referenced by the author.</p><p>This journal is published as found.</p></div>
+        <div class="page16-journal-flow"><section class="journal-entry"><h3>Journal Entry – Year 5, Day 174</h3><p>We scouted another district today.<br>This part of the city is overgrown with vines now but this used to be a business district with lots of offices. I do remember my time here as an employee, fun times.</p><p>I kept trying to line things up in my head but it doesn’t work right anymore. Everything’s out of order and wonky. I tried to guide us at first. That didn’t help. We got kind of lost anyway, so halfway through, I stopped trying.</p><p>The big goal this week was to find a working coffee machine, and still no luck today! We did find instant coffee though, and some old cassette tapes.</p><p>We set up late tonight, inside the lobby of a big building and made a bonfire. There were a lot of small eyes looking in through the windows. Might’ve been frogs. Might’ve been something else. Rain joked about it and we laughed. I like seeing her smile.</p><p>We listened to the tapes while playing cards. One of the albums was something we had when I was a kid, Savage Garden. It was mushy but it brought me back at least.</p><p>Kean liked the songs—he felt like he knew them before. Amos was fast asleep, as usual, so we had to end the game.<br>I think it was a good day.</p></section><section class="journal-entry"><h3>Journal Entry – Year 5, Day 177</h3><p>Day 3 in the business district. Amos and Kean didn’t feel like moving around today. I tried to convince them anyway. Kean was very vocal about not wanting to, so I stopped pushing.</p><p>I still wanted to confirm where we were. I kept thinking if I could see it from above, something might click. So I suggested going up one of the buildings. Rain hesitated but came with me.</p><p>We usually avoid going up because there’s no power in the stairwells. We brought one flashlight to save on battery—bad idea. The stairwell of this building is kinda cramped, it gets hard to breathe after a while. We talked the whole time so it wouldn’t get quiet. Mostly nothing important. We made it to the rooftop eventually. It took longer than I expected.</p><p>The whole city was covered in fog. Just a flat layer of it, stretching out in every direction. So the whole point of going up there didn’t really work. I couldn’t tell where anything was.</p><p>I don’t remember the last time I saw clouds like that, from above. It was beautiful, and eerie. I kind of liked it anyway. Rain and I sat there for a while and didn’t say much.</p></section><section class="journal-entry"><h3>Journal Entry – Year 5, Day 182</h3><p>I went out alone today. I wasn’t able to assess how far I went. I don’t think anyone asked, everyone was kinda tired. Amos was napping while blasting music, and Kean didn’t look like he wanted to move anyway. Rain looked like she wanted to come along but changed her mind on the last minute.</p><p>I went deeper than I meant to. I kept telling myself I’d turn back after the next block, but I kept finding useful stuff. I got us some cup noodles, and found batteries for the flashlight. I kept walking, and somehow ended up in an anomaly.</p><p>I noticed something was off earlier and didn’t pay much attention to it. I think I was bored. Maybe a little reckless. The place bent the shadows in ways that didn’t make sense. I felt it in my jaw, like a dull toothache that wouldn’t go away. It was strange how two unrelated sensations blended into one. It kept urging me to take my mask off. I held onto it tighter and kept moving.</p><p>Rain’s voice stayed with me the whole way back. Not anything specific she said. Random phrases. I tried to recall her way of speaking, her tone. Played the voice back in my head over and over.</p><p>I somehow ended up from where I entered. I don’t remember reading about that place in the boards. So I recorded the experience and the location then and there.</p><p>When I got back, Kean was a bit upset, said he didn’t like it when we split up. He said it calmly. Rain and Amos were a bit worried too and suggested we leave this place.</p><p>I told them I wouldn’t do it again.</p></section><section class="journal-entry"><h3>Journal Entry – Year 5, Day 185</h3><p>Finally back in the commune. I was woken up by the noise of another group arriving. I think I slept for almost two days straight. It felt really good.</p><p>We had a good breakfast. Kean made this exotic-sounding egg dish with tomato sauce. I always look forward to Kean’s cooking, especially after expeditions.</p><p>It’s been a while since there were this many people around, so we organized a game of frisbee. We ended up playing most of the day. Rain kept doing this really funny commentary on the game. We were laughing the whole time because of it.</p><p>Dinner was good too. We gathered around the bonfire and played the music we’d found. I especially liked the Land of Pleasure album the other group brought. I don’t remember hearing this band from before the Silence. I’ll try to keep an eye out for more Sticky Fingers albums when I go out.</p><p>We talked about playing frisbee again tomorrow. We’ll probably end up doing it all day.</p><p>I like these boring days. They make me want to stay here longer.</p></section><section class="journal-entry"><h3>Journal Entry – Year 5, Day 190</h3><p>It’s been raining for days now. The power went out sometime last night. We’re used to outages—having power in this era is more of a bonus—but it still changed the mood.</p><p>We stayed inside most of the day, sitting around in the lamplight. Rain and Amos kept joking<br> the whole time so it wouldn’t get too quiet.</p></section><section class="journal-entry"><h3>Journal Entry – Year 5, Day 191</h3><p>Was greeted with some bad news this morning. The storm still hasn’t stopped, and the commune sits right by the river. If it keeps going, the dam upstream could fail. That’s what the engineer who set up our water system said. We had to open the dam.</p><p>I knew it would fall on me. I was the one who mapped that area before. It’s less than twenty kilometers out. Not far, but the storm and flooding would make it harder.</p><p>Rain asked if it was safe. I said it should be, as long as we didn’t rush it. I don’t know if that was true.</p><p>Kean said he’d come with us. Sef, an explorer from another group, tagged along too. We agreed we’d be back the same day. Amos agreed that the plan made sense.</p><p>We left while there was still light.</p></section></div>
+      </div>
+    </section>
+    <section class="page17-layer" id="page17" aria-label="Record of an Explorer continuation">
+      <img class="page17-bg" src="assets/page16-bg.webp" alt="">
+      <div class="page17-dim"></div>
+      <div class="editorial-master page17-master page17-content" id="page17Content">
+        <div class="page17-columns"><section class="journal-entry"><h3>Journal Entry – Year 5, Day 193</h3><p>It took a while, but the engineer was able to open the dam. We didn’t know it would flood the road we came in through.</p><p>Once the gates opened, the water moved fast. Faster than I expected. We ran back towards the road, trying to outpace it. In the panic, I left my bag behind in the control room, with this journal in it. I made a dash back for it, but by the time I reached the road again, the current was already too strong.</p><p>The engineer told me to wait it out in the control room. He said the water would settle once the levels evened out. I believed him. I had to. I waved them goodbye. The rain was still coming down hard, and they still had a long way to go.</p><p>I stayed in the control room. The rain was loud against the concrete. It made it hard to sleep.</p><p>I thought about my brother and the last time we talked. I remember we argued. About what, I don’t remember anymore. I thought about my mom too. She’d probably like it here. She’s always been a bit of an adventurer. She’d also scold me a lot for the risky things I’ve been doing.</p><p>Then I thought about my girlfriend. I tried to remember her face. Some details felt wrong. I didn’t try to fix it. She said we’d live in the city someday. I still hold on to that. I don’t know if she remembers me. I don’t know if she’s still waiting.</p><p>I could feel the water rushing under the floor, and it pulled me back to the present. The commune should be safe for now. The water has somewhere to go.</p></section><section class="journal-entry"><h3>Journal Entry – Year 5, Day 196</h3><p>I’m still stuck here. The rain hasn’t let up, and it might be a while before the water settles.</p><p>I ran out of food two days ago. I’m really hungry, and I can’t focus on anything for very long. Writing this down helps a little. It keeps my thoughts from drifting too far.</p><p>This doesn’t feel anything like being close to the singularities. Near them, it feels like waking up. All at once. Like a jolt.</p><p>There was a time I stood too close to one, without a mask, just to make sense of that feeling. For a moment, it was clear. Like a curtain being lifted. Everything came back. Names. Faces. Memories of certain places sharpened. I remembered where I was supposed to be. What I’ve been doing exactly before I ended up here.</p><p>Then my memory of this place pushed back. It felt like the two couldn’t exist at the same time.</p><p>I stepped away before it finished. The world went hazy again.</p><p>The rain is still coming down. I’ve been in trouble twice this month already. I’m starting to think about what comes after this.</p></section><section class="journal-entry"><h3>Journal Entry – Year 5, Day 197</h3><p>I started walking back once the water dropped enough to cross. I didn’t get very far.</p><p>I saw them coming towards me from the other side of the road. Rain first, in her usual fast pace. Kean behind her, then Amos a little farther back. They were soaked.</p><p>Rain tossed me a piece of suman as she approached. I ate it all in one bite. She shook her head, pulled another one from her pocket, then dug into her pack, a sweet potato that was still a little warm, and handed them both to me.</p><p>Kean said I looked like I’d been thinking too hard instead of eating. I said that was what running out of food does to you.</p><p>Amos looked the most worried. He said he was impressed I’d lasted that long without dying of boredom. I think he was trying to lighten the mood.</p><p>I told them the road had been worse earlier, with mud settling over the concrete. Kean <br>said that explained the smell.</p><p>Amos took my pack without asking. Rain bumped my shoulder when we started walking back. Not hard.<br>They said they figured nothing bad was going to happen. Still, it didn’t feel right leaving me out there alone.</p><p>We made it back before dark. Kean cooked. We didn’t talk much after dinner. but I didn’t mind. It felt good not having to decide where to go next.</p></section><section class="journal-entry"><h3>Journal Entry – Year 5, Day 202</h3><p>We started moving again today once the weather finally eased up. It’s been a while since we were back in the city. Rain said it felt good to be on the road again. I didn’t feel the same, but I’ll admit I missed the intermitent buzz of the singularities in my head.</p><p>Rain had the map, since she liked exploring ahead . Our destination this week is a small gathering spot along the eastern border, just outside Metro Manila. I used to live near there as a child, when it was still all mountains, but I can’t let them know that. We planned to go there to mark our third year together as a group.</p><p>Amos counted turns out loud like he always does. It’s a clever countermeasure for the moving anomalies, to make sure we aren’t already inside one without realizing it. Kean walked behind us and kept checking that everyone was still there. It felt normal again. </p><p>We had a route planned and a brief window between two shifting anomalies. We were still on schedule.</p><p>Then we saw it.<br>A man-sized cat in a sharp suit, standing in the middle of the street. It noticed us. I don’t know how, but it did.</p><p>I’d heard about it from other explorers. Seeing it in person was different. The feeling wasn’t panic. It was something older. We froze where we stood.</p><p>The cat split into three. One had a piano. One held a trumpet. One set up drums. The instruments appeared out of thin air and settled naturally under their paws.</p><p>It played jazz. Care-free music, but complicated in a way I don’t know how to describe. The kind that sounds like it took a long time to learn. It moved through it easily. I didn’t realize how tense I was until the music started and something in me let go.</p><p>We stayed where we were and listened. At some point Kean sat down, so we did too. The cat played for a while. Long enough for time to slip.</p><p>When it ended, the three folded back into one. The instruments vanished the same way they appeared. The cat bowed and walked straight through a wall.</p><p>I’ve seen a lot of anomalies. This didn’t feel like one of those. It felt pointless. Like a natural feature of this world.</p><p>We were quiet for a bit, but Amos couldn’t keep it to himself and said how incredible it was. That turned into a throwback session about the weirdest anomalies we’ve experienced. By then, we’d missed our window, so we had to settle in for the night.</p><p>Rain said we could probably push a little farther before dark but I was glad we didn’t.</p></section><section class="journal-entry"><h3>Journal Entry – Year 5, Day 207</h3><p>We reached the Fade Away Hotel today.</p><p>It sits on a ridge, just out of view of the city. From the outside, it doesn’t look like much. There are cars and bikes parked on the gravel out front. It makes sense. The roads here are still kind of usable.</p><p>The others liked it right away. There are a lot of people gathered here, more than at our commune. Two other groups were leaving as we arrived.</p><p>We introduced ourselves. Rain booked us a room on the second floor. We spent some time by the jukebox and played old songs. Amos and Kean were visibly excited.</p><p>I didn’t say much.</p><p>I used to live here.<br>Not just near here. This exact building. The room we booked was our old apartment. I still know how the light is supposed to fall in the afternoon. Which window catches the wind. How my mom used to call me through it when dinner was ready, while I played tag with friends in the courtyard below.</p><p>But this building has a history I don’t recognize, one I wasn’t a part of.</p><p>There are photos in the lobby showing old renovations. The pool in the courtyard that wasn’t supposed to be there. Posters from bands that used to play at the restaurant. Dates. Names. A past that doesn’t line up with mine.</p><p>I shuffled around the hallway longer than I needed to.</p><p>I tried to explain some of this to Rain. I couldn’t say it directly, or properly. The words didn’t fit together, and I could tell I was just confusing her.</p><p>She said, “Or you could just enjoy our stay. You don’t have to think about it too much.”</p><p>She meant it kindly.</p><p>We spent some time on the rooftop. We ate the adobo we prepared earlier. Down by the empty pool, three groups had merged and turned it into a small party. Music, shouting, laughter. Amos was already down there, flirting. Kean followed soon after.</p><p>I stayed back.</p><p>Maybe I don’t belong here. Not really.</p><p>I looked at Rain. She was leaning against the railing, looking past the lights, like she was already thinking about where we’d go next.</p></section><section class="journal-entry"><h3>Journal Entry – Year 5, Day 209</h3><p>I didn’t tell them I was leaving for good.</p><p>The morning was normal. Too normal. Kean was outside with the other group—he’s always asking around for some new recipes to try out. Amos still at his radio, listening to some new CD that he probably traded for last night. I watched Rain as she draws in her journal. Im still curious what she writes in there.<br>We ate on the hotel steps just to have that sense of being outside. Someone said it felt like a bad vacation. I laughed.</p><p>All day I kept thinking about my old life. Not the people, but the shape of it. Waking up for things that mattered. Being expected somewhere. Knowing what the next few years were supposed to be for. Stuff that can be anticipated. A sense of normalcy.</p><p>This place is real. I know that now. It has its own history and its own rules. I tried hard to fit in, and make sense of it, and I had fun figuring it out for awhile.</p><p>That’s the problem. </p><p>I may have enjoyed this temporary trip a little too much, and as much as i hated it, I won’t be able to say goodbye.</p><p>I watched them for a while instead. Tried to memorize their faces, their little quirks. The way Amos leans forward awkwardly when he’s excited. The way Kean frowns when he’s about to drop a silly joke. The way Rain looks away when she smile.</p><p>If you’re reading this, then I’ve returned to my old life.</p><p>I hope you understand why I chose this. <br>I hope you don’t think it means you mattered less.</p><p>You were my life here. </p><p>If I forget your faces when I wake up there, <br>I hope I don’t forget what you gave me.</p><p>Thank you for keeping me alive.<br>Thank you for walking with me.</p><p>This is my last entry.</p></section><aside class="page17-note"><h4>Publisher’s Note:</h4><p>The accounts described in this journal reflect the experiences and beliefs of its author. They should not be interpreted as guidance or instruction.</p><p>Proximity to singularity zones has been repeatedly associated with severe cognitive distress and disappearance.<br>Travelers are advised to follow established protocols and avoid unnecessary exposure.</p><p>Waypoint makes no claim regarding what lies beyond the singularities.</p></aside></div>
+      </div>
+    </section>
+    <section class="page18-layer" id="page18" aria-label="Epilogue song page">
+      <img class="page18-bg" src="assets/page18-bg.webp" alt="">
+      <img class="page18-overlay" id="page18Overlay" src="assets/page18-overlay.png" alt="Epilogue lyrics">
+      <div class="page18-player" id="page18Player"></div>
+    </section>
+
+
+    <section class="page19-layer" id="page19" aria-label="Credits">
+      <img class="page19-bg" src="assets/page19-bg.jpg" alt="">
+      <div class="editorial-master page19-master" id="page19Master">
+        <div class="page19-grid">
+        <div class="page19-credits" id="page19Credits">
+          <p class="page19-edition"><strong>WAYPOINT - The Explorer’s Magazine - Fade Away Hotel Special Edition</strong><br>
+          Written, illustrated, and animated by Purpo</p>
+
+          <p>This publication is purely fictional. All characters, names, groups,<br>
+          and events depicted are fictional and are not intended to represent<br>
+          real individuals or organizations. Any resemblance to actual persons,<br>
+          living or dead, is coincidental.</p>
+
+          <p class="page19-ep"><strong>FADE AWAY EP by Purpo</strong></p>
+
+          <p><strong>Music and Lyrics</strong><br>
+          Purpo</p>
+
+          <p><strong>Featured Musicians</strong><br>
+          Purpo, Jem Blanco, Pablo Pacis, Ren Gamboa, Bong Abantao</p>
+
+          <p><strong>Edited by</strong><br>
+          Gari Custodio</p>
+        </div>
+
+        <div class="page19-player" id="page19Player"></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="fade-to-white" id="fadeToWhite"></div>
+
+    <div class="fade-to-black" id="fadeToBlack"></div>
+
+  <nav class="side-rail" id="sideRail" aria-label="Quick navigation">
+    <a class="rail-article" href="#page2" data-rail-snap="3" aria-label="Fade Away Hotel">
+      <span class="rail-mark"></span><span class="rail-label">FADE AWAY HOTEL</span>
+    </a>
+    <a class="rail-song" href="#page5" data-rail-snap="8" aria-label="Fade Away">
+      <span class="rail-mark"></span><span class="rail-label">FADE AWAY</span>
+    </a>
+    <a class="rail-article" href="#page6" data-rail-snap="10" aria-label="A Visitor from the South">
+      <span class="rail-mark"></span><span class="rail-label">A VISITOR FROM THE SOUTH</span>
+    </a>
+    <a class="rail-song" href="#page8" data-rail-snap="13" aria-label="Stuck on Rewind">
+      <span class="rail-mark"></span><span class="rail-label">STUCK ON REWIND</span>
+    </a>
+    <a class="rail-article" href="#page9" data-rail-snap="15" aria-label="Laundromat">
+      <span class="rail-mark"></span><span class="rail-label">CORRESPONDENT FEATURE</span>
+    </a>
+    <a class="rail-song" href="#page11" data-rail-snap="18" aria-label="Alright">
+      <span class="rail-mark"></span><span class="rail-label">ALRIGHT</span>
+    </a>
+    <a class="rail-article" href="#page12" data-rail-snap="20" aria-label="Fade Away Bar and Restaurant">
+      <span class="rail-mark"></span><span class="rail-label">BAR &amp; RESTAURANT</span>
+    </a>
+    <a class="rail-song" href="#page13" data-rail-snap="22" aria-label="Unreachable">
+      <span class="rail-mark"></span><span class="rail-label">UNREACHABLE</span>
+    </a>
+    <a class="rail-article" href="#page14" data-rail-snap="24" aria-label="Courtyard Pool">
+      <span class="rail-mark"></span><span class="rail-label">COURTYARD POOL</span>
+    </a>
+    <a class="rail-song" href="#page15" data-rail-snap="26" aria-label="Again">
+      <span class="rail-mark"></span><span class="rail-label">AGAIN</span>
+    </a>
+    <a class="rail-article" href="#page16" data-rail-snap="28" aria-label="Record of an Explorer">
+      <span class="rail-mark"></span><span class="rail-label">RECORD OF AN EXPLORER</span>
+    </a>
+    <a class="rail-song" href="#page18" data-rail-snap="31" aria-label="Epilogue">
+      <span class="rail-mark"></span><span class="rail-label">EPILOGUE</span>
+    </a>
+    <a class="rail-article" href="#page19" data-rail-snap="32" aria-label="Credits">
+      <span class="rail-mark"></span><span class="rail-label">CREDITS</span>
+    </a>
+  </nav>
+
+  <div class="scroll-cue">scroll</div>
+  </div>
+</section>
+
+
+<div class="snap-indicator" id="snapIndicator">↕ · ↑↓ · ⎵ to navigate</div>
+<script src="assets/ambient-audio-data.js"></script>
+<script src="assets/page6-ambient-audio-data.js"></script>
+<script>
+const video = document.querySelector(".hero-video");
+const hero = document.querySelector(".hero");
+const heroScroll = document.querySelector(".hero-scroll");
+const tracks = [...document.querySelectorAll(".track-list a")];
+const scrollCue = document.querySelector(".scroll-cue");
+const fadeToBlack = document.getElementById("fadeToBlack");
+const pageFlipLayer = document.getElementById("pageFlipLayer");
+const pageFlipVideo = document.getElementById("pageFlipVideo");
+const page2 = document.getElementById("page2");
+const page2Items = [...document.querySelectorAll(".page2-reveal")];
+const page3 = document.getElementById("page3");
+const page3Items = [...document.querySelectorAll(".page3-reveal")];
+const page4 = document.getElementById("page4");
+const page4Items = [...document.querySelectorAll(".page4-reveal")];
+const fadeToWhite = document.getElementById("fadeToWhite");
+const page5 = document.getElementById("page5");
+const page5Overlay = document.getElementById("page5Overlay");
+const page5Player = document.getElementById("page5Player");
+const sharedSpotify = document.getElementById("sharedSpotify");
+const page6 = document.getElementById("page6");
+const page6Items = [...document.querySelectorAll(".page6-reveal")];
+const page7 = document.getElementById("page7");
+const page7Spread = document.querySelector(".page7-spread");
+const page7Items = [...document.querySelectorAll(".page7-reveal")];
+
+const page8 = document.getElementById("page8");
+const page8RackingCanvas = document.getElementById("page8RackingCanvas");
+const page8Loop = document.getElementById("page8Loop");
+const page8Overlay = document.getElementById("page8Overlay");
+const page8Player = document.getElementById("page8Player");
+
+const page11 = document.getElementById("page11");
+const page11Title = document.getElementById("page11Title");
+const page11Lyrics = document.getElementById("page11Lyrics");
+const page11Player = document.getElementById("page11Player");
+const page12 = document.getElementById("page12");
+const page12Header = document.getElementById("page12Header");
+const page12Copy = document.getElementById("page12Copy");
+const page13 = document.getElementById("page13");
+const page13Header = document.getElementById("page13Header");
+const page13Player = document.getElementById("page13Player");
+const page14 = document.getElementById("page14");
+const page14Header = document.getElementById("page14Header");
+const page14Copy = document.getElementById("page14Copy");
+const page14Caption = document.getElementById("page14Caption");
+const page15 = document.getElementById("page15");
+const page15Video = document.getElementById("page15Video");
+const page15Overlay = document.getElementById("page15Overlay");
+const page15Title = document.getElementById("page15Title");
+const page15Player = document.getElementById("page15Player");
+const page16 = document.getElementById("page16");
+const page16Content = document.getElementById("page16Content");
+const page17 = document.getElementById("page17");
+const page17Content = document.getElementById("page17Content");
+const page17Dim = document.querySelector(".page17-dim");
+const page18 = document.getElementById("page18");
+const page18Overlay = document.getElementById("page18Overlay");
+const page18Player = document.getElementById("page18Player");
+const page19 = document.getElementById("page19");
+const page19Master = document.getElementById("page19Master");
+const page19Credits = document.getElementById("page19Credits");
+const page19Player = document.getElementById("page19Player");
+
+function updateHandwrittenSafeZones(){
+  // Query the nav locally so this function is safe to run before the later
+  // siteNav const declaration in the UI script.
+  const navEl = document.querySelector(".site-nav");
+  const navRect = navEl ? navEl.getBoundingClientRect() : null;
+  const safeTop = Math.max(72, navRect ? navRect.bottom + 18 : 72);
+
+  const pairs = [
+    [page8Overlay, page8Player],
+    [page13Header, page13Player],
+    [page18Overlay, page18Player]
+  ];
+
+  pairs.forEach(([overlay, player]) => {
+    if (!overlay || !player) return;
+
+    const playerRect = player.getBoundingClientRect();
+    const safeBottom = Math.min(window.innerHeight - 24, playerRect.top - 24);
+    const usable = Math.max(360, safeBottom - safeTop);
+    const centerY = safeTop + usable / 2;
+
+    overlay.style.setProperty("--overlay-center-y", `${centerY}px`);
+    overlay.style.setProperty("--overlay-safe-height", `${usable}px`);
+  });
+}
+
+const editorialMasters = [...document.querySelectorAll(".editorial-master")];
+function updateEditorialScales(){
+  const s=Math.min(window.innerWidth/1920,window.innerHeight/1080);
+  editorialMasters.forEach(el=>el.style.setProperty("--editorial-scale",s));
+}
+updateEditorialScales();
+updateHandwrittenSafeZones();
+window.addEventListener("resize",()=>{
+  updateEditorialScales();
+  updateHandwrittenSafeZones();
+},{passive:true});
+window.addEventListener("load",updateHandwrittenSafeZones,{once:true});
+
+
+const SPOTIFY_TRACKS = {
+  page5: {
+    src: "https://open.spotify.com/embed/track/2znYYnDiWPnLoDng2VRCSH",
+    title: "Fade Away on Spotify",
+    host: page5Player
+  },
+  page8: {
+    src: "https://open.spotify.com/embed/track/0w5iLyGoHrHgL3cDO5j0YR",
+    title: "Stuck on Rewind on Spotify",
+    host: page8Player
+  },
+  page11: {
+    src: "https://open.spotify.com/embed/track/7H7ccCZBrWX9qqvPx5sKSo",
+    title: "Alright on Spotify",
+    host: page11Player
+  },
+  page13: {
+    src: "https://open.spotify.com/embed/track/0Sx5emh8qZwTXocgzbHZBY",
+    title: "Unreachable on Spotify",
+    host: page13Player
+  },
+  page15: {
+    src: "https://open.spotify.com/embed/track/2eYEUuOKFjJMQ0a7cAe8jl",
+    title: "Again on Spotify",
+    host: page15Player
+  },
+  page18: {
+    src: "https://open.spotify.com/embed/track/70mcXWPxMKC7oYUHZglhq1",
+    title: "Epilogue on Spotify",
+    host: page18Player
+  },
+  page19: {
+    src: "https://open.spotify.com/embed/playlist/1tc2PWJpKOmhRlJ39sgjHk",
+    title: "Fade Away playlist on Spotify",
+    host: page19Player
+  }
+};
+
+let spotifyActiveKey = null;
+let spotifyPendingKey = null;
+let spotifyLoadTimer = null;
+const SPOTIFY_SETTLE_MS = 400;
+
+function stopSharedSpotify(){
+  if (spotifyLoadTimer) {
+    clearTimeout(spotifyLoadTimer);
+    spotifyLoadTimer = null;
+  }
+  spotifyPendingKey = null;
+  if (sharedSpotify && sharedSpotify.getAttribute("src") !== "about:blank") {
+    sharedSpotify.src = "about:blank";
+  }
+  spotifyActiveKey = null;
+}
+
+function requestSpotifyTrack(key){
+  if (!sharedSpotify) return;
+
+  // No song section is active: stop immediately and make no network request.
+  if (!key) {
+    if (spotifyActiveKey || spotifyPendingKey) stopSharedSpotify();
+    return;
+  }
+
+  // Already on this song: do nothing.
+  if (spotifyActiveKey === key && sharedSpotify.getAttribute("src") &&
+      sharedSpotify.getAttribute("src") !== "about:blank") {
+    return;
+  }
+
+  // Same pending destination: keep the existing debounce timer.
+  if (spotifyPendingKey === key && spotifyLoadTimer) return;
+
+  // Leaving another song stops it immediately, but the next embed waits until
+  // the visitor has committed to the destination section.
+  if (spotifyActiveKey && spotifyActiveKey !== key) {
+    sharedSpotify.src = "about:blank";
+    spotifyActiveKey = null;
+  }
+
+  if (spotifyLoadTimer) clearTimeout(spotifyLoadTimer);
+  spotifyPendingKey = key;
+
+  spotifyLoadTimer = setTimeout(() => {
+    const track = SPOTIFY_TRACKS[spotifyPendingKey];
+    if (!track || !track.host) return;
+    track.host.appendChild(sharedSpotify);
+    sharedSpotify.title = track.title;
+    sharedSpotify.src = track.src;
+    spotifyActiveKey = spotifyPendingKey;
+    spotifyPendingKey = null;
+    spotifyLoadTimer = null;
+  }, SPOTIFY_SETTLE_MS);
+}
+
+const page10 = document.getElementById("page10");
+const page10Canvas = document.getElementById("page10Canvas");
+const page10Items = [...document.querySelectorAll(".page10-item")];
+
+function updatePage10CanvasScale(){
+  if (!page10Canvas) return;
+  const scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+  page10Canvas.style.setProperty("--page10-scale", scale);
+}
+updatePage10CanvasScale();
+window.addEventListener("resize", updatePage10CanvasScale, { passive:true });
+const page9 = document.getElementById("page9");
+const page9ZoomCanvas = document.getElementById("page9ZoomCanvas");
+const page9Bg = document.getElementById("page9Bg");
+const page9Editorial = document.getElementById("page9Editorial");
+const PAGE9_FRAME_COUNT = 56;
+const page9Frames = new Array(PAGE9_FRAME_COUNT);
+let page9FramesLoading = false;
+let page9LastFrame = -1;
+
+function drawPage9Frame(index){
+  if (!page9ZoomCanvas) return;
+  const img = page9Frames[index];
+  if (!img || !img.complete || !img.naturalWidth) return;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const cssW = window.innerWidth;
+  const cssH = window.innerHeight;
+  const pxW = Math.round(cssW * dpr);
+  const pxH = Math.round(cssH * dpr);
+  if (page9ZoomCanvas.width !== pxW || page9ZoomCanvas.height !== pxH) {
+    page9ZoomCanvas.width = pxW;
+    page9ZoomCanvas.height = pxH;
+  }
+  const ctx = page9ZoomCanvas.getContext("2d", { alpha:false });
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const scale = Math.max(cssW / img.naturalWidth, cssH / img.naturalHeight);
+  const dw = img.naturalWidth * scale;
+  const dh = img.naturalHeight * scale;
+  ctx.clearRect(0,0,cssW,cssH);
+  ctx.drawImage(img,(cssW-dw)/2,(cssH-dh)/2,dw,dh);
+  page9LastFrame = index;
+}
+
+function preloadPage9Frames(){
+  if (page9FramesLoading) return;
+  page9FramesLoading = true;
+  for (let i=0; i<PAGE9_FRAME_COUNT; i++) {
+    const img = new Image();
+    img.decoding = "async";
+    img.onload = () => {
+      if (i === 0 && page9LastFrame < 0) drawPage9Frame(0);
+    };
+    img.src = `assets/laundryzoom-frames/frame_${String(i).padStart(3,"0")}.jpg`;
+    page9Frames[i] = img;
+  }
+}
+
+const PAGE8_FRAME_COUNT = 62;
+const page8Frames = new Array(PAGE8_FRAME_COUNT);
+let page8FramesLoading = false;
+let page8FramesReady = 0;
+let page8LastFrame = -1;
+
+function drawPage8Frame(index){
+  if (!page8RackingCanvas) return;
+  const img = page8Frames[index];
+  if (!img || !img.complete || !img.naturalWidth) return;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const cssW = window.innerWidth;
+  const cssH = window.innerHeight;
+  const pxW = Math.round(cssW * dpr);
+  const pxH = Math.round(cssH * dpr);
+  if (page8RackingCanvas.width !== pxW || page8RackingCanvas.height !== pxH) {
+    page8RackingCanvas.width = pxW;
+    page8RackingCanvas.height = pxH;
+  }
+  const ctx = page8RackingCanvas.getContext("2d", { alpha:false });
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const scale = Math.max(cssW / img.naturalWidth, cssH / img.naturalHeight);
+  const dw = img.naturalWidth * scale;
+  const dh = img.naturalHeight * scale;
+  ctx.clearRect(0,0,cssW,cssH);
+  ctx.drawImage(img,(cssW-dw)/2,(cssH-dh)/2,dw,dh);
+  page8LastFrame = index;
+}
+
+function preloadPage8Frames(){
+  if (page8FramesLoading) return;
+  page8FramesLoading = true;
+  for (let i=0; i<PAGE8_FRAME_COUNT; i++) {
+    const img = new Image();
+    img.decoding = "async";
+    img.onload = () => {
+      page8FramesReady++;
+      if (i === 0 && page8LastFrame < 0) drawPage8Frame(0);
+    };
+    img.src = `assets/racking-frames/frame_${String(i).padStart(3,"0")}.webp`;
+    page8Frames[i] = img;
+  }
+}
+preloadPage8Frames();
+
+const soundToggle = document.getElementById("soundToggle");
+let ambientEnabled = false;
+let ambientTargetVolume = 0;
+
+/* Page 6–7 ambient state is declared here, before the first scroll-render call. */
+let page6AmbientGain = null;
+let page6AmbientSource = null;
+let page6AmbientBuffer = null;
+let page6AmbientPreparing = null;
+let page6AmbientTargetVolume = 0;
+const AMBIENT_FULL_VOLUME = 0.46;
+const AMBIENT_DUCK_VOLUME = 0.055;
+
+/* Keep the landing video alive while the sticky viewport is visible.
+   Observe the actual hero viewport rather than the multi-page scroll wrapper. */
+const io = new IntersectionObserver(([entry]) => {
+  if (!video) return;
+  if (entry.isIntersecting) {
+    video.muted = true;
+    video.play().catch(()=>{});
+  } else {
+    video.pause();
+  }
+}, {threshold:.05});
+if (video && hero) {
+  io.observe(hero);
+  video.muted = true;
+  video.play().catch(()=>{});
+  video.addEventListener("canplay", () => video.play().catch(()=>{}), { once:true });
+}
+
+/*
+  Reveal each song title progressively while the user scrolls.
+  The first title begins shortly after scrolling starts and the
+  last one finishes before the sticky landing section ends.
+*/
+function clamp(n, min, max){
+  return Math.max(min, Math.min(max, n));
+}
+
+function smoothstep(t){
+  t = clamp(t, 0, 1);
+  return t * t * (3 - 2 * t);
+}
+
+function updatePage7Scale(){
+  if (!page7Spread) return;
+  const baseWidth = 1760;
+  const baseHeight = 905;
+  const desiredScale = 1.10;
+  const safeWidth = window.innerWidth * 0.92;
+  const safeHeight = window.innerHeight * 0.90;
+  const fitScale = Math.min(safeWidth / baseWidth, safeHeight / baseHeight);
+  page7Spread.style.setProperty("--page7-scale", Math.min(desiredScale, fitScale));
+}
+updatePage7Scale();
+window.addEventListener("resize", updatePage7Scale, { passive:true });
+
+function updateScrollReveal(){
+  const rect = heroScroll.getBoundingClientRect();
+  const distance = heroScroll.offsetHeight - window.innerHeight;
+  const siteRunProgress = clamp(-rect.top / Math.max(distance, 1), 0, 1);
+  const siteJourneyProgress = clamp(siteRunProgress / 0.8333333333, 0, 1);
+  const siteTotalProgress = clamp(siteJourneyProgress / 0.75, 0, 1);
+  const siteMasterProgress = clamp(siteTotalProgress / 0.90, 0, 1);
+  const masterProgress = clamp(siteMasterProgress / 0.82, 0, 1);
+  const fullProgress = clamp(masterProgress / 0.78, 0, 1);
+  // Preserve the approved Page 1–7 timeline inside the expanded Page 8 scene.
+  const sceneProgress = clamp(fullProgress / 0.705714, 0, 1);
+  // Pages 1–5 keep their approved timing inside the first 82% of the expanded scene.
+  const legacyProgress = clamp(sceneProgress / 0.8745, 0, 1);
+  const siteProgress = clamp(legacyProgress / 0.82, 0, 1);
+  // Preserve the approved Page 1–4 timing inside the first 84% of this expanded scene.
+  const rawProgress = clamp(siteProgress / 0.84, 0, 1);
+  const progress = clamp(rawProgress / 0.80, 0, 1);
+  const oldProgress = clamp(progress / 0.7213, 0, 1);
+
+  /*
+    PAGE 1 gets the first ~55% of the total scroll.
+    Because the whole scene is 440svh, this keeps Page 1's physical
+    scroll distance close to the previous 250svh build.
+  */
+  const page1 = clamp(oldProgress / 0.55, 0, 1);
+
+  const firstStart = 0.10;
+  const stagger = 0.085;
+  const revealLength = 0.18;
+
+  // Fade the Page 1 song list away as the Page 1 -> Page 2 transition begins.
+  // Previously each track reached opacity:1 and stayed there forever.
+  const page1TrackExit = 1 - smoothstep((oldProgress - 0.49) / (0.545 - 0.49));
+
+  tracks.forEach((track, i) => {
+    const start = firstStart + i * stagger;
+    const local = smoothstep((page1 - start) / revealLength);
+    const visible = local * page1TrackExit;
+
+    track.style.opacity = visible;
+    track.style.transform = `translateY(${22 * (1 - local)}px)`;
+    track.style.filter = `blur(${2 * (1 - local)}px)`;
+
+    // Only visible Page 1 titles should accept clicks.
+    track.style.pointerEvents = (visible > 0.55) ? "auto" : "none";
+  });
+
+  scrollCue.style.opacity = clamp(0.65 - page1 * 2.6, 0, 0.65);
+
+  /*
+    PAGE 1 → BLACK → PAGE 2.
+    Epilogue remains fully visible for a while first.
+  */
+  const blackIn = smoothstep((oldProgress - 0.49) / (0.545 - 0.49));
+  const page2Bg = smoothstep((oldProgress - 0.555) / (0.615 - 0.555));
+  const blackOut = smoothstep((oldProgress - 0.585) / (0.64 - 0.585));
+
+  page2.style.opacity = page2Bg;
+  // fadeToBlack opacity is composed below so both section transitions can use it.
+
+  /*
+    PAGE 2 overlay appears LATER, after the reception background has
+    had time to sit on screen. This mirrors the Page 1 track reveal:
+    heading → subhead → body → section title → amenities one by one.
+  */
+  const page2RevealProgress = clamp((oldProgress - 0.66) / (0.98 - 0.66), 0, 1);
+
+  const starts = [
+    0.03, // heading
+    0.12, // subhead
+    0.22, // body
+    0.36, // "what you'll find"
+    0.48, // room
+    0.56, // restaurant
+    0.64, // jukebox
+    0.72, // pool
+    0.80, // rooftop
+    0.88  // social
+  ];
+
+  page2Items.forEach((item, i) => {
+    const start = starts[i] ?? (0.48 + i * 0.07);
+    const local = smoothstep((page2RevealProgress - start) / 0.13);
+    item.style.opacity = local;
+    item.style.transform = `translateY(${20 * (1 - local)}px)`;
+    item.style.filter = `blur(${1.5 * (1 - local)}px)`;
+  });
+
+  /*
+    PAGE 2 → HOLD → BLACK → PAGE 3
+
+    Page 2 reaches its completed amenity state around progress 0.721.
+    We deliberately leave it untouched for several scroll frames before
+    fading to black. Page 3 is swapped in while the screen is black,
+    then black fades away to reveal the clean Page 3 background.
+  */
+  const page23BlackIn  = smoothstep((progress - 0.765) / (0.805 - 0.765));
+  const page3BgIn      = smoothstep((progress - 0.800) / (0.825 - 0.800));
+  const page23BlackOut = smoothstep((progress - 0.825) / (0.865 - 0.825));
+
+  page3.style.opacity = page3BgIn;
+
+  // Keep Page 2 fully present during the hold, then let black cover the swap.
+  const page2Out = smoothstep((progress - 0.800) / (0.825 - 0.800));
+  page2.style.opacity = Math.min(page2Bg, 1 - page2Out);
+
+  // Combine this transition with the existing Page 1 → Page 2 black fade.
+  const page12Black = blackIn * (1 - blackOut);
+  const page23Black = page23BlackIn * (1 - page23BlackOut);
+  // fadeToBlack opacity is composed below after the Page 5 → Page 6 transition is calculated.
+
+  // Page 3 content waits until AFTER its background has been fully revealed.
+  const page3Content = clamp((progress - 0.895) / (0.995 - 0.895), 0, 1);
+  const page3Starts = [0.06, 0.38];
+  page3Items.forEach((item, i) => {
+    const local = smoothstep((page3Content - page3Starts[i]) / 0.24);
+    item.style.opacity = local;
+    item.style.transform = `translateY(${20 * (1 - local)}px)`;
+    item.style.filter = `blur(${1.5 * (1 - local)}px)`;
+  });
+  /* PAGE 3 → WHITE → PAGE 4
+     rawProgress is used here so Pages 1–3 remain completely untouched.
+  */
+  const whiteIn = smoothstep((rawProgress - 0.805) / (0.845 - 0.805));
+  const page4BgIn = smoothstep((rawProgress - 0.835) / (0.865 - 0.835));
+  const whiteOut = smoothstep((rawProgress - 0.865) / (0.905 - 0.865));
+
+  if (page4) page4.style.opacity = page4BgIn;
+
+  // Page 3 stays fully intact until the white transition covers it.
+  const page3Exit = smoothstep((rawProgress - 0.840) / (0.865 - 0.840));
+  if (rawProgress >= 0.80) {
+    page3.style.opacity = 1 - page3Exit;
+  }
+
+  if (fadeToWhite) {
+    fadeToWhite.style.opacity = whiteIn * (1 - whiteOut);
+  }
+
+  // Hold the clean Page 4 paper first, then reveal editorial components.
+  const page4Content = clamp((rawProgress - 0.925) / (0.995 - 0.925), 0, 1);
+  const p4Starts = [0.02, 0.14, 0.26, 0.40, 0.58];
+  page4Items.forEach((item, i) => {
+    const local = smoothstep((page4Content - (p4Starts[i] ?? 0.5)) / 0.22);
+    item.style.opacity = local;
+    item.style.transform = `translateY(${16 * (1 - local)}px)`;
+    item.style.filter = `blur(${1 * (1 - local)}px)`;
+  });
+
+  /* PAGE 4 → WHITE → PAGE 5 */
+  const p45WhiteIn = smoothstep((siteProgress - 0.842) / (0.872 - 0.842));
+  const page5BgIn = smoothstep((siteProgress - 0.862) / (0.892 - 0.862));
+  const p45WhiteOut = smoothstep((siteProgress - 0.892) / (0.922 - 0.892));
+  const page4Exit = smoothstep((siteProgress - 0.862) / (0.888 - 0.862));
+
+  if (siteProgress >= 0.84 && page4) page4.style.opacity = 1 - page4Exit;
+  if (page5) {
+    page5.style.opacity = page5BgIn;
+    page5.style.pointerEvents = page5BgIn > 0.96 ? "auto" : "none";
+  }
+
+  if (fadeToWhite) {
+    const earlierWhite = whiteIn * (1 - whiteOut);
+    const page5White = p45WhiteIn * (1 - p45WhiteOut);
+    fadeToWhite.style.opacity = Math.max(earlierWhite, page5White);
+  }
+
+  const p5OverlayIn = smoothstep((siteProgress - 0.930) / (0.958 - 0.930));
+  if (page5Overlay) {
+    page5Overlay.style.opacity = p5OverlayIn;
+    page5Overlay.style.transform = `translateY(calc(-50% + ${14 * (1 - p5OverlayIn)}px)) scale(.75)`;
+    page5Overlay.style.filter = `blur(${1 * (1 - p5OverlayIn)}px)`;
+  }
+
+  const p5PlayerIn = smoothstep((siteProgress - 0.958) / (0.985 - 0.958));
+  if (page5Player) {
+    page5Player.style.opacity = p5PlayerIn;
+    page5Player.style.transform = `translateY(${14 * (1 - p5PlayerIn)}px)`;
+    page5Player.style.pointerEvents = p5PlayerIn > 0.92 ? "auto" : "none";
+  }
+
+
+  /*
+    PAGE 5 → HOLD → BLACK → PAGE 6
+    Page 5 reaches its complete lyrics + Spotify state first and holds.
+    Black then covers the swap; Page 6 background is revealed cleanly,
+    held briefly, and only then do the editorial elements appear.
+  */
+  const p56BlackIn  = smoothstep((legacyProgress - 0.842) / (0.872 - 0.842));
+  // Match the earlier black transitions: black reaches 100% before the scene swap.
+  const page6BgIn   = smoothstep((legacyProgress - 0.874) / (0.884 - 0.874));
+  // Hold full black over the swap, then fade it away onto Page 6.
+  const p56BlackOut = smoothstep((legacyProgress - 0.892) / (0.922 - 0.892));
+  const page5Exit   = smoothstep((legacyProgress - 0.874) / (0.884 - 0.874));
+
+  if (page6) {
+    page6.style.opacity = page6BgIn;
+    page6.style.pointerEvents = page6BgIn > 0.96 ? "auto" : "none";
+  }
+
+  // Page 5 stays complete through its clean hold, then disappears under black.
+  if (legacyProgress >= 0.845 && page5) {
+    page5.style.opacity = 1 - page5Exit;
+    page5.style.pointerEvents = legacyProgress < 0.875 ? "auto" : "none";
+  }
+
+  const existingBlack = Math.max(page12Black, page23Black);
+  const page56Black = p56BlackIn * (1 - p56BlackOut);
+  fadeToBlack.style.opacity = Math.max(existingBlack, page56Black);
+
+  // Clean Page 6 background hold, followed by header → copy → pull quote.
+  const page6Content = clamp((legacyProgress - 0.932) / (0.998 - 0.932), 0, 1);
+  const p6Starts = [0.02, 0.27, 0.56];
+  page6Items.forEach((item, i) => {
+    const local = smoothstep((page6Content - (p6Starts[i] ?? 0.5)) / 0.24);
+    item.style.opacity = local;
+    item.style.transform = `translateY(${14 * (1 - local)}px)`;
+    item.style.filter = `blur(${1 * (1 - local)}px)`;
+  });
+
+  /*
+    PAGE 6 → HOLD → WHITE → PAGE 7
+    White fully covers the swap. Page 7's clean paper spread appears underneath,
+    then white clears, holds briefly, and one final snap runs the reveal sequence.
+  */
+  const p67WhiteIn  = smoothstep((sceneProgress - 0.892) / (0.916 - 0.892));
+  const page7BgIn   = smoothstep((sceneProgress - 0.914) / (0.925 - 0.914));
+  const p67WhiteOut = smoothstep((sceneProgress - 0.930) / (0.950 - 0.930));
+  const page6Exit   = smoothstep((sceneProgress - 0.910) / (0.928 - 0.910));
+
+  if (page7) {
+    page7.style.opacity = page7BgIn;
+    page7.style.pointerEvents = page7BgIn > 0.96 ? "auto" : "none";
+  }
+
+  if (sceneProgress >= 0.892 && page6) {
+    page6.style.opacity = 1 - page6Exit;
+    page6.style.pointerEvents = "none";
+  }
+
+  const page67White = p67WhiteIn * (1 - p67WhiteOut);
+  const earlierPageWhite = whiteIn * (1 - whiteOut);
+  const page45White = p45WhiteIn * (1 - p45WhiteOut);
+  fadeToWhite.style.opacity = Math.max(earlierPageWhite, page45White, page67White);
+
+  if (siteNav) {
+    const onPage4Light = rawProgress >= 0.815 && siteProgress < 0.885;
+    const onPage7Light = sceneProgress >= 0.914 && fullProgress < 0.709;
+    const onPage10Light = siteMasterProgress >= .828 && siteTotalProgress < .918;
+    siteNav.classList.toggle("on-light", onPage4Light || onPage7Light || onPage10Light);
+  }
+
+  // One Page 7 reveal snap; components stagger automatically inside it.
+  const page7Content = clamp((sceneProgress - 0.960) / (0.998 - 0.960), 0, 1);
+  const p7Starts = [0.00, 0.16, 0.32, 0.48, 0.64];
+  page7Items.forEach((item, i) => {
+    const local = smoothstep((page7Content - (p7Starts[i] ?? 0.5)) / 0.25);
+    item.style.opacity = local;
+    item.style.transform = `translateY(${14 * (1 - local)}px)`;
+    item.style.filter = `blur(${1 * (1 - local)}px)`;
+  });
+
+
+  /*
+    PAGE 7 → BLACK → PAGE 8
+    RACKING starts beneath full black, then hands off to PLAY LOOP.
+  */
+  const p78BlackIn = smoothstep((fullProgress - 0.702) / (0.713 - 0.702));
+  const page8BgIn = smoothstep((fullProgress - 0.707) / (0.714 - 0.707));
+  const p78BlackOut = smoothstep((fullProgress - 0.716) / (0.732 - 0.716));
+  const page7Exit = smoothstep((fullProgress - 0.709) / (0.714 - 0.709));
+  const page78Black = p78BlackIn * (1 - p78BlackOut);
+
+  if (page8) {
+    page8.style.opacity = page8BgIn;
+    page8.style.pointerEvents = page8BgIn > .96 ? "auto" : "none";
+  }
+  if (fullProgress >= .702 && page7) {
+    page7.style.opacity = 1 - page7Exit;
+    page7.style.pointerEvents = "none";
+  }
+  fadeToBlack.style.opacity = Math.max(existingBlack, page56Black, page78Black);
+
+  // Canvas image-sequence scrub: scroll maps directly to one of the preloaded frames.
+  const rackScrub = clamp((fullProgress - .716) / (.928 - .716), 0, 1);
+  const rackFrame = Math.round(rackScrub * (PAGE8_FRAME_COUNT - 1));
+  if (rackFrame !== page8LastFrame) drawPage8Frame(rackFrame);
+
+  // At the end of the scrub range, show the looping background.
+  // Rewinding below the handoff automatically restores RACKING.
+  const page8LoopMix = smoothstep((fullProgress - .926) / (.934 - .926));
+  if (page8RackingCanvas) {
+    page8RackingCanvas.style.opacity = fullProgress >= .934 ? "0" : (1 - page8LoopMix);
+    page8RackingCanvas.style.visibility = fullProgress >= .934 ? "hidden" : "visible";
+  }
+  if (page8Loop) {
+    page8Loop.style.opacity = fullProgress >= .934 ? "1" : page8LoopMix;
+    if (page8LoopMix > .01 && page8Loop.paused) {
+      const p8loopPlay = page8Loop.play();
+      if (p8loopPlay && p8loopPlay.catch) p8loopPlay.catch(() => {});
+    }
+    if (page8LoopMix <= .01 && !page8Loop.paused) {
+      page8Loop.pause();
+    }
+  }
+
+  // Clean moving background first; the final snap reveals the supplied handwriting.
+  const page8Content = clamp((fullProgress - .938) / (.997 - .938), 0, 1);
+  const p8OverlayIn = smoothstep((page8Content - .08) / .48);
+  if (page8Overlay) {
+    page8Overlay.style.opacity = p8OverlayIn;
+    page8Overlay.style.translate = `0 ${14 * (1 - p8OverlayIn)}px`;
+    page8Overlay.style.filter = `blur(${1 * (1 - p8OverlayIn)}px)`;
+  }
+  const p8PlayerIn = smoothstep((page8Content - .42) / .34);
+  if (page8Player) {
+    page8Player.style.opacity = p8PlayerIn;
+    page8Player.style.transform = `translateY(${14 * (1 - p8PlayerIn)}px)`;
+    page8Player.style.pointerEvents = p8PlayerIn > .92 ? "auto" : "none";
+  }
+
+  /*
+    PAGE 8 → BLACK → PAGE 9 ZOOM
+    The supplied 56-frame laundry sequence is directly scroll-addressed and reversible.
+    It hands off to the supplied final background before the editorial content appears.
+  */
+  const p89BlackIn = smoothstep((masterProgress - .779) / (.790 - .779));
+  const page9In = smoothstep((masterProgress - .786) / (.795 - .786));
+  const p89BlackOut = smoothstep((masterProgress - .798) / (.812 - .798));
+  const page8Exit = smoothstep((masterProgress - .790) / (.802 - .790));
+  const page89Black = p89BlackIn * (1 - p89BlackOut);
+
+  if (masterProgress > .765) preloadPage9Frames();
+
+  if (page9) {
+    page9.style.opacity = page9In;
+    page9.style.pointerEvents = page9In > .96 ? "auto" : "none";
+  }
+  if (masterProgress >= .779 && page8) {
+    page8.style.opacity = 1 - page8Exit;
+    page8.style.pointerEvents = "none";
+  }
+  fadeToBlack.style.opacity = Math.max(existingBlack, page56Black, page78Black, page89Black);
+
+  const laundryScrub = clamp((masterProgress - .800) / (.935 - .800), 0, 1);
+  const laundryFrame = Math.round(laundryScrub * (PAGE9_FRAME_COUNT - 1));
+  if (laundryFrame !== page9LastFrame) drawPage9Frame(laundryFrame);
+
+  const page9Handoff = smoothstep((masterProgress - .930) / (.940 - .930));
+  if (page9ZoomCanvas) {
+    page9ZoomCanvas.style.opacity = 1 - page9Handoff;
+    page9ZoomCanvas.style.visibility = masterProgress >= .942 ? "hidden" : "visible";
+  }
+  if (page9Bg) page9Bg.style.opacity = page9Handoff;
+
+  // Clean final laundromat frame first, then one content beat reveals the feature.
+  const page9Content = smoothstep((masterProgress - .956) / (.992 - .956));
+  if (page9Editorial) {
+    page9Editorial.style.opacity = page9Content;
+    page9Editorial.style.transform = `translateY(${14 * (1 - page9Content)}px)`;
+    page9Editorial.style.filter = `blur(${1 * (1 - page9Content)}px)`;
+  }
+
+  const p910WhiteIn=smoothstep((siteMasterProgress-.819)/(.832-.819));
+  const page10In=smoothstep((siteMasterProgress-.828)/(.840-.828));
+  const p910WhiteOut=smoothstep((siteMasterProgress-.844)/(.858-.844));
+  const page9Exit10=smoothstep((siteMasterProgress-.832)/(.842-.832));
+  const page910White=p910WhiteIn*(1-p910WhiteOut);
+  if(page10){page10.style.opacity=page10In;page10.style.pointerEvents=page10In>.96?"auto":"none";}
+  if(siteMasterProgress>=.819&&page9){page9.style.opacity=1-page9Exit10;page9.style.pointerEvents="none";}
+  fadeToWhite.style.opacity=Math.max(parseFloat(fadeToWhite.style.opacity||0),page910White);
+  const page10Content=clamp((siteMasterProgress-.872)/(.988-.872),0,1);
+  const p10Starts=[0,.08,.17,.26,.35,.44,.53,.62];
+  page10Items.forEach((item,i)=>{const local=smoothstep((page10Content-p10Starts[i])/.30);item.style.opacity=local;item.style.transform=`translateY(${12*(1-local)}px)`;item.style.filter=`blur(${.8*(1-local)}px)`;});
+
+  /*
+    PAGE 10 → BLACK → PAGE 11 / ALRIGHT
+    Page 10 completes, black covers the swap, then the clean Page 11 background
+    appears first. Additional scrolling reveals title → lyrics → Spotify player.
+  */
+  const p1011BlackIn = smoothstep((siteTotalProgress-.900)/(.916-.900));
+  const page11BgIn = smoothstep((siteTotalProgress-.912)/(.922-.912));
+  const p1011BlackOut = smoothstep((siteTotalProgress-.923)/(.942-.923));
+  const page10Exit11 = smoothstep((siteTotalProgress-.912)/(.924-.912));
+  const page1011Black = p1011BlackIn * (1 - p1011BlackOut);
+
+  if (page11) {
+    page11.style.opacity = page11BgIn;
+    page11.style.pointerEvents = page11BgIn > .96 ? "auto" : "none";
+  }
+  if (siteTotalProgress >= .900 && page10) {
+    page10.style.opacity = 1 - page10Exit11;
+    page10.style.pointerEvents = "none";
+  }
+  fadeToBlack.style.opacity = Math.max(parseFloat(fadeToBlack.style.opacity || 0), page1011Black);
+
+  const page11Content = clamp((siteTotalProgress-.952)/(.992-.952),0,1);
+  const p11TitleIn = smoothstep((page11Content-.00)/.34);
+  const p11LyricsIn = smoothstep((page11Content-.18)/.42);
+  const p11PlayerIn = smoothstep((page11Content-.58)/.34);
+
+  if (page11Title) {
+    page11Title.style.opacity = p11TitleIn;
+    page11Title.style.transform = `translateY(${14*(1-p11TitleIn)}px)`;
+    page11Title.style.filter = `blur(${1*(1-p11TitleIn)}px)`;
+  }
+  if (page11Lyrics) {
+    page11Lyrics.style.opacity = p11LyricsIn;
+    page11Lyrics.style.transform = `translateY(${14*(1-p11LyricsIn)}px)`;
+    page11Lyrics.style.filter = `blur(${1*(1-p11LyricsIn)}px)`;
+  }
+  if (page11Player) {
+    page11Player.style.opacity = p11PlayerIn;
+    page11Player.style.transform = `translateY(${14*(1-p11PlayerIn)}px)`;
+    page11Player.style.filter = `blur(${1*(1-p11PlayerIn)}px)`;
+    page11Player.style.pointerEvents = p11PlayerIn > .92 ? "auto" : "none";
+  }
+
+
+  /*
+    SPEEDRUN PAGES 12–15
+    Existing Pages 1–11 retain their approved timing inside the first 75%.
+    New sections use the established background-first / content-second pattern.
+  */
+
+  // PAGE 11 → PAGE 12
+  const p1112BlackIn = smoothstep((siteJourneyProgress-.748)/(.760-.748));
+  const page12BgIn = smoothstep((siteJourneyProgress-.757)/(.766-.757));
+  const p1112BlackOut = smoothstep((siteJourneyProgress-.766)/(.780-.766));
+  const page11Exit12 = smoothstep((siteJourneyProgress-.758)/(.770-.758));
+  const page1112Black = p1112BlackIn * (1 - p1112BlackOut);
+  if (page12) {
+    page12.style.opacity = page12BgIn;
+    page12.style.pointerEvents = page12BgIn > .96 ? "auto" : "none";
+  }
+  if (siteJourneyProgress >= .748 && page11) {
+    page11.style.opacity = 1 - page11Exit12;
+    page11.style.pointerEvents = "none";
+  }
+  fadeToBlack.style.opacity = Math.max(parseFloat(fadeToBlack.style.opacity || 0), page1112Black);
+
+  const page12Content = clamp((siteJourneyProgress-.782)/(.807-.782),0,1);
+  const p12HeaderIn = smoothstep((page12Content-.00)/.45);
+  const p12CopyIn = smoothstep((page12Content-.18)/.55);
+  if (page12Header) {
+    page12Header.style.opacity = p12HeaderIn;
+    page12Header.style.transform = `translateY(${10*(1-p12HeaderIn)}px)`;
+    page12Header.style.filter = `blur(${.7*(1-p12HeaderIn)}px)`;
+  }
+  if (page12Copy) {
+    page12Copy.style.opacity = p12CopyIn;
+    page12Copy.style.transform = `translateY(${10*(1-p12CopyIn)}px)`;
+    page12Copy.style.filter = `blur(${.7*(1-p12CopyIn)}px)`;
+  }
+
+  // PAGE 12 → PAGE 13
+  const p1213BlackIn = smoothstep((siteJourneyProgress-.810)/(.823-.810));
+  const page13BgIn = smoothstep((siteJourneyProgress-.820)/(.829-.820));
+  const p1213BlackOut = smoothstep((siteJourneyProgress-.830)/(.842-.830));
+  const page12Exit13 = smoothstep((siteJourneyProgress-.820)/(.832-.820));
+  const page1213Black = p1213BlackIn * (1 - p1213BlackOut);
+  if (page13) {
+    page13.style.opacity = page13BgIn;
+    page13.style.pointerEvents = page13BgIn > .96 ? "auto" : "none";
+  }
+  if (siteJourneyProgress >= .810 && page12) {
+    page12.style.opacity = 1 - page12Exit13;
+    page12.style.pointerEvents = "none";
+  }
+  fadeToBlack.style.opacity = Math.max(parseFloat(fadeToBlack.style.opacity || 0), page1213Black);
+
+  const page13Content = clamp((siteJourneyProgress-.844)/(.875-.844),0,1);
+  const p13HeaderIn = smoothstep((page13Content-.00)/.48);
+  const p13PlayerIn = smoothstep((page13Content-.50)/.38);
+  if (page13Header) {
+    page13Header.style.opacity = p13HeaderIn;
+    page13Header.style.translate = `0 ${12*(1-p13HeaderIn)}px`;
+    page13Header.style.filter = `blur(${.9*(1-p13HeaderIn)}px)`;
+  }
+  if (page13Player) {
+    page13Player.style.opacity = p13PlayerIn;
+    page13Player.style.transform = `translateY(${14*(1-p13PlayerIn)}px)`;
+    page13Player.style.filter = `blur(${1*(1-p13PlayerIn)}px)`;
+    page13Player.style.pointerEvents = p13PlayerIn > .92 ? "auto" : "none";
+  }
+
+  // PAGE 13 → PAGE 14
+  const p1314BlackIn = smoothstep((siteJourneyProgress-.878)/(.890-.878));
+  const page14BgIn = smoothstep((siteJourneyProgress-.887)/(.897-.887));
+  const p1314BlackOut = smoothstep((siteJourneyProgress-.898)/(.910-.898));
+  const page13Exit14 = smoothstep((siteJourneyProgress-.888)/(.900-.888));
+  const page1314Black = p1314BlackIn * (1 - p1314BlackOut);
+  if (page14) {
+    page14.style.opacity = page14BgIn;
+    page14.style.pointerEvents = page14BgIn > .96 ? "auto" : "none";
+  }
+  if (siteJourneyProgress >= .878 && page13) {
+    page13.style.opacity = 1 - page13Exit14;
+    page13.style.pointerEvents = "none";
+  }
+  fadeToBlack.style.opacity = Math.max(parseFloat(fadeToBlack.style.opacity || 0), page1314Black);
+
+  const page14Content = clamp((siteJourneyProgress-.912)/(.932-.912),0,1);
+  const p14HeaderIn = smoothstep((page14Content-.00)/.40);
+  const p14CopyIn = smoothstep((page14Content-.14)/.48);
+  const p14CaptionIn = smoothstep((page14Content-.38)/.52);
+  if (page14Header) {
+    page14Header.style.opacity = p14HeaderIn;
+    page14Header.style.transform = `translateY(${10*(1-p14HeaderIn)}px)`;
+    page14Header.style.filter = `blur(${.7*(1-p14HeaderIn)}px)`;
+  }
+  if (page14Copy) {
+    page14Copy.style.opacity = p14CopyIn;
+    page14Copy.style.transform = `translateY(${10*(1-p14CopyIn)}px)`;
+    page14Copy.style.filter = `blur(${.7*(1-p14CopyIn)}px)`;
+  }
+  if (page14Caption) {
+    page14Caption.style.opacity = p14CaptionIn;
+    page14Caption.style.transform = `translateY(${10*(1-p14CaptionIn)}px)`;
+    page14Caption.style.filter = `blur(${.7*(1-p14CaptionIn)}px)`;
+  }
+
+  // PAGE 14 → PAGE 15 / AGAIN
+  const p1415BlackIn = smoothstep((siteJourneyProgress-.934)/(.946-.934));
+  const page15BgIn = smoothstep((siteJourneyProgress-.943)/(.953-.943));
+  const p1415BlackOut = smoothstep((siteJourneyProgress-.954)/(.966-.954));
+  const page14Exit15 = smoothstep((siteJourneyProgress-.944)/(.956-.944));
+  const page1415Black = p1415BlackIn * (1 - p1415BlackOut);
+  if (page15) {
+    page15.style.opacity = page15BgIn;
+    page15.style.pointerEvents = page15BgIn > .96 ? "auto" : "none";
+  }
+  if (siteJourneyProgress >= .934 && page14) {
+    page14.style.opacity = 1 - page14Exit15;
+    page14.style.pointerEvents = "none";
+  }
+  fadeToBlack.style.opacity = Math.max(parseFloat(fadeToBlack.style.opacity || 0), page1415Black);
+
+  const page15Content = clamp((siteJourneyProgress-.968)/(.995-.968),0,1);
+  const p15TitleIn = smoothstep((page15Content-.00)/.34);
+  const p15OverlayIn = smoothstep((page15Content-.15)/.46);
+  const p15PlayerIn = smoothstep((page15Content-.58)/.34);
+  if (page15Title) {
+    page15Title.style.opacity = p15TitleIn;
+    page15Title.style.transform = `translateY(${12*(1-p15TitleIn)}px)`;
+    page15Title.style.filter = `blur(${.9*(1-p15TitleIn)}px)`;
+  }
+  if (page15Overlay) {
+    page15Overlay.style.opacity = p15OverlayIn;
+    page15Overlay.style.transform = `translateY(${12*(1-p15OverlayIn)}px)`;
+    page15Overlay.style.filter = `blur(${.9*(1-p15OverlayIn)}px)`;
+  }
+  if (page15Player) {
+    page15Player.style.opacity = p15PlayerIn;
+    page15Player.style.transform = `translateY(${14*(1-p15PlayerIn)}px)`;
+    page15Player.style.filter = `blur(${1*(1-p15PlayerIn)}px)`;
+    page15Player.style.pointerEvents = p15PlayerIn > .92 ? "auto" : "none";
+  }
+
+
+  // PAGE 15 → PAGE 16
+  const p1516BlackIn=smoothstep((siteRunProgress-.832)/(.842-.832));
+  const page16BgIn=smoothstep((siteRunProgress-.839)/(.847-.839));
+  const p1516BlackOut=smoothstep((siteRunProgress-.848)/(.858-.848));
+  const page15Exit16=smoothstep((siteRunProgress-.840)/(.850-.840));
+  if(page16){page16.style.opacity=page16BgIn;page16.style.pointerEvents=page16BgIn>.96?"auto":"none";}
+  if(siteRunProgress>=.832&&page15){page15.style.opacity=1-page15Exit16;page15.style.pointerEvents="none";}
+  fadeToBlack.style.opacity=Math.max(parseFloat(fadeToBlack.style.opacity||0),p1516BlackIn*(1-p1516BlackOut));
+  const p16Content=smoothstep((siteRunProgress-.861)/(.884-.861));
+  if(page16Content){page16Content.style.opacity=p16Content;page16Content.style.translate=`0 ${10*(1-p16Content)}px`;page16Content.style.filter=`blur(${.7*(1-p16Content)}px)`;}
+
+  // PAGE 16 → PAGE 17: keep the shared background fully opaque throughout.
+  // Only the Page 17 dim treatment crossfades, so Page 1 can never show through.
+  const page17In=smoothstep((siteRunProgress-.888)/(.900-.888));
+  const page16Exit17=smoothstep((siteRunProgress-.892)/(.902-.892));
+  if(page17){
+    const page17Active = siteRunProgress >= .888;
+    page17.style.opacity = page17Active ? 1 : 0;
+    page17.style.pointerEvents = page17Active ? "auto" : "none";
+  }
+  if(page17Dim){page17Dim.style.opacity=page17In;}
+  if(siteRunProgress>=.888&&page16){page16.style.opacity=1-page16Exit17;page16.style.pointerEvents="none";}
+  const p17Content=smoothstep((siteRunProgress-.904)/(.930-.904));
+  if(page17Content){page17Content.style.opacity=p17Content;page17Content.style.translate=`0 ${10*(1-p17Content)}px`;page17Content.style.filter=`blur(${.7*(1-p17Content)}px)`;}
+
+  // PAGE 17 → PAGE 18 / EPILOGUE
+  const p1718BlackIn=smoothstep((siteRunProgress-.936)/(.948-.936));
+  const page18BgIn=smoothstep((siteRunProgress-.945)/(.954-.945));
+  const p1718BlackOut=smoothstep((siteRunProgress-.955)/(.967-.955));
+  const page17Exit18=smoothstep((siteRunProgress-.946)/(.958-.946));
+  if(page18){page18.style.opacity=page18BgIn;page18.style.pointerEvents=page18BgIn>.96?"auto":"none";}
+  if(siteRunProgress>=.936&&page17){page17.style.opacity=1-page17Exit18;page17.style.pointerEvents="none";}
+  fadeToBlack.style.opacity=Math.max(parseFloat(fadeToBlack.style.opacity||0),p1718BlackIn*(1-p1718BlackOut));
+  const page18Content=clamp((siteRunProgress-.969)/(.995-.969),0,1);
+  const p18OverlayIn=smoothstep((page18Content-.00)/.48);
+  const p18PlayerIn=smoothstep((page18Content-.58)/.34);
+  if(page18Overlay){page18Overlay.style.opacity=p18OverlayIn;page18Overlay.style.translate=`0 ${12*(1-p18OverlayIn)}px`;page18Overlay.style.filter=`blur(${.9*(1-p18OverlayIn)}px)`;}
+  if(page18Player){page18Player.style.opacity=p18PlayerIn;page18Player.style.transform=`translateY(${14*(1-p18PlayerIn)}px)`;page18Player.style.filter=`blur(${1*(1-p18PlayerIn)}px)`;page18Player.style.pointerEvents=p18PlayerIn>.92?"auto":"none";}
+
+
+  // PAGE 18 → PAGE 19 / FINAL CREDITS
+  // The last snap runs this short black handoff, then the credits and playlist settle in.
+  const p1819BlackIn = smoothstep((siteRunProgress-.9950)/(.9970-.9950));
+  const page19BgIn = smoothstep((siteRunProgress-.9962)/(.9982-.9962));
+  const p1819BlackOut = smoothstep((siteRunProgress-.9980)/(.9994-.9980));
+  const page18Exit19 = smoothstep((siteRunProgress-.9964)/(.9984-.9964));
+  const page1819Black = p1819BlackIn * (1 - p1819BlackOut);
+
+  if (page19) {
+    page19.style.opacity = page19BgIn;
+    page19.style.pointerEvents = page19BgIn > .96 ? "auto" : "none";
+  }
+  if (siteRunProgress >= .9950 && page18) {
+    page18.style.opacity = 1 - page18Exit19;
+    page18.style.pointerEvents = "none";
+  }
+  fadeToBlack.style.opacity = Math.max(parseFloat(fadeToBlack.style.opacity || 0), page1819Black);
+
+  const page19Content = smoothstep((siteRunProgress-.9990)/(1.0000-.9990));
+  const page19PlayerIn = smoothstep((siteRunProgress-.99935)/(1.0000-.99935));
+
+  if (page19Credits) {
+    page19Credits.style.opacity = page19Content;
+    page19Credits.style.translate = `0 ${10*(1-page19Content)}px`;
+    page19Credits.style.filter = `blur(${.7*(1-page19Content)}px)`;
+  }
+  if (page19Player) {
+    page19Player.style.opacity = page19PlayerIn;
+    page19Player.style.translate = `0 ${12*(1-page19PlayerIn)}px`;
+    page19Player.style.filter = `blur(${.8*(1-page19PlayerIn)}px)`;
+    page19Player.style.pointerEvents = page19PlayerIn > .92 ? "auto" : "none";
+  }
+
+  // One reusable Spotify iframe for the whole site.
+  // It is stopped immediately when leaving a song page, then loaded only after
+  // a short 400ms settle on the next song page to avoid rapid-scroll request storms.
+  let desiredSpotifyTrack = null;
+  if (page19PlayerIn > .08 && siteRunProgress >= .99935) {
+    desiredSpotifyTrack = "page19";
+  } else if (p18PlayerIn > .08 && siteRunProgress >= .969 && siteRunProgress < .9950) {
+    desiredSpotifyTrack = "page18";
+  } else if (p15PlayerIn > .08 && siteRunProgress < .832 && siteJourneyProgress >= .968) {
+    desiredSpotifyTrack = "page15";
+  } else if (p13PlayerIn > .08 && siteJourneyProgress >= .844 && siteJourneyProgress < .878) {
+    desiredSpotifyTrack = "page13";
+  } else if (p11PlayerIn > .08 && siteJourneyProgress < .748 && siteTotalProgress >= .952) {
+    desiredSpotifyTrack = "page11";
+  } else if (p8PlayerIn > .08 && masterProgress < .779) {
+    desiredSpotifyTrack = "page8";
+  } else if (p5PlayerIn > .08 && page5Exit < .35) {
+    desiredSpotifyTrack = "page5";
+  }
+  requestSpotifyTrack(desiredSpotifyTrack);
+
+  /*
+    AMBIENT DUCKING
+    Pages 1–4: normal ambient level.
+    Page 5: Fade Away ambient ducks all the way to exact zero as Spotify reveals,
+    matching the Page 8 behavior.
+  */
+
+  // Page 1–5 bed ducks to silence under Page 5 Spotify, then crossfades into
+  // the Page 6–7 bed under the Page 5 → Page 6 black transition.
+  const page6AudioMix = smoothstep((legacyProgress - 0.855) / (0.915 - 0.855));
+
+  if (ambientEnabled) {
+    const page5Base = AMBIENT_FULL_VOLUME * (1 - p5PlayerIn);
+
+    ambientTargetVolume = page5Base * (1 - page6AudioMix);
+    page6AmbientTargetVolume = AMBIENT_FULL_VOLUME * page6AudioMix * (1 - p8PlayerIn);
+
+    if (page6AudioMix > 0.01 && !page6AmbientSource) {
+      activatePage6Ambient();
+    }
+  } else {
+    ambientTargetVolume = 0;
+    page6AmbientTargetVolume = 0;
+  }
+
+}
+
+
+/* =========================
+   TOP UI AUTO-FADE
+   =========================
+   Desktop only:
+   - move the mouse into the top ~18% of the screen -> UI appears
+   - move below that zone -> UI fades
+*/
+const siteNav = document.querySelector(".site-nav");
+const finePointer = window.matchMedia("(hover:hover) and (pointer:fine)");
+
+function updateNavFromPointer(y){
+  if (!finePointer.matches) {
+    siteNav.classList.remove("ui-dimmed");
+    return;
+  }
+
+  const revealZone = window.innerHeight * 0.18;
+  const pointerNearTop = y <= revealZone;
+
+  if (pointerNearTop) {
+    siteNav.classList.remove("ui-dimmed");
+  } else {
+    siteNav.classList.add("ui-dimmed");
+  }
+}
+
+window.addEventListener("mousemove", (event) => {
+  updateNavFromPointer(event.clientY);
+}, { passive:true });
+
+window.addEventListener("mouseleave", () => {
+  if (finePointer.matches) {
+    siteNav.classList.add("ui-dimmed");
+  }
+});
+
+/* Start visible so the visitor immediately knows navigation exists. */
+siteNav.classList.remove("ui-dimmed");
+
+/* =========================
+   DISCRETE SCENE SNAP EXPERIMENT
+   =========================
+   Instead of requiring lots of wheel movement, one wheel gesture advances
+   to the next major content beat. We animate the actual page scroll position
+   between targets, so all of the existing fades, staggers and black transitions
+   still happen exactly through scroll progress.
+*/
+let pageFlipRunToken = 0;
+function playPageFlipTransition(){
+  if (!pageFlipLayer || !pageFlipVideo) return;
+  const token = ++pageFlipRunToken;
+  pageFlipLayer.classList.add("is-active");
+  pageFlipVideo.pause();
+  try { pageFlipVideo.currentTime = 0; } catch(e) {}
+  const playPromise = pageFlipVideo.play();
+  if (playPromise && typeof playPromise.catch === "function") {
+    playPromise.catch(()=>{
+      if (token === pageFlipRunToken) pageFlipLayer.classList.remove("is-active");
+    });
+  }
+}
+if (pageFlipVideo) {
+  pageFlipVideo.addEventListener("ended", ()=>{
+    const token = pageFlipRunToken;
+    window.setTimeout(()=>{
+      if (token === pageFlipRunToken && pageFlipLayer) {
+        pageFlipLayer.classList.remove("is-active");
+      }
+    }, 20);
+  });
+}
+
+const snapEnabled = window.matchMedia("(hover:hover) and (pointer:fine) and (min-width:801px)");
+const snapIndicator = document.getElementById("snapIndicator");
+
+/*
+  Targets are expressed in the SAME normalized progress used by
+  updateScrollReveal():
+
+  0.000  Page 1 background
+  0.350  Page 1 titles animate in one-by-one, then hold
+  0.480  Page 2 background revealed, content still absent
+  0.748  Page 2 content/amenities complete + short hold
+  0.875  Page 3 background revealed after black transition
+  0.998  Page 3 header/body reveal
+*/
+
+const snapProgress = [0.000000, 0.042813, 0.059003, 0.091383, 0.107213, 0.121964, 0.152185, 0.166936, 0.180607, 0.205432, 0.220902, 0.252562, 0.336029, 0.357976, 0.433575, 0.458944, 0.559688, 0.590000, 0.621875, 0.650833, 0.668333, 0.702500, 0.725000, 0.759167, 0.773333, 0.805833, 0.829167, 0.859000, 0.884000, 0.930000, 0.968000, 0.995000, 1.000000];
+let snapIndex = 0;
+let snapAnimating = false;
+let wheelAccumulator = 0;
+let lastWheelAt = 0;
+let cinematicReleaseUntil = 0;
+
+function scrollYForProgress(progress){
+  const start = heroScroll.offsetTop;
+  const distance = Math.max(heroScroll.offsetHeight - window.innerHeight, 1);
+  return start + distance * progress;
+}
+
+function nearestSnapIndex(){
+  const start = heroScroll.offsetTop;
+  const distance = Math.max(heroScroll.offsetHeight - window.innerHeight, 1);
+  const current = clamp((window.scrollY - start) / distance, 0, 1);
+
+  let best = 0;
+  let bestDistance = Infinity;
+  snapProgress.forEach((p, i) => {
+    const d = Math.abs(current - p);
+    if (d < bestDistance){
+      bestDistance = d;
+      best = i;
+    }
+  });
+  return best;
+}
+
+function easeInOutCubic(t){
+  return t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
+}
+
+function animateToSnap(index){
+  index = clamp(index, 0, snapProgress.length - 1);
+  if (index === snapIndex && snapAnimating) return;
+
+  snapIndex = index;
+  const from = window.scrollY;
+  const to = scrollYForProgress(snapProgress[index]);
+  const distancePx = Math.abs(to - from);
+
+  // Longer scene moves give staggered content enough time to breathe.
+  let duration = clamp(950 + distancePx * 0.16, 1100, 1900);
+
+  // Page 8 RACKING is a dedicated scroll-scrub zone. When a snap crosses it,
+  // let the scrub breathe at approximately the source clip's natural duration.
+  const fromProgress = clamp((from - heroScroll.offsetTop) / Math.max(heroScroll.offsetHeight - window.innerHeight, 1), 0, 1);
+  const toProgress = snapProgress[index];
+
+  // One deliberate Page 1 → Page 2 snap: fade into the supplied 5s page-flip movie,
+  // let it play at its native timing, then reveal the already-clean Page 2 background.
+  const crossesPageFlip = fromProgress <= 0.0435 && toProgress >= 0.0590;
+  if (crossesPageFlip) {
+    duration = 2280;
+    playPageFlipTransition();
+  }
+
+  /*
+    CINEMATIC IMAGE-SEQUENCE TRANSITIONS
+    These ranges are expressed in the CURRENT outer site timeline.
+
+    Page 8 vinyl/racking sequence:
+      snap 11 (0.252562) -> snap 12 (0.336029)
+
+    Laundromat fly-in:
+      snap 13 (0.357976) -> snap 14 (0.433575)
+
+    One navigation gesture therefore traverses each entire image sequence
+    on a fixed clock. Extra wheel events are ignored while snapAnimating.
+  */
+  const crossesRackScrub =
+    (fromProgress <= 0.2535 && toProgress >= 0.3350) ||
+    (fromProgress >= 0.3350 && toProgress <= 0.2535);
+  const crossesLaundryScrub =
+    (fromProgress <= 0.3590 && toProgress >= 0.4320) ||
+    (fromProgress >= 0.4320 && toProgress <= 0.3590);
+
+  const cinematicTransition = crossesRackScrub || crossesLaundryScrub;
+
+  if (crossesRackScrub) {
+    duration = 5505;
+  }
+
+  if (crossesLaundryScrub) {
+    duration = 4300;
+  }
+
+  const crossesFinalCredits =
+    (fromProgress <= 0.9950 && toProgress >= 1.0000) ||
+    (fromProgress >= 1.0000 && toProgress <= 0.9950);
+  if (crossesFinalCredits) {
+    duration = 1700;
+  }
+
+  const startTime = performance.now();
+
+  snapAnimating = true;
+  if (snapIndicator) snapIndicator.style.opacity = ".28";
+
+  function frame(now){
+    const t = clamp((now - startTime) / duration, 0, 1);
+    const eased = easeInOutCubic(t);
+    window.scrollTo(0, from + (to - from) * eased);
+    updateScrollReveal();
+
+    if (t < 1){
+      requestAnimationFrame(frame);
+    } else {
+      window.scrollTo(0, to);
+      updateScrollReveal();
+      snapAnimating = false;
+      if (cinematicTransition) {
+        cinematicReleaseUntil = performance.now() + 260;
+        wheelAccumulator = 0;
+      }
+      if (snapIndicator) snapIndicator.style.opacity = "1";
+    }
+  }
+  requestAnimationFrame(frame);
+}
+
+function handleSnapWheel(event){
+  if (!snapEnabled.matches) return;
+
+  // Once below the experiment's sticky scene, restore ordinary document scrolling.
+  const sceneStart = heroScroll.offsetTop;
+  const sceneEnd = sceneStart + heroScroll.offsetHeight - window.innerHeight;
+  if (window.scrollY > sceneEnd + 4) return;
+
+  event.preventDefault();
+
+  if (snapAnimating) return;
+  if (performance.now() < cinematicReleaseUntil) {
+    wheelAccumulator = 0;
+    return;
+  }
+
+  const now = performance.now();
+  if (now - lastWheelAt > 180) wheelAccumulator = 0;
+  lastWheelAt = now;
+  wheelAccumulator += event.deltaY;
+
+  // Filters tiny trackpad noise but still makes one intentional gesture advance.
+  if (Math.abs(wheelAccumulator) < 24) return;
+
+  const direction = wheelAccumulator > 0 ? 1 : -1;
+  wheelAccumulator = 0;
+
+  snapIndex = nearestSnapIndex();
+  const next = clamp(snapIndex + direction, 0, snapProgress.length - 1);
+
+  // Final credits are the hard end of the experience.
+  if (snapIndex === snapProgress.length - 1 && direction > 0){
+    window.scrollTo({top: scrollYForProgress(snapProgress[snapProgress.length - 1]), behavior:"auto"});
+    return;
+  }
+
+  animateToSnap(next);
+}
+
+document.documentElement.classList.toggle("snap-mode", snapEnabled.matches);
+window.addEventListener("wheel", handleSnapWheel, {passive:false});
+
+/* Arrow/Page keys use the same discrete beats for easy testing. */
+window.addEventListener("keydown", (event) => {
+  if (!snapEnabled.matches || snapAnimating) return;
+
+  const down = ["ArrowDown", "PageDown", " "].includes(event.key);
+  const up = ["ArrowUp", "PageUp"].includes(event.key);
+  if (!down && !up) return;
+
+  event.preventDefault();
+  snapIndex = nearestSnapIndex();
+  animateToSnap(snapIndex + (down ? 1 : -1));
+});
+
+let ticking = false;
+window.addEventListener("scroll", () => {
+  if (!ticking){
+    requestAnimationFrame(() => {
+      updateScrollReveal();
+      ticking = false;
+    });
+    ticking = true;
+  }
+}, {passive:true});
+
+window.addEventListener("resize", () => {
+  snapIndex = nearestSnapIndex();
+  updateScrollReveal();
+});
+
+snapIndex = nearestSnapIndex();
+updateScrollReveal();
+
+
+/* =========================
+   AMBIENT AUDIO — WEB AUDIO API
+   =========================
+   The uploaded MP3 is not re-encoded or altered. Its exact bytes are
+   decoded once in memory and looped by AudioBufferSourceNode.
+*/
+let ambientCtx = null;
+let ambientGain = null;
+let ambientSource = null;
+let ambientBuffer = null;
+let ambientPreparing = null;
+
+function base64ToArrayBuffer(base64){
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return bytes.buffer;
+}
+
+async function ensurePage6AmbientReady(){
+  if (page6AmbientBuffer && ambientCtx && page6AmbientGain) return;
+
+  // Reuse the original ambient AudioContext.
+  if (!ambientCtx) {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) throw new Error("Web Audio API is unavailable.");
+    ambientCtx = new AudioContextClass();
+  }
+
+  if (!page6AmbientGain) {
+    page6AmbientGain = ambientCtx.createGain();
+    page6AmbientGain.gain.value = 0;
+    page6AmbientGain.connect(ambientCtx.destination);
+  }
+
+  if (!page6AmbientPreparing) {
+    page6AmbientPreparing = (async () => {
+      const encoded = window.PURPO_PAGE6_AMBIENT_MP3_BASE64;
+      if (!encoded) throw new Error("Page 6 ambient audio data is unavailable.");
+      page6AmbientBuffer = await ambientCtx.decodeAudioData(base64ToArrayBuffer(encoded));
+    })();
+  }
+
+  await page6AmbientPreparing;
+}
+
+function startPage6AmbientSource(){
+  if (!ambientCtx || !page6AmbientGain || !page6AmbientBuffer || page6AmbientSource) return;
+
+  page6AmbientSource = ambientCtx.createBufferSource();
+  page6AmbientSource.buffer = page6AmbientBuffer;
+  page6AmbientSource.loop = true;
+  page6AmbientSource.connect(page6AmbientGain);
+  page6AmbientSource.start(0);
+}
+
+async function activatePage6Ambient(){
+  if (!ambientEnabled) return;
+
+  try {
+    await ensurePage6AmbientReady();
+    if (ambientCtx.state === "suspended") await ambientCtx.resume();
+    startPage6AmbientSource();
+  } catch (err) {
+    console.error("Page 6 ambient failed:", err);
+  }
+}
+
+
+async function ensureAmbientReady(){
+  if (ambientBuffer && ambientCtx && ambientGain) return;
+
+  if (!ambientPreparing) {
+    ambientPreparing = (async () => {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) throw new Error("Web Audio API is unavailable.");
+
+      ambientCtx = new AudioContextClass();
+      ambientGain = ambientCtx.createGain();
+      ambientGain.gain.value = 0;
+      ambientGain.connect(ambientCtx.destination);
+
+      const encoded = window.PURPO_AMBIENT_MP3_BASE64;
+      if (!encoded) throw new Error("Ambient audio data is unavailable.");
+
+      ambientBuffer = await ambientCtx.decodeAudioData(
+        base64ToArrayBuffer(encoded)
+      );
+    })();
+  }
+
+  await ambientPreparing;
+}
+
+function startAmbientSource(){
+  if (!ambientCtx || !ambientGain || !ambientBuffer || ambientSource) return;
+
+  ambientSource = ambientCtx.createBufferSource();
+  ambientSource.buffer = ambientBuffer;
+  ambientSource.loop = true;
+  ambientSource.connect(ambientGain);
+  ambientSource.start(0);
+}
+
+function updateSoundButton(){
+  if (!soundToggle) return;
+  soundToggle.setAttribute("aria-pressed", ambientEnabled ? "true" : "false");
+  soundToggle.setAttribute(
+    "aria-label",
+    ambientEnabled ? "Turn ambient sound off" : "Turn ambient sound on"
+  );
+}
+
+if (soundToggle) {
+  updateSoundButton();
+
+  soundToggle.addEventListener("click", async () => {
+    if (!ambientEnabled) {
+      try {
+        await ensureAmbientReady();
+
+        if (ambientCtx.state === "suspended") {
+          await ambientCtx.resume();
+        }
+
+        startAmbientSource();
+        ambientEnabled = true;
+
+        // Start the Page 6–7 loop at zero gain so it is ready for a seamless crossfade later.
+        activatePage6Ambient();
+      } catch (err) {
+        console.error("Ambient audio failed:", err);
+        ambientEnabled = false;
+      }
+    } else {
+      ambientEnabled = false;
+      ambientTargetVolume = 0;
+    }
+
+    updateSoundButton();
+    updateScrollReveal();
+  });
+}
+
+function animateAmbientGain(){
+  if (ambientCtx) {
+    const now = ambientCtx.currentTime;
+
+    if (ambientGain) {
+      const target = ambientEnabled
+        ? Math.max(0, Math.min(1, ambientTargetVolume))
+        : 0;
+
+      ambientGain.gain.cancelScheduledValues(now);
+      ambientGain.gain.setTargetAtTime(target, now, 0.075);
+    }
+
+    if (page6AmbientGain) {
+      const page6Target = ambientEnabled
+        ? Math.max(0, Math.min(1, page6AmbientTargetVolume))
+        : 0;
+
+      page6AmbientGain.gain.cancelScheduledValues(now);
+      page6AmbientGain.gain.setTargetAtTime(page6Target, now, 0.075);
+    }
+  }
+
+  requestAnimationFrame(animateAmbientGain);
+}
+requestAnimationFrame(animateAmbientGain);
+
+
+// Page 1 song shortcuts: jump instantly to the requested song page.
+document.querySelectorAll(".track-list a[data-song-snap]").forEach((link) => {
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const targetSnapIndex = Number(link.dataset.songSnap);
+    const targetProgress = snapProgress[targetSnapIndex];
+    if (!Number.isInteger(targetSnapIndex) || typeof targetProgress !== "number") return;
+
+    // Stop any active snap animation so intermediate pages are never traversed visibly.
+    snapAnimating = false;
+    snapIndex = targetSnapIndex;
+    const targetY = scrollYForProgress(targetProgress);
+
+    // Instant timeline jump, then render the destination state immediately.
+    window.scrollTo({ top: targetY, behavior: "auto" });
+    updateScrollReveal();
+  });
+});
+
+
+// Restrained right-edge song rail: instant jump + active destination marker.
+const sideRail = document.getElementById("sideRail");
+const sideRailLinks = sideRail ? [...sideRail.querySelectorAll("a[data-rail-snap]")] : [];
+
+function jumpDirectToSnap(targetSnapIndex){
+  const targetProgress = snapProgress[targetSnapIndex];
+  if (!Number.isInteger(targetSnapIndex) || typeof targetProgress !== "number") return;
+  snapAnimating = false;
+  snapIndex = targetSnapIndex;
+  window.scrollTo({ top: scrollYForProgress(targetProgress), behavior: "auto" });
+  updateScrollReveal();
+}
+
+sideRailLinks.forEach((link) => {
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    jumpDirectToSnap(Number(link.dataset.railSnap));
+  });
+});
+
+function updateSideRailState(){
+  if (!sideRail || !sideRailLinks.length) return;
+
+  const start = heroScroll.offsetTop;
+  const distance = Math.max(heroScroll.offsetHeight - window.innerHeight, 1);
+  const current = clamp((window.scrollY - start) / distance, 0, 1);
+
+  let activeLink = null;
+  let bestDistance = Infinity;
+  sideRailLinks.forEach((link) => {
+    const idx = Number(link.dataset.railSnap);
+    const p = snapProgress[idx];
+    if (typeof p !== "number") return;
+    const d = Math.abs(current - p);
+    if (d < bestDistance){
+      bestDistance = d;
+      activeLink = link;
+    }
+  });
+
+  sideRailLinks.forEach((link) => link.classList.toggle("active", link === activeLink));
+
+  // Mirror the persistent top UI's light/dark state so the rail remains legible.
+  if (siteNav){
+    sideRail.classList.toggle("on-light", siteNav.classList.contains("on-light"));
+  }
+}
+
+window.addEventListener("scroll", updateSideRailState, {passive:true});
+updateSideRailState();
+
+</script>
+
+
+<div class="crt480-vignette" aria-hidden="true"></div>
+<div class="crt480-mask" aria-hidden="true"></div>
+<div class="crt480-scan" aria-hidden="true"></div>
+
+<div class="crt480-rgb-displace" aria-hidden="true"></div>
+<div class="crt480-bloom" aria-hidden="true"></div>
+<div class="crt480-noise" aria-hidden="true"></div>
+<div class="crt480-luminance-flicker" aria-hidden="true"></div>
+
+
+
+<script id="purpo-crt-random-contrast-flicker">
+(() => {
+  const root=document.documentElement;
+  const MIN=1.03, BASE=1.08, MAX=1.14;
+  function next(){
+    const r=Math.random();
+    let v;
+    if(r<.68) v=BASE+(Math.random()-.5)*.018;
+    else if(r<.84) v=MIN+Math.random()*(BASE-MIN);
+    else v=BASE+Math.random()*(MAX-BASE);
+    v=Math.max(MIN,Math.min(MAX,v));
+    root.style.setProperty("--crt-contrast",v.toFixed(3));
+    const delay=Math.random()<.14 ? 220+Math.random()*420 : 55+Math.random()*175;
+    setTimeout(next,delay);
+  }
+  root.style.setProperty("--crt-contrast",BASE);
+  next();
+})();
+</script>
+</body>
+</html>
