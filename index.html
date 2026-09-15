@@ -41,6 +41,16 @@ html{scroll-snap-type:y mandatory}
  .scene3 .layer{width:190vw!important;object-position:45% center!important}
  .motion-enable.show{display:block}
 }
+
+/* V7 mobile tuning */
+@media(max-width:800px),(hover:none) and (pointer:coarse){
+  .scene2 .layer{
+    width:205vw!important;
+    height:118vh!important;
+    top:-9vh!important;
+    object-position:42% center!important;
+  }
+}
 </style></head><body>
 <div class="stage" id="stage">
 <section class="scene scene1 active" id="scene1"><img class="layer bg" src="assets/background.jpg" alt=""><img class="layer mid" src="assets/middleground.png" alt=""><img class="layer fg" src="assets/foreground.png" alt=""></section>
@@ -62,10 +72,10 @@ html{scroll-snap-type:y mandatory}
  const scenes=[...document.querySelectorAll('.scene')],nav=document.getElementById('siteNav'),vig=document.getElementById('uiVignette'),black=document.getElementById('blackout'),motionBtn=document.getElementById('motionEnable');
  let index=0,locked=false,tx=0,ty=0,cx=0,cy=0,raf=0,touching=false,startX=0,startY=0,startPan=0,axis=null,gyroX=0,gyroY=0,lastAuto=performance.now(),autoDir=1,manualUntil=0;
  const pans=[0,0,0],clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),mobile=()=>matchMedia('(max-width:800px),(hover:none) and (pointer:coarse)').matches;
- const limits=()=>[innerWidth*.375,innerWidth*.40,innerWidth*.45];
+ const limits=()=>[innerWidth*.375,innerWidth*.58,innerWidth*.45];
  function req(){if(!raf)raf=requestAnimationFrame(tick)}
  function tick(now){raf=0;
-   if(mobile()&&!touching&&now>manualUntil){const dt=Math.min(40,now-lastAuto);lastAuto=now,lim=limits()[index],speed=lim/18000;pans[index]+=autoDir*speed*dt;if(pans[index]>=lim){pans[index]=lim;autoDir=-1}if(pans[index]<=-lim){pans[index]=-lim;autoDir=1}}else lastAuto=now;
+   if(mobile()){const dt=Math.min(40,now-lastAuto);lastAuto=now,lim=limits()[index],speed=lim/10000;pans[index]+=autoDir*speed*dt;if(pans[index]>=lim){pans[index]=lim;autoDir=-1}if(pans[index]<=-lim){pans[index]=-lim;autoDir=1}}else lastAuto=now;
    cx+=(tx+gyroX-cx)*.12;cy+=(ty+gyroY-cy)*.12;
    scenes.forEach((s,i)=>{s.style.setProperty('--mx',cx.toFixed(4));s.style.setProperty('--my',cy.toFixed(4));s.style.setProperty('--pan',(pans[i]||0).toFixed(1)+'px')});
    if(mobile()||Math.abs(tx+gyroX-cx)>.001||Math.abs(ty+gyroY-cy)>.001)req()
@@ -74,14 +84,14 @@ html{scroll-snap-type:y mandatory}
  function ui(y){const near=y<=innerHeight*.18;nav.classList.toggle('ui-dimmed',!near);vig.style.opacity=near?'1':'0'}
  function paint(){scenes.forEach((s,i)=>{const on=i===index;s.classList.toggle('active',on);s.style.opacity=on?'1':'0';s.style.visibility=on?'visible':'hidden'});black.style.opacity='0';autoDir=1;lastAuto=performance.now()}
  function go(next){next=clamp(next,0,scenes.length-1);if(next===index||locked)return;locked=true;black.style.transition='opacity .2s ease';black.style.opacity='1';setTimeout(()=>{index=next;paint();black.style.opacity='1';scrollTo({top:index*innerHeight,behavior:'auto'});requestAnimationFrame(()=>black.style.opacity='0');setTimeout(()=>locked=false,430)},210)}
- function orient(e){if(!mobile())return;const g=typeof e.gamma==='number'?e.gamma:0,b=typeof e.beta==='number'?e.beta:45;gyroX=clamp(g/35,-.45,.45);gyroY=clamp((b-45)/45,-.35,.35);req()}
+ function orient(e){if(!mobile())return;const g=typeof e.gamma==='number'?e.gamma:0,b=typeof e.beta==='number'?e.beta:45;gyroX=clamp(g/20,-.85,.85);gyroY=clamp((b-45)/28,-.65,.65);req()}
  async function enableMotion(){try{if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){if(await DeviceOrientationEvent.requestPermission()!=='granted')return}addEventListener('deviceorientation',orient,{passive:true});motionBtn.classList.remove('show');req()}catch(_){}}
  if(mobile()){if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function')motionBtn.classList.add('show');else if('DeviceOrientationEvent'in window)addEventListener('deviceorientation',orient,{passive:true});req()}
  motionBtn.addEventListener('click',enableMotion);
  addEventListener('wheel',e=>{if(Math.abs(e.deltaY)<12)return;e.preventDefault();go(index+(e.deltaY>0?1:-1))},{passive:false});
  addEventListener('keydown',e=>{if(['ArrowDown','PageDown',' '].includes(e.key)){e.preventDefault();go(index+1)}else if(['ArrowUp','PageUp'].includes(e.key)){e.preventDefault();go(index-1)}});
- addEventListener('touchstart',e=>{if(!mobile())return;const t=e.touches[0];if(!t)return;touching=true;axis=null;startX=t.clientX;startY=t.clientY;startPan=pans[index];manualUntil=performance.now()+3500;ui(t.clientY)},{passive:true});
- addEventListener('touchmove',e=>{if(!mobile()||!touching)return;const t=e.touches[0];if(!t)return;const dx=t.clientX-startX,dy=t.clientY-startY;if(!axis&&Math.hypot(dx,dy)>12)axis=Math.abs(dx)>Math.abs(dy)*1.15?'x':'y';if(axis==='x'){e.preventDefault();const lim=limits()[index];pans[index]=clamp(startPan+dx,-lim,lim);depth(t.clientX,t.clientY)}else if(axis==='y')e.preventDefault()},{passive:false});
+ addEventListener('touchstart',e=>{if(!mobile())return;const t=e.touches[0];if(!t)return;touching=true;axis=null;startX=t.clientX;startY=t.clientY;startPan=pans[index];ui(t.clientY)},{passive:true});
+ addEventListener('touchmove',e=>{if(!mobile()||!touching)return;const t=e.touches[0];if(!t)return;const dy=t.clientY-startY;if(Math.abs(dy)>12){axis='y';e.preventDefault()}},{passive:false});
  addEventListener('touchend',e=>{if(!mobile()||!touching)return;touching=false;const t=e.changedTouches[0];if(!t)return;const dy=t.clientY-startY;if(axis==='y'&&Math.abs(dy)>=55)go(index+(dy<0?1:-1));axis=null;lastAuto=performance.now();req()},{passive:true});
  addEventListener('touchcancel',()=>{touching=false;axis=null;lastAuto=performance.now();req()},{passive:true});
  addEventListener('pointermove',e=>{if(!mobile()&&(e.pointerType==='mouse'||e.pointerType==='pen')){depth(e.clientX,e.clientY);ui(e.clientY)}},{passive:true});
