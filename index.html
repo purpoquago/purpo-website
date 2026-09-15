@@ -3,15 +3,41 @@
 <title>PURPO</title>
 <style>
 *{box-sizing:border-box}html,body{margin:0;width:100%;min-height:100%;background:#111}html{scroll-behavior:auto}body{overflow-x:hidden;overscroll-behavior-x:none;font-family:system-ui,sans-serif}.scroll-track{height:820vh}.stage{position:fixed;inset:0;overflow:hidden;background:#111;perspective:1200px}.scene{--mx:0;--my:0;position:absolute;inset:0;overflow:hidden;opacity:0;visibility:hidden;will-change:opacity}.scene.active{visibility:visible}.layer{position:absolute;inset:-3%;width:106%;height:106%;object-fit:cover;object-position:center;pointer-events:none;user-select:none;will-change:transform,opacity;transform-origin:center}.scene1 .bg{transform:translate3d(calc(var(--mx)*-7px),calc(var(--my)*-5px),-35px) scale(1.04)}.scene1 .mid{transform:translate3d(calc(var(--mx)*9px),calc(var(--my)*7px),20px) scale(1.025)}.scene1 .fg{transform:translate3d(calc(var(--mx)*19px),calc(var(--my)*14px),55px) scale(1.015)}
-.scene2 .bg{transform:translate3d(calc(var(--mx)*-5px),calc(var(--my)*-3px),-28px) scale(1.035)}.scene2 .mid{transform:translate3d(calc(var(--mx)*8px),calc(var(--my)*6px),18px) scale(1.02);opacity:0}.scene2 .fg{transform:translate3d(calc(var(--mx)*15px),calc(var(--my)*11px),45px) scale(1.012);opacity:0}.scene3 .bg{transform:translate3d(calc(var(--mx)*-5px),calc(var(--my)*-3px),-25px) scale(1.03)}.scene3 .fg{transform:translate3d(calc(var(--mx)*15px),calc(var(--my)*10px),45px) scale(1.012);opacity:0}
+.scene2 .bg{transform:translate3d(calc(var(--mx)*-5px),calc(var(--my)*-3px),-28px) scale(1.035)}.scene2 .mid{transform:translate3d(calc(var(--mx)*8px),calc(var(--my)*6px),18px) scale(1.02);opacity:0}.scene2 .fg{transform:translate3d(calc(var(--mx)*15px),calc(var(--my)*11px),45px) scale(1.012);opacity:1}.scene3 .bg{transform:translate3d(calc(var(--mx)*-5px),calc(var(--my)*-3px),-25px) scale(1.03)}.scene3 .fg{transform:translate3d(calc(var(--mx)*15px),calc(var(--my)*10px),45px) scale(1.012);opacity:1}
 .blackout{position:absolute;inset:0;background:#000;z-index:20;opacity:0;pointer-events:none;will-change:opacity}.ui-vignette{position:fixed;z-index:90;left:0;right:0;top:0;height:180px;pointer-events:none;background:linear-gradient(to bottom,rgba(0,0,0,.5),rgba(0,0,0,.12) 45%,transparent);opacity:1;transition:opacity .45s ease}.site-nav{position:fixed;z-index:100;top:0;left:0;width:100%;display:flex;justify-content:space-between;align-items:flex-start;gap:30px;padding:22px 34px 0;opacity:1;transition:opacity .45s ease,transform .45s ease;pointer-events:none}.site-nav.ui-dimmed{opacity:.10;transform:translateY(-4px)}.site-nav a{pointer-events:auto}.nav-left{display:flex;align-items:flex-start}.logo-link{display:block;width:168px}.logo-link img{display:block;width:100%;height:auto}.menu{display:flex;align-items:center;margin-top:7px}.nav-item{position:relative;display:block;text-decoration:none;height:44px}.nav-item+.nav-item{margin-left:46px}.nav-item+.nav-item:before{content:"";position:absolute;left:-24px;top:4px;width:2px;height:34px;background:rgba(0,0,0,.48);transform:rotate(4deg)}.nav-art{position:relative;display:block;width:100%;height:100%}.nav-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;transition:opacity .18s ease,transform .18s ease,filter .18s ease}.nav-art .base{opacity:1}.nav-art .pink{opacity:0}.nav-item:hover .base,.nav-item:focus-visible .base{opacity:0}.nav-item:hover .pink,.nav-item:focus-visible .pink{opacity:1}.hover-pink{filter:brightness(0) saturate(100%) invert(45%) sepia(94%) saturate(3922%) hue-rotate(310deg) brightness(101%) contrast(101%)}.nav-sa{width:286px}.nav-fade{width:185px}.nav-malilig{width:148px}.nav-visuals{width:116px}.nav-about{width:98px}
 @media(max-width:800px),(hover:none) and (pointer:coarse){.scroll-track{height:760vh}.layer{inset:-8%;width:116%;height:116%;object-position:center}.site-nav{padding:16px 16px 0;gap:12px}.logo-link{width:112px}.menu{flex-direction:column;align-items:flex-end;gap:4px;margin:0}.nav-item{height:34px;margin:0}.nav-item+.nav-item{margin-left:0}.nav-item+.nav-item:before{display:none}.nav-art img{object-position:right center}.nav-sa{width:188px}.nav-fade{width:122px}.nav-malilig{width:98px}.nav-visuals{width:76px}.nav-about{width:64px}.ui-vignette{height:220px;background:linear-gradient(to bottom,rgba(0,0,0,.52),rgba(0,0,0,.14) 52%,transparent)}}
 @media(prefers-reduced-motion:reduce){.layer{transform:none!important}}
+
+/* V5: complete compositions + discrete scene snapping */
+.scene{transition:opacity .34s ease;--pan:0px}
+.scene .mid,.scene .fg{opacity:1!important}
+.scroll-track{height:300vh}
+html{scroll-snap-type:y mandatory}
+.snap-anchor{height:100vh;scroll-snap-align:start;scroll-snap-stop:always}
+@media(max-width:800px),(hover:none) and (pointer:coarse){
+ html,body{overscroll-behavior-y:none}
+ .scroll-track{height:300vh}
+ .scene{--pan:0px}
+ .scene .layer{
+   inset:auto!important;top:-5vh!important;left:50%!important;
+   width:155vw!important;height:110vh!important;
+   object-fit:cover!important;transform-origin:center!important
+ }
+ /* Scene 1 resting crop: character centered, doorway only partly visible. */
+ .scene1 .layer{object-position:61% center!important}
+ .scene2 .layer,.scene3 .layer{object-position:center!important}
+ .scene1 .bg{transform:translate3d(calc(-50% + var(--pan) + var(--mx)*-2px),calc(var(--my)*-1px),-18px) scale(1.02)!important}
+ .scene1 .mid{transform:translate3d(calc(-50% + var(--pan) + var(--mx)*3px),calc(var(--my)*2px),10px) scale(1.012)!important}
+ .scene1 .fg{transform:translate3d(calc(-50% + var(--pan) + var(--mx)*6px),calc(var(--my)*4px),28px) scale(1.008)!important}
+ .scene2 .bg,.scene3 .bg{transform:translate3d(calc(-50% + var(--pan) + var(--mx)*-2px),calc(var(--my)*-1px),-16px) scale(1.018)!important}
+ .scene2 .mid{transform:translate3d(calc(-50% + var(--pan) + var(--mx)*3px),calc(var(--my)*2px),10px) scale(1.012)!important}
+ .scene2 .fg,.scene3 .fg{transform:translate3d(calc(-50% + var(--pan) + var(--mx)*6px),calc(var(--my)*4px),26px) scale(1.008)!important}
+}
 </style></head><body>
 <div class="stage" id="stage">
 <section class="scene scene1 active" id="scene1"><img class="layer bg" src="assets/background.jpg" alt=""><img class="layer mid" src="assets/middleground.png" alt=""><img class="layer fg" src="assets/foreground.png" alt=""></section>
 <section class="scene scene2" id="scene2"><img class="layer bg" src="assets/scene2/background.jpg" alt=""><img class="layer mid" id="s2mid" src="assets/scene2/middleground.png" alt=""><img class="layer fg" id="s2fg" src="assets/scene2/foreground.png" alt=""></section>
-<section class="scene scene3" id="scene3"><img class="layer bg" src="assets/scene3/background.jpg" alt=""><img class="layer fg" id="s3fg" src="assets/scene3/foreground.png" alt=""></section><div class="blackout" id="blackout"></div></div><div class="scroll-track" aria-hidden="true"></div>
+<section class="scene scene3" id="scene3"><img class="layer bg" src="assets/scene3/background.jpg" alt=""><img class="layer fg" id="s3fg" src="assets/scene3/foreground.png" alt=""></section><div class="blackout" id="blackout"></div></div><div class="scroll-track" aria-hidden="true"><div class="snap-anchor"></div><div class="snap-anchor"></div><div class="snap-anchor"></div></div>
 <div class="ui-vignette" id="uiVignette" aria-hidden="true"></div>
 <nav class="site-nav" id="siteNav" aria-label="Primary navigation">
  <div class="nav-left"><a class="logo-link" href="./" aria-label="PURPO home"><img src="assets/ui/purpo-logo-white.png" alt="PURPO"></a></div>
@@ -24,20 +50,51 @@
  </div>
 </nav>
 <script>
-(()=>{const scenes=[...document.querySelectorAll('.scene')],s1=scenes[0],s2=scenes[1],s3=scenes[2],s2m=document.getElementById('s2mid'),s2f=document.getElementById('s2fg'),s3f=document.getElementById('s3fg'),black=document.getElementById('blackout'),nav=document.getElementById('siteNav'),vig=document.getElementById('uiVignette');let tx=0,ty=0,cx=0,cy=0,raf=0;
-const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v)),range=(p,a,b)=>clamp((p-a)/(b-a)),smooth=t=>t*t*(3-2*t);
-function depth(x,y){tx=clamp((x/innerWidth-.5)*2,-1,1);ty=clamp((y/innerHeight-.5)*2,-1,1);if(!raf)raf=requestAnimationFrame(tick)}function tick(){raf=0;cx+=(tx-cx)*.12;cy+=(ty-cy)*.12;scenes.forEach(s=>{s.style.setProperty('--mx',cx.toFixed(4));s.style.setProperty('--my',cy.toFixed(4))});if(Math.abs(tx-cx)>.001||Math.abs(ty-cy)>.001)raf=requestAnimationFrame(tick)}
-function render(){const max=document.documentElement.scrollHeight-innerHeight,p=max?scrollY/max:0;let o1=1,o2=0,o3=0,b=0,m2=0,f2=0,f3=0;
-// Scene 1 hold to 16%; fade through black, then reveal clean Scene 2 background.
-if(p<.16){}else if(p<.22){b=smooth(range(p,.16,.22))}else if(p<.28){o1=0;o2=1;b=1-smooth(range(p,.22,.28))}else{o1=0;o2=1}
-// Scene 2 clean hold .28-.37, then mid and foreground reveals.
-if(p>=.37)m2=smooth(range(p,.37,.45));if(p>=.46)f2=smooth(range(p,.46,.54));
-// Scene 2 final hold, transition through black into Scene 3.
-if(p>=.62&&p<.68)b=Math.max(b,smooth(range(p,.62,.68)));if(p>=.68){o2=0;o3=1;b=Math.max(b,1-smooth(range(p,.68,.74)))}
-// Scene 3 clean hold, then foreground/car reveal and final hold.
-if(p>=.82)f3=smooth(range(p,.82,.90));
-s1.style.opacity=o1;s2.style.opacity=o2;s3.style.opacity=o3;scenes.forEach((s,i)=>s.classList.toggle('active',[o1,o2,o3][i]>.001));black.style.opacity=b;s2m.style.opacity=m2;s2f.style.opacity=f2;s3f.style.opacity=f3}
-function ui(y){const near=y<=innerHeight*.18;nav.classList.toggle('ui-dimmed',!near);vig.style.opacity=near?'1':'0'}
-addEventListener('scroll',render,{passive:true});addEventListener('resize',render,{passive:true});addEventListener('pointermove',e=>{if(e.pointerType==='mouse'||e.pointerType==='pen'){depth(e.clientX,e.clientY);ui(e.clientY)}},{passive:true});addEventListener('touchstart',e=>{const t=e.touches[0];if(t)ui(t.clientY)},{passive:true});render();
+(()=> {
+ const scenes=[...document.querySelectorAll('.scene')], nav=document.getElementById('siteNav'), vig=document.getElementById('uiVignette'), black=document.getElementById('blackout');
+ let index=0, locked=false, tx=0,ty=0,cx=0,cy=0,raf=0;
+ let touching=false,startX=0,startY=0,startPan=0,axis=null;
+ const pans=[0,0,0], clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+ const mobile=()=>matchMedia('(max-width:800px),(hover:none) and (pointer:coarse)').matches;
+ const panLimit=()=>innerWidth*.275;
+
+ function tick(){
+   raf=0; cx+=(tx-cx)*.14;cy+=(ty-cy)*.14;
+   scenes.forEach((s,i)=>{s.style.setProperty('--mx',cx.toFixed(4));s.style.setProperty('--my',cy.toFixed(4));s.style.setProperty('--pan',(pans[i]||0).toFixed(1)+'px')});
+   if(Math.abs(tx-cx)>.001||Math.abs(ty-cy)>.001)raf=requestAnimationFrame(tick)
+ }
+ function depth(x,y){tx=clamp((x/innerWidth-.5)*2,-1,1);ty=clamp((y/innerHeight-.5)*2,-1,1);if(!raf)raf=requestAnimationFrame(tick)}
+ function ui(y){const near=y<=innerHeight*.18;nav.classList.toggle('ui-dimmed',!near);vig.style.opacity=near?'1':'0'}
+ function paint(){
+   scenes.forEach((s,i)=>{const on=i===index;s.classList.toggle('active',on);s.style.opacity=on?'1':'0';s.style.visibility=on?'visible':'hidden'});
+   black.style.opacity='0';
+ }
+ function go(next){
+   next=clamp(next,0,scenes.length-1); if(next===index||locked)return;
+   locked=true; black.style.transition='opacity .2s ease';black.style.opacity='1';
+   setTimeout(()=>{index=next;paint();black.style.opacity='1';scrollTo({top:index*innerHeight,behavior:'auto'});
+     requestAnimationFrame(()=>{black.style.opacity='0'});
+     setTimeout(()=>locked=false,430);
+   },210);
+ }
+ function syncScroll(){if(locked)return;const n=clamp(Math.round(scrollY/innerHeight),0,scenes.length-1);if(n!==index){index=n;paint()}}
+ addEventListener('wheel',e=>{if(Math.abs(e.deltaY)<12)return;e.preventDefault();go(index+(e.deltaY>0?1:-1))},{passive:false});
+ addEventListener('keydown',e=>{if(['ArrowDown','PageDown',' '].includes(e.key)){e.preventDefault();go(index+1)}else if(['ArrowUp','PageUp'].includes(e.key)){e.preventDefault();go(index-1)}});
+
+ addEventListener('touchstart',e=>{if(!mobile())return;const t=e.touches[0];if(!t)return;touching=true;axis=null;startX=t.clientX;startY=t.clientY;startPan=pans[index];ui(t.clientY)},{passive:true});
+ addEventListener('touchmove',e=>{if(!mobile()||!touching)return;const t=e.touches[0];if(!t)return;const dx=t.clientX-startX,dy=t.clientY-startY;
+   if(!axis&&Math.hypot(dx,dy)>12)axis=Math.abs(dx)>Math.abs(dy)*1.15?'x':'y';
+   if(axis==='x'){e.preventDefault();pans[index]=clamp(startPan+dx,-panLimit(),panLimit());depth(t.clientX,t.clientY)}
+   else if(axis==='y')e.preventDefault();
+ },{passive:false});
+ addEventListener('touchend',e=>{if(!mobile()||!touching)return;touching=false;const t=e.changedTouches[0];if(!t)return;const dx=t.clientX-startX,dy=t.clientY-startY;
+   if(axis==='y'&&Math.abs(dy)>=55)go(index+(dy<0?1:-1));
+   axis=null;
+ },{passive:true});
+ addEventListener('touchcancel',()=>{touching=false;axis=null},{passive:true});
+ addEventListener('pointermove',e=>{if(!mobile()&&(e.pointerType==='mouse'||e.pointerType==='pen')){depth(e.clientX,e.clientY);ui(e.clientY)}},{passive:true});
+ addEventListener('scroll',syncScroll,{passive:true});
+ addEventListener('resize',()=>{pans[index]=clamp(pans[index],-panLimit(),panLimit());scrollTo(0,index*innerHeight)},{passive:true});
+ paint();scrollTo(0,0);
 })();
 </script></body></html>
