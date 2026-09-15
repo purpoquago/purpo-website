@@ -1,0 +1,1296 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PURPO — Universidad</title>
+<style>
+  :root { --cols: 6; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #000; }
+  body { overflow-x: hidden; }
+
+
+  html,
+  body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
+  body {
+    position: fixed;
+    inset: 0;
+  }
+
+  .mosaic-stage {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    background: #000;
+  }
+
+  .album-grid {
+    --cell: max(calc(100vw / 7), calc(100vh / 3));
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: calc(var(--cell) * 7);
+    height: calc(var(--cell) * 3);
+    display: grid;
+    grid-template-columns: repeat(6, var(--cell));
+    grid-template-rows: repeat(3, var(--cell));
+    gap: 0;
+    transform: translate(-50%, -50%);
+    visibility: hidden;
+    opacity: 1;
+    transition: opacity 180ms ease;
+  }
+
+  .album-grid.is-ready { visibility: visible; }
+  .album-grid.is-changing { opacity: 0; }
+
+  .tile,
+  .spotify-compound {
+    position: relative;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    background: #111;
+  }
+
+  .tile.is-2x1 {
+    grid-column-end: span 2;
+    grid-row-end: span 1;
+  }
+
+  .tile.is-1x2 {
+    grid-column-end: span 1;
+    grid-row-end: span 2;
+  }
+
+  .tile.is-2x2 {
+    grid-column-end: span 2;
+    grid-row-end: span 2;
+  }
+
+  .tile > img,
+  .tile > video,
+  .tile > iframe {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .tile > img,
+  .tile > video {
+    object-fit: cover;
+  }
+
+  .spotify-compound {
+    min-width: 0;
+    min-height: 0;
+    display: grid;
+    grid-template-rows: 0.5fr 1.5fr;
+    gap: 0;
+    overflow: hidden;
+    background: #000;
+  }
+
+  .spotify-player,
+  .spotify-image {
+    position: relative;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .spotify-player iframe {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .spotify-image img {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tile video { display: none; }
+  }
+
+  .title-overlay-video {
+    position: absolute;
+    z-index: 20;
+    display: block;
+    pointer-events: none;
+    object-fit: contain;
+    opacity: 1;
+    transform: translateZ(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .title-overlay-video { display: none; }
+  }
+
+
+  /* Universal PURPO top UI — inverted/dark version for this yellow EP. */
+  .site-nav {
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 30px;
+    padding: 22px 34px 0;
+    opacity: 1;
+    transition: opacity .45s ease, transform .45s ease;
+    will-change: opacity, transform;
+    pointer-events: none;
+  }
+
+  .site-nav.ui-dimmed {
+    opacity: .10;
+    transform: translateY(-4px);
+  }
+
+  .site-nav:focus-within {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .site-nav a,
+  .site-nav button {
+    pointer-events: auto;
+  }
+
+  .nav-left {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .logo-link {
+    display: block;
+    width: 168px;
+    flex: 0 0 auto;
+  }
+
+  .logo-link img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .menu {
+    display: flex;
+    align-items: center;
+    margin-top: 7px;
+  }
+
+  .nav-item {
+    position: relative;
+    display: block;
+    text-decoration: none;
+    height: 44px;
+  }
+
+  .nav-item + .nav-item {
+    margin-left: 46px;
+  }
+
+  .nav-item + .nav-item::before {
+    content: "";
+    position: absolute;
+    left: -24px;
+    top: 4px;
+    width: 2px;
+    height: 34px;
+    background: rgba(0,0,0,.48);
+    transform: rotate(4deg);
+  }
+
+  .nav-art {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .nav-art img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    transition: opacity .18s ease, transform .18s ease, filter .18s ease;
+  }
+
+  /* Universal UI remains white on this EP. */
+  .nav-art .base {
+    filter: none;
+    opacity: 1;
+  }
+
+  .nav-art .pink {
+    opacity: 0;
+    filter: none;
+  }
+
+  /* Pink is this EP's active/hover accent. */
+  .nav-item:hover .base,
+  .nav-item:focus-visible .base,
+  .nav-item.active .base {
+    opacity: 0;
+  }
+
+  .nav-item:hover .pink,
+  .nav-item:focus-visible .pink,
+  .nav-item.active .pink {
+    opacity: 1;
+  }
+
+  .nav-item:hover .nav-art,
+  .nav-item:focus-visible .nav-art {
+    transform: translateY(-1px);
+  }
+
+  .nav-sa { width: 286px; }
+  .nav-fade { width: 185px; }
+  .nav-malilig { width: 148px; }
+  .nav-visuals { width: 116px; }
+  .nav-about { width: 98px; }
+
+  @media (max-width: 1000px) {
+    .site-nav { padding: 16px 18px 0; gap: 16px; }
+    .logo-link { width: 124px; }
+    .nav-item + .nav-item { margin-left: 24px; }
+    .nav-item + .nav-item::before { left: -13px; }
+    .nav-sa { width: 200px; }
+    .nav-fade { width: 130px; }
+    .nav-malilig { width: 105px; }
+    .nav-visuals { width: 82px; }
+    .nav-about { width: 70px; }
+  }
+
+
+  .nav-art .hover-pink {
+    filter: brightness(0) saturate(100%) invert(46%) sepia(97%) saturate(2199%)
+            hue-rotate(306deg) brightness(103%) contrast(101%);
+  }
+
+
+  .tile.is-unused {
+    display: none !important;
+  }
+
+
+  .spotify-compound.spotify-wide{display:block;position:relative;overflow:hidden;background:#000}
+  .spotify-compound.spotify-wide .spotify-player{position:absolute;inset:0;width:100%;height:100%;overflow:hidden}
+  .spotify-compound.spotify-wide .spotify-player iframe{position:absolute;left:0;top:-2px;width:100%;height:calc(100% + 10px);border:0}
+
+  /* v21: keep each nominal 1x1 cell close to square while still covering
+     the viewport. Cells may stretch only between 0.9:1 and 1.1:1.
+     Any excess grid area is centered and cropped by .mosaic-stage. */
+  .album-grid{
+    --cell-w:max(calc(100vw / 7), calc((100vh / 3) * 0.9));
+    --cell-h:max(calc(100vh / 3), calc((100vw / 7) / 1.1));
+    position:absolute!important;
+    inset:auto!important;
+    left:0!important;
+    top:0!important;
+    width:calc(var(--cell-w) * 7)!important;
+    height:calc(var(--cell-h) * 3)!important;
+    grid-template-columns:repeat(7,var(--cell-w))!important;
+    grid-template-rows:repeat(3,var(--cell-h))!important;
+    transform:none!important;
+  }
+
+  /* Mobile V1: portrait 3x6 mosaic, no 2x2 modules. */
+  @media (max-width: 800px), (hover: none) and (pointer: coarse) {
+    .album-grid{
+      --cell-w:max(calc(100vw / 3), calc((100vh / 6) * 0.9));
+      --cell-h:max(calc(100vh / 6), calc((100vw / 3) / 1.1));
+      width:calc(var(--cell-w) * 3)!important;
+      height:calc(var(--cell-h) * 6)!important;
+      grid-template-columns:repeat(3,var(--cell-w))!important;
+      grid-template-rows:repeat(6,var(--cell-h))!important;
+      left:0!important;
+      top:0!important;
+      transform:none!important;
+    }
+  }
+
+  .tile,
+  .tile img,
+  .tile video{
+    min-width:0;
+    min-height:0;
+  }
+
+  .tile img,
+  .tile video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+  }
+
+  /* Spotify is now a single grid cell. */
+  .spotify-compound.spotify-wide{
+    width:auto!important;
+    height:auto!important;
+    overflow:hidden!important;
+    background:#000;
+  }
+
+  .spotify-compound.spotify-wide .spotify-player{
+    position:absolute!important;
+    inset:0!important;
+    width:100%!important;
+    height:100%!important;
+    overflow:hidden!important;
+  }
+
+  .spotify-compound.spotify-wide .spotify-player iframe{
+    position:absolute!important;
+    left:0!important;
+    top:-2px!important;
+    width:100%!important;
+    height:calc(100% + 8px)!important;
+    border:0!important;
+  }
+
+  /* Mobile V3: the Spotify wrapper contributes no visible box.
+     The iframe itself floats at 60vw and is centered in the viewport. */
+  @media (max-width: 800px), (hover: none) and (pointer: coarse) {
+    .spotify-compound.spotify-wide{
+      display:contents!important;
+      background:transparent!important;
+      box-shadow:none!important;
+    }
+
+    .spotify-compound.spotify-wide .spotify-player{
+      display:contents!important;
+    }
+
+    .spotify-compound.spotify-wide .spotify-player iframe{
+      position:fixed!important;
+      left:50%!important;
+      top:50%!important;
+      width:60vw!important;
+      height:352px!important;
+      max-height:72vh!important;
+      transform:translate(-50%,-50%)!important;
+      z-index:80!important;
+      border:0!important;
+      border-radius:12px!important;
+      overflow:hidden!important;
+    }
+  }
+
+  .static-overlay {
+    position: absolute;
+    z-index: 21;
+    display: block;
+    pointer-events: none;
+    object-fit: contain;
+    opacity: 1;
+    transform: translateZ(0);
+  }
+
+  #overlay3Image {
+    z-index: 22;
+  }
+
+
+  .ui-vignette {
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity .45s ease;
+    background:
+      linear-gradient(to bottom,
+        rgba(0,0,0,.62) 0%,
+        rgba(0,0,0,.38) 7%,
+        rgba(0,0,0,.16) 15%,
+        rgba(0,0,0,0) 28%),
+      radial-gradient(ellipse at top center,
+        rgba(0,0,0,.20) 0%,
+        rgba(0,0,0,0) 58%);
+  }
+
+  .ui-vignette.ui-dimmed {
+    opacity: 0;
+  }
+
+  @media (max-width: 800px), (hover: none), (pointer: coarse) {
+    .ui-vignette {
+      opacity: 1;
+    }
+  }
+
+
+  /* Mobile V4 UI test: vertically stacked, right-aligned navigation. */
+  @media (max-width: 800px), (hover: none) and (pointer: coarse) {
+    .site-nav {
+      left:auto!important;
+      right:0!important;
+      top:0!important;
+      width:auto!important;
+      padding:16px 16px 0 0!important;
+      display:flex!important;
+      flex-direction:column!important;
+      justify-content:flex-start!important;
+      align-items:flex-end!important;
+      gap:8px!important;
+      opacity:1!important;
+      transform:none!important;
+    }
+
+    .site-nav.ui-dimmed {
+      opacity:1!important;
+      transform:none!important;
+    }
+
+    .nav-left {
+      width:100%!important;
+      display:flex!important;
+      justify-content:flex-end!important;
+      align-items:flex-start!important;
+    }
+
+    .logo-link {
+      width:112px!important;
+      margin:0!important;
+    }
+
+    .menu {
+      display:flex!important;
+      flex-direction:column!important;
+      align-items:flex-end!important;
+      justify-content:flex-start!important;
+      gap:4px!important;
+      margin:0!important;
+    }
+
+    .nav-item {
+      height:34px!important;
+      margin:0!important;
+      flex:none!important;
+    }
+
+    .nav-item + .nav-item {
+      margin-left:0!important;
+    }
+
+    .nav-item + .nav-item::before {
+      display:none!important;
+    }
+
+    .nav-art img {
+      object-position:right center!important;
+    }
+
+    .nav-sa { width:188px!important; }
+    .nav-fade { width:122px!important; }
+    .nav-malilig { width:98px!important; }
+    .nav-visuals { width:76px!important; }
+    .nav-about { width:64px!important; }
+
+    /* Keep the mobile menu readable while letting the mosaic show through. */
+    .ui-vignette {
+      background:
+        radial-gradient(ellipse at top right,
+          rgba(0,0,0,.58) 0%,
+          rgba(0,0,0,.36) 22%,
+          rgba(0,0,0,.12) 46%,
+          rgba(0,0,0,0) 68%),
+        linear-gradient(to bottom,
+          rgba(0,0,0,.34) 0%,
+          rgba(0,0,0,.10) 18%,
+          rgba(0,0,0,0) 38%)!important;
+    }
+  }
+
+
+  /* Mobile V5: split top UI — PURPO left, vertical menu right.
+     Both the logo and first menu item share the exact same top anchor. */
+  @media (max-width: 800px), (hover: none) and (pointer: coarse) {
+    .site-nav {
+      top:0!important;
+      left:0!important;
+      right:0!important;
+      width:100%!important;
+      padding:16px 16px 0!important;
+      display:flex!important;
+      flex-direction:row!important;
+      justify-content:space-between!important;
+      align-items:flex-start!important;
+      gap:12px!important;
+    }
+
+    .nav-left {
+      width:auto!important;
+      display:flex!important;
+      justify-content:flex-start!important;
+      align-items:flex-start!important;
+      margin:0!important;
+      padding:0!important;
+    }
+
+    .logo-link {
+      width:112px!important;
+      margin:0!important;
+      padding:0!important;
+      align-self:flex-start!important;
+    }
+
+    .menu {
+      display:flex!important;
+      flex-direction:column!important;
+      align-items:flex-end!important;
+      justify-content:flex-start!important;
+      gap:4px!important;
+      margin:0!important;
+      padding:0!important;
+      align-self:flex-start!important;
+    }
+
+    .nav-item:first-child {
+      margin-top:0!important;
+    }
+  }
+
+
+  /* Mobile V6: center Spotify in the vertical space below the UI, and restore UI fading. */
+  @media (max-width: 800px), (hover: none) and (pointer: coarse) {
+    .site-nav{opacity:1!important;transform:none!important;transition:opacity .45s ease,transform .45s ease!important}
+    .site-nav.ui-dimmed{opacity:.10!important;transform:translateY(-4px)!important}
+    .site-nav:focus-within{opacity:1!important;transform:none!important}
+    .ui-vignette.ui-dimmed{opacity:0!important}
+  }
+</style>
+</head>
+<body>
+
+<div class="ui-vignette" id="uiVignette" aria-hidden="true"></div>
+<nav class="site-nav" id="siteNav" aria-label="Primary navigation">
+  <div class="nav-left">
+    <a class="logo-link" href="../" aria-label="PURPO home">
+      <img src="assets/ui/purpo-logo-white.png" alt="PURPO">
+    </a>
+  </div>
+
+  <div class="menu">
+
+    <a class="nav-item nav-sa active" href="./" aria-current="page" aria-label="Sa Gitna ng Lahat EP">
+      <span class="nav-art">
+        <img class="base" src="assets/ui/sa-gitna-white.png" alt="">
+        <img class="pink" src="assets/ui/sa-gitna-pink.png" alt="">
+      </span>
+    </a>
+
+    <a class="nav-item nav-fade" href="../fade-away/" aria-label="Fade Away EP">
+      <span class="nav-art">
+        <img class="base" src="assets/ui/fade-away-white.png" alt="">
+        <img class="pink hover-pink" src="assets/ui/fade-away-white.png" alt="">
+      </span>
+    </a>
+
+    <a class="nav-item nav-malilig" href="#malilig" aria-label="Malilig LP">
+      <span class="nav-art">
+        <img class="base" src="assets/ui/malilig-white.png" alt="">
+        <img class="pink hover-pink" src="assets/ui/malilig-white.png" alt="">
+      </span>
+    </a>
+
+    <a class="nav-item nav-visuals" href="#visuals" aria-label="Visuals">
+      <span class="nav-art">
+        <img class="base" src="assets/ui/visuals-white.png" alt="">
+        <img class="pink hover-pink" src="assets/ui/visuals-white.png" alt="">
+      </span>
+    </a>
+
+    <a class="nav-item nav-about" href="#about" aria-label="About">
+      <span class="nav-art">
+        <img class="base" src="assets/ui/about-white.png" alt="">
+        <img class="pink hover-pink" src="assets/ui/about-white.png" alt="">
+      </span>
+    </a>
+  </div>
+</nav>
+
+<div class="mosaic-stage" id="mosaicStage">
+<main class="album-grid" id="albumGrid" aria-label="Universidad visual mosaic">
+  <article class="tile image-tile"><img src="assets/images/universidad_01.jpg" alt="" loading="eager"></article>
+  <article class="tile image-tile"><img src="assets/images/universidad_02.jpg" alt="" loading="lazy"></article>
+  <article class="tile image-tile"><img src="assets/images/universidad_03.jpg" alt="" loading="lazy"></article>
+  <article class="tile image-tile"><img src="assets/images/universidad_04.jpg" alt="" loading="lazy"></article>
+  <article class="tile image-tile"><img src="assets/images/universidad_05.jpg" alt="" loading="lazy"></article>
+  <article class="tile image-tile"><img src="assets/images/universidad_06.jpg" alt="" loading="lazy"></article>
+  <article class="tile image-tile"><img src="assets/images/universidad_07.jpg" alt="" loading="lazy"></article>
+  <article class="tile image-tile"><img src="assets/images/universidad_08.jpg" alt="" loading="lazy"></article>
+  <article class="tile image-tile"><img src="assets/images/universidad_09.jpg" alt="" loading="lazy"></article>
+  <article class="tile image-tile"><img src="assets/images/universidad_10.jpg" alt="" loading="lazy"></article>
+  <article class="tile image-tile"><img src="assets/images/universidad_11.jpg" alt="" loading="lazy"></article>
+  <article class="tile image-tile"><img src="assets/images/universidad_12.jpg" alt="" loading="lazy"></article>
+  <article class="tile image-tile"><img src="assets/images/universidad_13.jpg" alt="" loading="lazy"></article>
+  <article class="tile image-tile landscape-flex" data-landscape-flex="true"><img src="assets/images/universidad_14.jpg" alt="" loading="lazy"></article>
+
+  <article class="tile video-tile">
+    <video src="assets/videos/lualhati.mp4" autoplay muted loop playsinline preload="metadata"></video>
+  </article>
+  <article class="tile video-tile" data-title-video="true">
+    <video src="assets/videos/stairs.mp4" autoplay muted loop playsinline preload="metadata"></video>
+  </article>
+  <article class="tile video-tile">
+    <video src="assets/videos/yosiLR.mp4" autoplay muted loop playsinline preload="metadata"></video>
+  </article>
+  <article class="tile video-tile" data-title-video="true">
+    <video src="assets/videos/universidad-title.mp4" autoplay muted loop playsinline preload="metadata"></video>
+  </article>
+  <article class="tile video-tile" data-title-video="true">
+    <video src="assets/videos/obla-LR.mp4" autoplay muted loop playsinline preload="metadata"></video>
+  </article>
+
+  <article class="spotify-compound spotify-wide" id="spotifyCompound">
+    <div class="spotify-player">
+      <iframe
+        src="https://open.spotify.com/embed/album/7cyCKh9i9a9mGrdUd7CqAz?utm_source=generator"
+        title="Spotify album player"
+        loading="lazy"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </article>
+</main>
+  <video class="title-overlay-video" id="titleOverlayVideo"
+    src="assets/overlays/universidad-title.webm"
+    autoplay muted loop playsinline preload="auto"></video>
+  <img class="static-overlay" id="overlay2Image"
+    src="assets/overlays/overlay-2.png" alt="">
+  <img class="static-overlay" id="overlay3Image"
+    src="assets/overlays/overlay-3.png" alt="">
+</div>
+
+<script>
+(() => {
+  const grid = document.getElementById("albumGrid");
+  const allItems = Array.from(grid.children);
+  const imageTiles = allItems.filter(el => el.classList.contains("image-tile"));
+  const mediaTiles = allItems.filter(el =>
+    el.classList.contains("image-tile") || el.classList.contains("video-tile")
+  );
+  const spotifyCompound = document.getElementById("spotifyCompound");
+  const titleOverlayVideo = document.getElementById("titleOverlayVideo");
+  const overlay2Image = document.getElementById("overlay2Image");
+  const overlay3Image = document.getElementById("overlay3Image");
+
+  let changing = false;
+  let releaseUntil = 0;
+
+  function positionMobileSpotify() {
+    if (!isMobileMosaic()) return;
+    const nav = document.getElementById("siteNav");
+    const iframe = spotifyCompound?.querySelector("iframe");
+    if (!nav || !iframe) return;
+
+    const safeTop = Math.min(window.innerHeight, nav.getBoundingClientRect().bottom);
+    const safeHeight = Math.max(0, window.innerHeight - safeTop);
+    iframe.style.top = `${safeTop + safeHeight / 2}px`;
+
+    // Keep 60vw width. Only reduce height if a short phone cannot fit 352px below the UI.
+    iframe.style.height = `${Math.min(352, Math.max(152, safeHeight - 24))}px`;
+    iframe.style.maxHeight = "none";
+  }
+
+  function randomItem(list) {
+    return list[Math.floor(Math.random() * list.length)];
+  }
+
+  function shuffle(list) {
+    const a = [...list];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function clearSizing() {
+    mediaTiles.forEach(tile => {
+      delete tile.dataset.overlayEdge;
+      delete tile.dataset.overlay2Edge;
+      delete tile.dataset.overlay3Target;
+      tile.classList.remove("is-2x1", "is-1x2", "is-2x2");
+      tile.classList.add("is-unused");
+      tile.style.gridColumn = "";
+      tile.style.gridRow = "";
+    });
+    spotifyCompound.style.gridColumn = "";
+    spotifyCompound.style.gridRow = "";
+  }
+
+  // Grid helpers switch between desktop 7x3 and Mobile V1 3x6.
+  function isMobileMosaic() {
+    return window.matchMedia("(max-width: 800px), (hover: none) and (pointer: coarse)").matches;
+  }
+
+  function gridDims() {
+    return isMobileMosaic() ? {cols: 3, rows: 6} : {cols: 7, rows: 3};
+  }
+
+  function canPlace(occ, col, row, w, h) {
+    const {cols, rows} = gridDims();
+    if (col < 0 || row < 0 || col + w > cols || row + h > rows) return false;
+    for (let y = row; y < row + h; y++) {
+      for (let x = col; x < col + w; x++) {
+        if (occ[y][x]) return false;
+      }
+    }
+    return true;
+  }
+
+  function mark(occ, col, row, w, h, value = true) {
+    for (let y = row; y < row + h; y++) {
+      for (let x = col; x < col + w; x++) occ[y][x] = value;
+    }
+  }
+
+  function placeRandom(occ, w, h) {
+    const {cols, rows} = gridDims();
+    const spots = [];
+    for (let row = 0; row <= rows - h; row++) {
+      for (let col = 0; col <= cols - w; col++) {
+        if (canPlace(occ, col, row, w, h)) spots.push({col, row});
+      }
+    }
+    return spots.length ? randomItem(spots) : null;
+  }
+
+  function placeSpotifySafe(occ) {
+    const {cols, rows} = gridDims();
+    const spots = [];
+
+    if (isMobileMosaic()) {
+      // Mobile: keep Spotify in the center column and away from top/bottom crop edges.
+      for (let row = 1; row < rows - 1; row++) {
+        if (canPlace(occ, 1, row, 1, 1)) spots.push({col: 1, row});
+      }
+    } else {
+      // Desktop v22 behavior: middle row, never the rightmost column.
+      const row = 1;
+      for (let col = 0; col < cols - 1; col++) {
+        if (canPlace(occ, col, row, 1, 1)) spots.push({col, row});
+      }
+    }
+    return spots.length ? randomItem(spots) : null;
+  }
+
+
+  function setPos(el, col, row, w, h) {
+    el.style.gridColumn = `${col + 1} / span ${w}`;
+    el.style.gridRow = `${row + 1} / span ${h}`;
+  }
+
+  function placeTitleOverlay(targetTile, randomizeEdge = false) {
+    if (!titleOverlayVideo || !targetTile) return;
+
+    const isWide = targetTile.classList.contains("is-2x1");
+    const isTall = targetTile.classList.contains("is-1x2");
+    const isLarge = targetTile.classList.contains("is-2x2");
+
+    if (randomizeEdge || !targetTile.dataset.overlayEdge) {
+      if (isLarge) {
+        const corners = ["top-left", "top-right", "bottom-left", "bottom-right"];
+        targetTile.dataset.overlayEdge = randomItem(corners);
+      } else if (isWide) {
+        targetTile.dataset.overlayEdge = Math.random() < 0.5 ? "left" : "right";
+      } else if (isTall) {
+        targetTile.dataset.overlayEdge = Math.random() < 0.5 ? "top" : "bottom";
+      } else {
+        targetTile.dataset.overlayEdge = "top-left";
+      }
+    }
+
+    requestAnimationFrame(() => {
+      const stageRect = document.getElementById("mosaicStage").getBoundingClientRect();
+      const tileRect = targetTile.getBoundingClientRect();
+
+      // Always occupy exactly one underlying 1x1 grid slot.
+      const cellWidth = (isWide || isLarge) ? tileRect.width / 2 : tileRect.width;
+      const cellHeight = (isTall || isLarge) ? tileRect.height / 2 : tileRect.height;
+
+      let left = tileRect.left - stageRect.left;
+      let top = tileRect.top - stageRect.top;
+      const edge = targetTile.dataset.overlayEdge;
+
+      if (edge === "right" || edge === "top-right" || edge === "bottom-right") {
+        left += tileRect.width - cellWidth;
+      }
+      if (edge === "bottom" || edge === "bottom-left" || edge === "bottom-right") {
+        top += tileRect.height - cellHeight;
+      }
+
+      titleOverlayVideo.style.left = `${left}px`;
+      titleOverlayVideo.style.top = `${top}px`;
+      titleOverlayVideo.style.width = `${cellWidth}px`;
+      titleOverlayVideo.style.height = `${cellHeight}px`;
+
+      const p = titleOverlayVideo.play();
+      if (p && typeof p.catch === "function") p.catch(() => {});
+    });
+  }
+
+
+  function placeOverlay2(targetTile, randomizeEdge = false) {
+    if (!overlay2Image || !targetTile) return;
+
+    const isWide = targetTile.classList.contains("is-2x1");
+    const isTall = targetTile.classList.contains("is-1x2");
+    const isLarge = targetTile.classList.contains("is-2x2");
+
+    if (randomizeEdge || !targetTile.dataset.overlay2Edge) {
+      if (isLarge) {
+        const corners = ["top-left", "top-right", "bottom-left", "bottom-right"];
+        targetTile.dataset.overlay2Edge = randomItem(corners);
+      } else if (isWide) {
+        targetTile.dataset.overlay2Edge = Math.random() < 0.5 ? "left" : "right";
+      } else if (isTall) {
+        targetTile.dataset.overlay2Edge = Math.random() < 0.5 ? "top" : "bottom";
+      } else {
+        targetTile.dataset.overlay2Edge = "top-left";
+      }
+    }
+
+    requestAnimationFrame(() => {
+      const stageRect = document.getElementById("mosaicStage").getBoundingClientRect();
+      const tileRect = targetTile.getBoundingClientRect();
+
+      // Always occupy exactly one underlying 1x1 grid slot.
+      const cellWidth = (isWide || isLarge) ? tileRect.width / 2 : tileRect.width;
+      const cellHeight = (isTall || isLarge) ? tileRect.height / 2 : tileRect.height;
+
+      let left = tileRect.left - stageRect.left;
+      let top = tileRect.top - stageRect.top;
+      const edge = targetTile.dataset.overlay2Edge;
+
+      if (edge === "right" || edge === "top-right" || edge === "bottom-right") {
+        left += tileRect.width - cellWidth;
+      }
+      if (edge === "bottom" || edge === "bottom-left" || edge === "bottom-right") {
+        top += tileRect.height - cellHeight;
+      }
+
+      const overlay2Width = cellWidth * 0.9;
+      const overlay2Height = cellHeight * 0.9;
+      left += (cellWidth - overlay2Width) / 2;
+      top += (cellHeight - overlay2Height) / 2;
+
+      overlay2Image.style.left = `${left}px`;
+      overlay2Image.style.top = `${top}px`;
+      overlay2Image.style.width = `${overlay2Width}px`;
+      overlay2Image.style.height = `${overlay2Height}px`;
+    });
+  }
+
+  function placeOverlay3(targetTile, randomizeSnap = true) {
+    if (!overlay3Image || !targetTile) return;
+
+    mediaTiles.forEach(tile => {
+      delete tile.dataset.overlay3Target;
+      if (tile !== targetTile) delete tile.dataset.overlay3Snap;
+    });
+    targetTile.dataset.overlay3Target = "true";
+    if (randomizeSnap || !targetTile.dataset.overlay3Snap) {
+      targetTile.dataset.overlay3Snap = Math.random() < 0.5 ? "top" : "bottom";
+    }
+
+    requestAnimationFrame(() => {
+      const stageRect = document.getElementById("mosaicStage").getBoundingClientRect();
+      const tileRect = targetTile.getBoundingClientRect();
+      const naturalW = overlay3Image.naturalWidth || 1;
+      const naturalH = overlay3Image.naturalHeight || 1;
+      const renderedWidth = tileRect.width * 0.9;
+      const renderedHeight = Math.min(tileRect.height * 0.9, renderedWidth * naturalH / naturalW);
+      const left = tileRect.left - stageRect.left + (tileRect.width - renderedWidth) / 2;
+      const top = targetTile.dataset.overlay3Snap === "bottom"
+        ? tileRect.bottom - stageRect.top - renderedHeight
+        : tileRect.top - stageRect.top;
+
+      overlay3Image.style.left = `${left}px`;
+      overlay3Image.style.top = `${top}px`;
+      overlay3Image.style.width = `${renderedWidth}px`;
+      overlay3Image.style.height = `${renderedHeight}px`;
+    });
+  }
+
+  function buildComposition() {
+    clearSizing();
+
+    // Existing sizing rules:
+    // 1 random still = 2x1
+    // 1 different random still = 1x2
+    // 1 different random image/video = 2x2
+    // Spotify = permanent dedicated 1x1 functional tile
+    // The expanded library is now larger than one 7x3 screen.
+    // Sample exactly 15 media tiles per composition:
+    // 3 become the special shapes and the remaining 12 fill the open 1x1 cells.
+    const titleVideoTiles = mediaTiles.filter(t => t.dataset.titleVideo === "true");
+    const nonTitleMediaTiles = mediaTiles.filter(t => t.dataset.titleVideo !== "true");
+
+    // Hard mutual-exclusion pairs:
+    // universidad_08.jpg <-> obla-LR.mp4
+    // universidad_09.jpg <-> universidad-title.mp4
+    const mediaKey = tile => {
+      const img = tile.querySelector("img");
+      const video = tile.querySelector("video");
+      return img?.getAttribute("src") || video?.getAttribute("src") || "";
+    };
+
+    const conflictPairs = [
+      ["assets/images/universidad_08.jpg", "assets/videos/obla-LR.mp4"],
+      ["assets/images/universidad_09.jpg", "assets/videos/universidad-title.mp4"]
+    ];
+
+    const conflictsWith = (candidate, chosen) => {
+      const key = mediaKey(candidate);
+      return conflictPairs.some(([a, b]) => {
+        const other = key === a ? b : key === b ? a : null;
+        return other && chosen.some(tile => mediaKey(tile) === other);
+      });
+    };
+
+    const pool = shuffle(nonTitleMediaTiles);
+    if (titleVideoTiles.length) {
+      pool.splice(Math.floor(Math.random() * (pool.length + 1)), 0, randomItem(titleVideoTiles));
+    }
+
+    const selectedMedia = [];
+    for (const tile of pool) {
+      if (selectedMedia.length >= 15) break;
+      if (tile.dataset.titleVideo === "true" &&
+          selectedMedia.some(t => t.dataset.titleVideo === "true")) continue;
+      if (conflictsWith(tile, selectedMedia)) continue;
+      selectedMedia.push(tile);
+    }
+
+    // Guarantee at least two stills are available for the required 2x1 and 1x2 slots.
+    let selectedImages = selectedMedia.filter(t => t.classList.contains("image-tile"));
+    if (selectedImages.length < 2) {
+      const missingImages = shuffle(imageTiles.filter(t => !selectedMedia.includes(t)))
+        .slice(0, 2 - selectedImages.length);
+      for (let i = 0; i < missingImages.length; i++) {
+        const replaceIndex = selectedMedia.findIndex(t => t.classList.contains("video-tile"));
+        if (replaceIndex >= 0) selectedMedia[replaceIndex] = missingImages[i];
+      }
+      selectedImages = selectedMedia.filter(t => t.classList.contains("image-tile"));
+    }
+
+    const mobile = isMobileMosaic();
+    const {cols, rows} = gridDims();
+
+    // Mobile V3 uses 13 media: 2x2 + 2x1 + 1x2 + 10 singles = all 18 cells.
+    // Spotify floats independently and does not consume a grid cell.
+    // Desktop keeps the existing 15-media composition.
+    const mediaTarget = mobile ? 13 : 15;
+    while (selectedMedia.length > mediaTarget) selectedMedia.pop();
+    selectedImages = selectedMedia.filter(t => t.classList.contains("image-tile"));
+
+    // Defensive mobile guarantee after trimming: keep two eligible stills for 2x1 + 1x2.
+    if (selectedImages.length < 2) {
+      const extras = shuffle(imageTiles.filter(t => !selectedMedia.includes(t)));
+      while (selectedImages.length < 2 && extras.length) {
+        const replacement = extras.pop();
+        const replaceIndex = selectedMedia.findIndex(t => t.classList.contains("video-tile"));
+        if (replaceIndex < 0) break;
+        selectedMedia[replaceIndex] = replacement;
+        selectedImages = selectedMedia.filter(t => t.classList.contains("image-tile"));
+      }
+    }
+
+    selectedMedia.forEach(tile => tile.classList.remove("is-unused"));
+
+    const wideTile = randomItem(selectedImages);
+    const tallTile = randomItem(
+      selectedImages.filter(t => t !== wideTile && t.dataset.landscapeFlex !== "true")
+    );
+
+    // Mobile V2 brings the 2x2 module back.
+    const largeTile = randomItem(
+      selectedMedia.filter(t =>
+        t !== wideTile &&
+        t !== tallTile &&
+        t.dataset.landscapeFlex !== "true"
+      )
+    );
+
+    wideTile.classList.add("is-2x1");
+    tallTile.classList.add("is-1x2");
+    largeTile.classList.add("is-2x2");
+
+    const landscapeFlexTile = selectedMedia.find(t => t.dataset.landscapeFlex === "true");
+    if (landscapeFlexTile) {
+      const landscapeImg = landscapeFlexTile.querySelector("img");
+      if (landscapeImg) {
+        landscapeImg.style.objectPosition = landscapeFlexTile === wideTile
+          ? "center center"
+          : (Math.random() < 0.5 ? "left center" : "right center");
+      }
+    }
+
+    const occ = Array.from({length: rows}, () => Array(cols).fill(false));
+    const shaped = shuffle([
+      {el: largeTile, w: 2, h: 2},
+      {el: wideTile, w: 2, h: 1},
+      {el: tallTile, w: 1, h: 2},
+      ...(!mobile ? [{el: spotifyCompound, w: 1, h: 1}] : [])
+    ]);
+
+    let success = false;
+    for (let attempt = 0; attempt < 150 && !success; attempt++) {
+      occ.forEach(row => row.fill(false));
+      success = true;
+      for (const shape of shaped) {
+        const spot = shape.el === spotifyCompound
+          ? placeSpotifySafe(occ)
+          : placeRandom(occ, shape.w, shape.h);
+        if (!spot) { success = false; break; }
+        shape._spot = spot;
+        mark(occ, spot.col, spot.row, shape.w, shape.h);
+      }
+    }
+
+    // Deterministic safe fallbacks for each canvas.
+    if (!success) {
+      occ.forEach(row => row.fill(false));
+      const wideShape = shaped.find(s => s.el === wideTile);
+      const tallShape = shaped.find(s => s.el === tallTile);
+      const largeShape = largeTile ? shaped.find(s => s.el === largeTile) : null;
+      const spotifyShape = mobile ? null : shaped.find(s => s.el === spotifyCompound);
+      const fallback = mobile
+        ? [
+            {shape: largeShape, col: 0, row: 0},
+            {shape: wideShape, col: 0, row: 2},
+            {shape: tallShape, col: 2, row: 2}
+          ]
+        : [
+            {shape: largeShape, col: 0, row: 0},
+            {shape: wideShape, col: 2, row: 0},
+            {shape: tallShape, col: 4, row: 0},
+            {shape: spotifyShape, col: 5, row: 1}
+          ];
+
+      fallback.forEach(({shape, col, row}) => {
+        shape._spot = {col, row};
+        mark(occ, col, row, shape.w, shape.h);
+      });
+    }
+
+    shaped.forEach(shape => {
+      setPos(shape.el, shape._spot.col, shape._spot.row, shape.w, shape.h);
+    });
+
+    const specialEls = new Set(shaped.map(s => s.el));
+    const singles = shuffle(selectedMedia.filter(el => !specialEls.has(el)));
+    const emptyCells = [];
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
+        if (!occ[row][col]) emptyCells.push({col, row});
+      }
+    }
+    // Defensive backfill: mobile must never expose the black stage through an empty grid cell.
+    // If constraints ever under-select media, pull additional non-conflicting unused media.
+    if (singles.length < emptyCells.length) {
+      const extras = shuffle(mediaTiles.filter(tile =>
+        !selectedMedia.includes(tile) &&
+        !specialEls.has(tile) &&
+        !(tile.dataset.titleVideo === "true" &&
+          selectedMedia.some(t => t.dataset.titleVideo === "true")) &&
+        !conflictsWith(tile, selectedMedia)
+      ));
+
+      while (singles.length < emptyCells.length && extras.length) {
+        const extra = extras.pop();
+        selectedMedia.push(extra);
+        extra.classList.remove("is-unused");
+        singles.push(extra);
+      }
+    }
+
+    singles.forEach((el, i) => {
+      const spot = emptyCells[i];
+      if (spot) setPos(el, spot.col, spot.row, 1, 1);
+    });
+
+    // Overlay rules are preserved. On mobile the shaped host pool is only 2x1 + 1x2.
+    const shapedOverlayHosts = [wideTile, tallTile, largeTile].filter(Boolean);
+    const imageShapedHosts = shapedOverlayHosts.filter(
+      tile => tile && tile.classList.contains("image-tile")
+    );
+
+    const overlayTarget = imageShapedHosts.length ? randomItem(imageShapedHosts) : null;
+    const overlay2Choices = shuffle(
+      shapedOverlayHosts.filter(tile => tile && tile !== overlayTarget)
+    );
+    const overlay2Target = overlay2Choices[0] || null;
+
+    if (overlayTarget) {
+      titleOverlayVideo.style.display = "";
+      placeTitleOverlay(overlayTarget, true);
+    } else {
+      titleOverlayVideo.style.display = "none";
+    }
+
+    if (overlay2Target) {
+      overlay2Image.style.display = "";
+      placeOverlay2(overlay2Target, true);
+    } else {
+      overlay2Image.style.display = "none";
+    }
+
+    const oneByOneImageTiles = selectedMedia.filter(tile =>
+      tile.classList.contains("image-tile") &&
+      tile !== wideTile &&
+      tile !== tallTile &&
+      tile !== largeTile
+    );
+    if (oneByOneImageTiles.length) {
+      placeOverlay3(randomItem(oneByOneImageTiles));
+    } else {
+      overlay3Image.style.display = "none";
+    }
+
+    const ordered = shuffle(allItems);
+    const frag = document.createDocumentFragment();
+    ordered.forEach(el => frag.appendChild(el));
+    grid.appendChild(frag);
+  }
+
+  function regenerate() {
+    if (changing || performance.now() < releaseUntil) return;
+    changing = true;
+    grid.classList.add("is-changing");
+
+    window.setTimeout(() => {
+      buildComposition();
+      grid.classList.remove("is-changing");
+      window.setTimeout(() => {
+        changing = false;
+        releaseUntil = performance.now() + 420;
+      }, 200);
+    }, 190);
+  }
+
+  buildComposition();
+  grid.classList.add("is-ready");
+  requestAnimationFrame(positionMobileSpotify);
+
+  // Wheel/trackpad no longer scrolls the page. Each deliberate gesture
+  // generates a new full-screen composition instead.
+  window.addEventListener("wheel", event => {
+    event.preventDefault();
+    regenerate();
+  }, { passive: false });
+
+  // Mobile V1: deliberate vertical swipe regenerates the fixed mosaic.
+  let touchStartY = null;
+  window.addEventListener("touchstart", event => {
+    touchStartY = event.touches[0]?.clientY ?? null;
+  }, {passive: true});
+  window.addEventListener("touchend", event => {
+    if (touchStartY == null) return;
+    const endY = event.changedTouches[0]?.clientY ?? touchStartY;
+    if (Math.abs(endY - touchStartY) >= 60) regenerate();
+    touchStartY = null;
+  }, {passive: true});
+
+  window.addEventListener("resize", () => {
+    positionMobileSpotify();
+    const webmTarget = grid.querySelector("[data-overlay-edge]");
+    if (webmTarget) placeTitleOverlay(webmTarget, false);
+
+    const overlay2Target = grid.querySelector("[data-overlay2-edge]");
+    if (overlay2Target) placeOverlay2(overlay2Target, false);
+
+    const overlay3Target = grid.querySelector("[data-overlay3-target]");
+    if (overlay3Target) placeOverlay3(overlay3Target, false);
+  });
+
+  window.addEventListener("keydown", event => {
+    if (["ArrowDown", "ArrowRight", " ", "PageDown"].includes(event.key)) {
+      event.preventDefault();
+      regenerate();
+    }
+  });
+
+  // Only decode/play videos while visible on the fixed stage.
+  const videos = grid.querySelectorAll("video");
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        const video = entry.target;
+        if (entry.isIntersecting) {
+          const p = video.play();
+          if (p && typeof p.catch === "function") p.catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
+    }, { threshold: 0.01 });
+
+    videos.forEach(video => observer.observe(video));
+  }
+
+  // Universal top-UI visibility behavior from the Fade Away experience.
+  const siteNav = document.getElementById("siteNav");
+  const uiVignette = document.getElementById("uiVignette");
+  let navPointerNearTop = true;
+
+  function updateNavVisibility() {
+    if (!siteNav) return;
+    const focusedInside = siteNav.contains(document.activeElement);
+    const dimmed = !navPointerNearTop && !focusedInside;
+    siteNav.classList.toggle("ui-dimmed", dimmed);
+    uiVignette?.classList.toggle("ui-dimmed", dimmed);
+  }
+
+  window.addEventListener("pointermove", event => {
+    navPointerNearTop = event.clientY <= window.innerHeight * 0.18;
+    updateNavVisibility();
+  }, { passive: true });
+
+  siteNav?.addEventListener("focusin", updateNavVisibility);
+  siteNav?.addEventListener("focusout", updateNavVisibility);
+
+  window.addEventListener("touchstart", event => {
+    const y = event.touches[0]?.clientY;
+    if (typeof y !== "number") return;
+    navPointerNearTop = y <= window.innerHeight * 0.18;
+    updateNavVisibility();
+  }, {passive:true});
+})();
+</script>
+
+</body>
+</html>
