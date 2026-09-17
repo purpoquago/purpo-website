@@ -8,33 +8,49 @@
 .index-grid,.detail-grid{width:min(1080px,78vw);display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center}.album-choice{text-align:center;color:#ffc52b;text-decoration:none;transition:transform .25s ease,filter .25s ease}.album-choice:hover{transform:translateY(-10px) scale(1.025);filter:drop-shadow(0 16px 18px rgba(0,0,0,.35))}.cover{width:100%;aspect-ratio:1;object-fit:cover;display:block}.choice-title,.heading{font-family:'Alfa Slab One',Impact,serif;color:#ffc52b;text-transform:uppercase}.choice-title{font-size:clamp(17px,1.45vw,25px);margin-top:15px}.copy-box,.player-box{width:100%;aspect-ratio:1;overflow:auto;padding:4px 6px}.heading{font-size:clamp(19px,1.65vw,28px);margin:0 0 5px}.meta{font-size:clamp(13px,1.05vw,18px);line-height:1.4}.description{font-size:clamp(14px,1.05vw,18px);line-height:1.55;margin-top:28px}.spotify{width:100%;height:100%;border:0;display:block;border-radius:10px}.tracks{padding:0 4px}.track{border-bottom:1px solid rgba(255,255,255,.22)}.track button{appearance:none;border:0;background:none;color:#fff;font:inherit;font-size:clamp(17px,1.45vw,25px);width:100%;text-align:left;padding:11px 0;cursor:pointer}.track button:after{content:'+';float:right;opacity:.65}.track.open button:after{content:'−'}.track-desc{max-height:0;overflow:hidden;opacity:0;transition:max-height .3s ease,opacity .25s,padding .3s;font-size:clamp(12px,.9vw,15px);line-height:1.5}.track.open .track-desc{max-height:150px;opacity:1;padding:0 0 12px}.hint{position:fixed;bottom:18px;left:50%;z-index:60;transform:translateX(-50%);font:12px/1.2 Arial,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.55}
 @media(max-width:800px),(hover:none) and (pointer:coarse){.site-nav{padding:16px 16px 0}.logo-link{width:112px}.menu{flex-direction:column;align-items:flex-end;gap:4px;margin:0}.nav-item{height:34px;margin:0!important}.nav-item+.nav-item:before{display:none}.nav-art img{object-position:right center}.nav-sa{width:188px}.nav-fade{width:122px}.nav-malilig{width:98px}.nav-visuals{width:76px}.nav-about{width:64px}.ui-vignette{height:220px}.front{padding:116px 8vw 35px;align-items:flex-start;overflow:auto}.index-grid,.detail-grid{width:min(84vw,430px);display:flex;flex-direction:column;gap:22px}.index-grid{padding-bottom:35px}.album-choice{width:72vw;max-width:310px}.choice-title{font-size:16px;margin-top:8px}.detail-grid{gap:15px}.copy-box,.player-box{aspect-ratio:auto;width:100%;overflow:visible;padding:0}.copy-box .description{margin-top:18px}.heading{font-size:20px}.meta{font-size:13px}.description{font-size:13px;line-height:1.5}.player-box{height:min(74vw,360px)}.tracks{width:100%;padding-bottom:40px}.track button{font-size:18px;padding:9px 0}.track-desc{font-size:12px}.bg{inset:-8%;width:116%;height:116%}.hint{display:none}}
 
-/* V4 — mobile Spotify geometry:
-   match the exact 1:1 footprint used by the album cover */
-@media (max-width: 700px) {
-  .spotify,
-  .spotify-wrap,
-  .spotify-player,
-  .spotify-embed,
-  .player,
-  .player-wrap {
-    width: 100% !important;
-    aspect-ratio: 1 / 1 !important;
+
+/* V5 — compact mobile Spotify + consistent editorial spacing */
+.listen-copy .tracks,
+.listen-info .tracks,
+.listen .tracks {
+  margin-top: 28px !important;
+}
+
+@media (max-width:700px) {
+  .player-box {
+    aspect-ratio: auto !important;
     height: auto !important;
     min-height: 0 !important;
-    overflow: hidden;
+    overflow: visible !important;
+  }
+  .player-box .spotify,
+  .player-box iframe.spotify,
+  iframe.spotify {
+    width: 100% !important;
+    height: 152px !important;
+    min-height: 0 !important;
+    aspect-ratio: auto !important;
+    display: block;
   }
 
-  .spotify iframe,
-  .spotify-wrap iframe,
-  .spotify-player iframe,
-  .spotify-embed iframe,
-  .player iframe,
-  .player-wrap iframe {
-    display: block;
-    width: 100% !important;
-    height: 100% !important;
-    min-height: 0 !important;
-    border: 0;
+  /* The text block follows the player directly instead of reserving a square. */
+  .listen-copy .tracks,
+  .listen-info .tracks,
+  .listen .tracks {
+    margin-top: 24px !important;
+  }
+
+  .site-nav,
+  .ui-vignette {
+    transition: opacity .35s ease, transform .35s ease !important;
+  }
+  .site-nav.mobile-hidden {
+    opacity: 0 !important;
+    transform: translateY(-12px) !important;
+    pointer-events: none;
+  }
+  .ui-vignette.mobile-hidden {
+    opacity: 0 !important;
   }
 }
 
@@ -92,4 +108,29 @@ function go(n){
 document.querySelectorAll('.jump').forEach(a=>a.onclick=e=>{e.preventDefault();go(+a.dataset.target)});addEventListener('wheel',e=>{if(Math.abs(e.deltaY)<12)return;e.preventDefault();go(current+(e.deltaY>0?1:-1))},{passive:false});addEventListener('keydown',e=>{if(['ArrowDown','PageDown',' '].includes(e.key))go(current+1);if(['ArrowUp','PageUp'].includes(e.key))go(current-1)});addEventListener('touchstart',e=>startY=e.touches[0].clientY,{passive:true});addEventListener('touchend',e=>{const dy=e.changedTouches[0].clientY-startY;if(Math.abs(dy)>55)go(current+(dy<0?1:-1))},{passive:true});
 addEventListener('mousemove',e=>{tx=(e.clientX/innerWidth-.5)*2;ty=(e.clientY/innerHeight-.5)*2;const near=e.clientY<=innerHeight*.18;nav.classList.toggle('ui-dimmed',!near);vig.style.opacity=near?'1':'0'});function anim(){mx+=(tx-mx)*.08;my+=(ty-my)*.08;document.documentElement.style.setProperty('--mx',mx.toFixed(3));document.documentElement.style.setProperty('--my',my.toFixed(3));requestAnimationFrame(anim)}anim();
 if('DeviceOrientationEvent'in window)addEventListener('deviceorientation',e=>{if(e.gamma!=null)tx=Math.max(-1,Math.min(1,e.gamma/28));if(e.beta!=null)ty=Math.max(-1,Math.min(1,(e.beta-45)/38))},{passive:true});
+
+/* V5 — mobile nav autohide */
+let _malligNavLastY = window.scrollY || 0;
+let _malligTouchNavY = 0;
+const _malligSetNavHidden = hidden => {
+  if (innerWidth > 700) return;
+  nav.classList.toggle('mobile-hidden', hidden);
+  vig.classList.toggle('mobile-hidden', hidden);
+};
+addEventListener('touchstart', e => {
+  if (!e.touches.length) return;
+  _malligTouchNavY = e.touches[0].clientY;
+  if (_malligTouchNavY < innerHeight * .18) _malligSetNavHidden(false);
+}, {passive:true});
+addEventListener('touchmove', e => {
+  if (!e.touches.length) return;
+  const y = e.touches[0].clientY;
+  const dy = y - _malligTouchNavY;
+  if (Math.abs(dy) > 10) {
+    _malligSetNavHidden(dy < 0);
+    _malligTouchNavY = y;
+  }
+}, {passive:true});
+addEventListener('orientationchange', () => _malligSetNavHidden(false), {passive:true});
+
 </script></body></html>
