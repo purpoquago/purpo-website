@@ -194,6 +194,27 @@ html,body{
   }
 }
 
+
+/* V12 — consistent mobile album-cover top anchor on STORY pages */
+@media(max-width:800px),(hover:none) and (pointer:coarse){
+  .scene:not(:has(.tracks)) .front:has(.cover){
+    align-items:flex-start!important;
+    justify-content:center!important;
+    padding-top:96px!important;
+    padding-bottom:42px!important;
+    overflow-y:auto!important;
+    overflow-x:clip!important;
+    scrollbar-width:none!important;
+  }
+  .scene:not(:has(.tracks)) .front:has(.cover)::-webkit-scrollbar{
+    display:none!important;
+  }
+  .scene:not(:has(.tracks)) .front:has(.cover) .pair{
+    margin-top:0!important;
+    align-self:flex-start!important;
+  }
+}
+
 </style></head><body>
 <div class="stage" id="stage">
 <section class="scene active" data-bg="a"><img class="bg" src="assets/mallig-bg.jpg"><div class="shade"></div><div class="front"><div class="index-grid"><a class="album-choice jump" data-target="1" href="#mallig-story"><img class="cover" src="assets/mallig-sideA.jpg"><div class="choice-title">Mallig EP (2021)</div></a><a class="album-choice jump" data-target="3" href="#sideb-story"><img class="cover" src="assets/mallig-sideB.jpg"><div class="choice-title">Mallig Side B EP (2022)</div></a></div></div></section>
