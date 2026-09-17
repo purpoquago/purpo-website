@@ -133,6 +133,67 @@ html,body,.stage{overflow:hidden!important}
   }
 }
 
+
+/* V11 — overflow containment + mobile Listen background lock */
+html,body{
+  width:100%;
+  max-width:100%;
+  overflow-x:clip!important;
+}
+.stage,.scene{
+  width:100%;
+  max-width:100%;
+  overflow-x:clip!important;
+}
+.player-box{
+  overflow:hidden!important;
+}
+
+/* Oversized parallax backgrounds remain visually oversized but are clipped by scene. */
+.scene .bg{
+  max-width:none!important;
+}
+
+/* Listen scenes: foreground can grow vertically, background remains viewport-bound. */
+.scene:has(.tracks){
+  overflow-x:clip!important;
+  overflow-y:auto!important;
+  scrollbar-width:none!important;
+}
+.scene:has(.tracks)::-webkit-scrollbar{display:none!important}
+
+@media(max-width:800px),(hover:none) and (pointer:coarse){
+  .scene:has(.tracks) > .bg,
+  .scene:has(.tracks) > .shade{
+    position:fixed!important;
+  }
+  .scene:has(.tracks) > .bg{
+    inset:-4%!important;
+    width:108%!important;
+    height:108%!important;
+    min-height:108vh!important;
+    object-fit:cover!important;
+  }
+  .scene:has(.tracks) > .shade{
+    inset:0!important;
+    width:100%!important;
+    height:100vh!important;
+  }
+  .scene:has(.tracks) .front{
+    position:relative!important;
+    inset:auto!important;
+    min-height:100vh!important;
+    height:auto!important;
+    overflow:visible!important;
+  }
+  .scene:has(.tracks) .pair,
+  .scene:has(.tracks) .copy-box{
+    height:auto!important;
+    max-height:none!important;
+    overflow:visible!important;
+  }
+}
+
 </style></head><body>
 <div class="stage" id="stage">
 <section class="scene active" data-bg="a"><img class="bg" src="assets/mallig-bg.jpg"><div class="shade"></div><div class="front"><div class="index-grid"><a class="album-choice jump" data-target="1" href="#mallig-story"><img class="cover" src="assets/mallig-sideA.jpg"><div class="choice-title">Mallig EP (2021)</div></a><a class="album-choice jump" data-target="3" href="#sideb-story"><img class="cover" src="assets/mallig-sideB.jpg"><div class="choice-title">Mallig Side B EP (2022)</div></a></div></div></section>
