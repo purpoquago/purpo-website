@@ -54,18 +54,98 @@
   }
 }
 
+
+/* V7 editorial copy + accordion overflow fix */
+html,body,.stage,.scene{overflow-x:hidden!important}.tracks,.track,.track-desc{max-width:100%;box-sizing:border-box}.track-desc{overflow-x:hidden!important;scrollbar-width:none}.track-desc::-webkit-scrollbar{display:none}.track.open .track-desc{max-height:520px}.song-credits{font-size:clamp(11px,.82vw,14px);line-height:1.45;opacity:.78;margin:0 0 16px}.song-story p{margin:0 0 12px}.song-story p:last-child{margin-bottom:14px}@media(max-width:800px),(hover:none) and (pointer:coarse){.track.open .track-desc{max-height:900px}.song-credits{font-size:12px;margin-bottom:14px}}
+
+/* V9 — natural-height song accordion */
+.track-desc{
+  display:grid !important;
+  grid-template-rows:0fr;
+  max-height:none !important;
+  overflow:hidden !important;
+  opacity:0;
+  padding:0 !important;
+  transition:grid-template-rows .38s cubic-bezier(.22,.61,.36,1),
+             opacity .24s ease,
+             padding .38s cubic-bezier(.22,.61,.36,1) !important;
+}
+.track-desc-inner{
+  min-height:0;
+  overflow:hidden;
+}
+.track.open .track-desc{
+  grid-template-rows:1fr;
+  max-height:none !important;
+  opacity:1;
+  padding:0 0 12px !important;
+}
+.tracks,.track,.track-desc,.track-desc-inner,.song-credits,.song-story{
+  width:100%;
+  max-width:100%;
+  box-sizing:border-box;
+  overflow-x:hidden;
+}
+
+
+/* V10 — expanded song copy grows the LISTEN composition itself */
+html,body,.stage{overflow:hidden!important}
+.scene{overflow-x:hidden!important}
+.scene:has(.tracks){
+  overflow-y:auto!important;
+  scrollbar-width:none;
+  overscroll-behavior-y:contain;
+}
+.scene:has(.tracks)::-webkit-scrollbar{display:none}
+.scene:has(.tracks) .front{
+  position:relative!important;
+  inset:auto!important;
+  min-height:100vh;
+  height:auto!important;
+  overflow:visible!important;
+  padding-top:100px;
+  padding-bottom:70px;
+}
+.scene:has(.tracks) .pair,
+.scene:has(.tracks) .copy-box{
+  height:auto!important;
+  max-height:none!important;
+  overflow:visible!important;
+}
+.scene:has(.tracks) .tracks,
+.scene:has(.tracks) .track,
+.scene:has(.tracks) .track-desc,
+.scene:has(.tracks) .track-desc-inner{
+  overflow-x:hidden!important;
+  max-height:none!important;
+  scrollbar-width:none!important;
+}
+.scene:has(.tracks) *::-webkit-scrollbar{display:none!important}
+
+/* closed/open accordion still animates naturally */
+.track-desc{display:grid!important;grid-template-rows:0fr;overflow:hidden!important}
+.track.open .track-desc{grid-template-rows:1fr;overflow:hidden!important}
+
+@media(max-width:800px),(hover:none) and (pointer:coarse){
+  .scene:has(.tracks) .front{
+    padding-top:92px;
+    padding-bottom:42px;
+  }
+}
+
 </style></head><body>
 <div class="stage" id="stage">
 <section class="scene active" data-bg="a"><img class="bg" src="assets/mallig-bg.jpg"><div class="shade"></div><div class="front"><div class="index-grid"><a class="album-choice jump" data-target="1" href="#mallig-story"><img class="cover" src="assets/mallig-sideA.jpg"><div class="choice-title">Mallig EP (2021)</div></a><a class="album-choice jump" data-target="3" href="#sideb-story"><img class="cover" src="assets/mallig-sideB.jpg"><div class="choice-title">Mallig Side B EP (2022)</div></a></div></div></section>
-<section class="scene" id="mallig-story" data-bg="a"><img class="bg" src="assets/mallig-bg.jpg"><div class="shade"></div><div class="front"><div class="detail-grid"><img class="cover" src="assets/mallig-sideA.jpg"><div class="copy-box"><h1 class="heading">Mallig EP (2021)</h1><div class="meta">by Purpo<br>Produced by: Purpo, Chuck Joson, Jem Blanco</div><div class="description">Mallig is a collection of deeply personal songs written at different points in my life. Rooted in the alternative OPM sound I grew up with, the EP moves through stories and struggles with freedom, love, expectations, and the passage of time. A lot of these songs came from moments when life seemed to be moving faster than I could make sense of it. Looking back, writing them might’ve just been my way of finding some meaning in the chaos.</div></div></div></div></section>
+<section class="scene" id="mallig-story" data-bg="a"><img class="bg" src="assets/mallig-bg.jpg"><div class="shade"></div><div class="front"><div class="detail-grid"><img class="cover" src="assets/mallig-sideA.jpg"><div class="copy-box"><h1 class="heading">Mallig EP (2021)</h1><div class="meta">by Purpo<br>Produced by: Purpo, Chuck Joson, Jem Blanco</div><div class="description">Mallig is a collection of deeply personal songs written at different points in my life. Rooted in the alternative OPM sound I grew up with, the EP moves through stories of freedom, love, expectations, and the passage of time. A lot of these songs came from moments when life seemed to be moving faster than I could make sense of it. At its heart, Mallig is about moving forward while still carrying pieces of where I came from.</div></div></div></div></section>
 <section class="scene" data-bg="a"><img class="bg" src="assets/mallig-bg.jpg"><div class="shade"></div><div class="front"><div class="detail-grid"><div class="player-box"><iframe class="spotify" loading="lazy" src="https://open.spotify.com/embed/album/4DRSbW4YmOMaOD5sueHCvC?utm_source=generator" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe></div><div class="copy-box"><h1 class="heading">Mallig EP (2021)</h1><div class="meta">by Purpo<br>Produced by: Purpo, Chuck Joson, Jem Blanco</div><div class="tracks" data-tracks="Kalayaan|Sa Wakas|Chance Encounter|Still Breathing|Mallig|Bukas"></div></div></div></div></section>
-<section class="scene" id="sideb-story" data-bg="b"><img class="bg" src="assets/side-b-bg.jpg"><div class="shade"></div><div class="front"><div class="detail-grid"><img class="cover" src="assets/mallig-sideB.jpg"><div class="copy-box"><h1 class="heading">Mallig Side B EP (2022)</h1><div class="meta">by Purpo<br>Produced by: Purpo, Jem Blanco</div><div class="description">A continuation of the Mallig story, Side B moves through another set of memories, places, friendships, and questions. This placeholder album description will be replaced with the final Side B copy.</div></div></div></div></section>
+<section class="scene" id="sideb-story" data-bg="b"><img class="bg" src="assets/side-b-bg.jpg"><div class="shade"></div><div class="front"><div class="detail-grid"><img class="cover" src="assets/mallig-sideB.jpg"><div class="copy-box"><h1 class="heading">Mallig Side B EP (2022)</h1><div class="meta">by Purpo<br>Produced by: Purpo, Jem Blanco</div><div class="description">Mallig Side B is a collection of stories I gathered from the new places and people I encountered along the way. Most of them aren’t really my stories, but stories of and for people I loved and have come to love. In one way or another, they explore different kinds of love whether for a person, or an idea.</div></div></div></div></section>
 <section class="scene" data-bg="b"><img class="bg" src="assets/side-b-bg.jpg"><div class="shade"></div><div class="front"><div class="detail-grid"><div class="player-box"><iframe class="spotify" loading="lazy" src="https://open.spotify.com/embed/album/39BBNBQsAtyV0ZNPQlzgVS?utm_source=generator" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe></div><div class="copy-box"><h1 class="heading">Mallig Side B EP (2022)</h1><div class="meta">by Purpo<br>Produced by: Purpo, Jem Blanco</div><div class="tracks" data-tracks="Ewan Ko Ba|Tag-Araw|Alaala|Sa Bundok|Panaginip|Magkaibigan"></div></div></div></div></section>
 </div><div class="blackout" id="blackout"></div><div class="ui-vignette" id="uiVignette"></div>
 <nav class="site-nav" id="siteNav"><a class="logo-link" href="../"><img src="assets/ui/purpo-logo-white.png"></a><div class="menu"><a class="nav-item nav-sa" href="../sa-gitna-ng-lahat/"><span class="nav-art"><img class="base" src="assets/ui/sa-gitna-white.png"><img class="pink" src="assets/ui/sa-gitna-pink.png"></span></a><a class="nav-item nav-fade" href="../fade-away/"><span class="nav-art"><img class="base" src="assets/ui/fade-away-white.png"><img class="pink hover-pink" src="assets/ui/fade-away-white.png"></span></a><a class="nav-item nav-malilig" href="./"><span class="nav-art"><img class="base" src="assets/ui/malilig-white.png"><img class="pink hover-pink" src="assets/ui/malilig-white.png"></span></a><a class="nav-item nav-visuals" href="#visuals"><span class="nav-art"><img class="base" src="assets/ui/visuals-white.png"><img class="pink hover-pink" src="assets/ui/visuals-white.png"></span></a><a class="nav-item nav-about" href="#about"><span class="nav-art"><img class="base" src="assets/ui/about-white.png"><img class="pink hover-pink" src="assets/ui/about-white.png"></span></a></div></nav><div class="hint">Scroll / swipe to explore</div>
 <script>
 const scenes=[...document.querySelectorAll('.scene')],black=document.getElementById('blackout'),nav=document.getElementById('siteNav'),vig=document.getElementById('uiVignette');let current=0,locked=false,startY=0,mx=0,my=0,tx=0,ty=0;
-document.querySelectorAll('.tracks').forEach(box=>{box.dataset.tracks.split('|').forEach(name=>{const row=document.createElement('div');row.className='track';row.innerHTML=`<button type="button">${name}</button><div class="track-desc">Placeholder song description for “${name}”. This text will be replaced with the final song notes.</div>`;row.querySelector('button').onclick=()=>{const was=row.classList.contains('open');box.querySelectorAll('.track.open').forEach(x=>x.classList.remove('open'));if(!was)row.classList.add('open')};box.appendChild(row)})});
+const songCopy={"Kalayaan": ["Music by: Purpo, Chuck Joson, Jem Blanco", "Lyrics by: Purpo", "I wrote this song 20 years ago, as a kid looking for freedom of thought and expression. I grew up in a deeply religious and traditional household where I wasn’t really allowed to think for myself. That mindset leaked into almost every part of my life, from choosing a career, a partner, and everything in between. Twenty years later, as much as I don’t want to admit it, I still haven’t quite figured out what to do with the freedom I have now."], "Sa Wakas": ["Music by: Purpo, Chuck Joson, Jem Blanco", "Lyrics by: Purpo", "Sa Wakas strangely came to me in a dream. It was a full song, with melody, chords and a complete structure. Luckily, during that time, I always sleep with a guitar beside me in bed and i was able to record it in my phone as a full one-shot.\n\nThe lyrics came much later, about a year before the pandemic. I had sat with the song for a long time by then, and it eventually became about longing for someone and finding your way back to each other after years apart. Just like how the song was made, maybe some arrive in their own time."], "Chance Encounter": ["Music by: Purpo, Jem Blanco", "Lyrics by: Purpo", "Chance Encounter is a rhetorical exploration of the possibilities that come with meeting someone new, falling in love, building a life together, and wondering how far a chance encounter could actually go.\n\nI originally wrote it on guitar, but while playing around with a new synth, I stumbled into this spacious sound that I really liked. I ended up following that instead and turned the song into synth-pop."], "Still Breathing": ["Music by: Purpo, Jem Blanco", "Lyrics by: Purpo", "Still Breathing is a song I wrote during the pandemic, when it felt like society was slowly unraveling around us. It came from trying to stay sane through all the uncertainty and isolation, and somehow managing to survive by keeping someone in mind.\n\nMusically, it was a continuation of me learning my way around synths and slowly discovering what all the controls actually did. I had just learned how much you could do with a filter, so naturally I used it everywhere."], "Mallig": ["Music by: Purpo, Jem Blanco", "Lyrics: Purpo", "I wrote Mallig in 2013, during a moment of sadness and I found myself looking up old friends from the province whom I had lost contact with, wondering where they were and whether life had worked out for them.\n\nWe came from Mallig, a small agricultural town where opportunities were limited, so being able to leave for the city or another country already felt like a blessing. A lot of us left hoping to make something more of our lives. But years later, I found myself wondering what giving up our old lives actually got us. Did we find what we were looking for? Was it worth it?"], "Bukas": ["Music by: Purpo, Jem Blanco", "Lyrics: Purpo", "Bukas was one of the first songs I ever wrote, back in my first year of college. It came from the pain of leaving behind the life I knew to pursue my dreams, while carrying pieces of that old life with me and hoping that someday I could just come back to it."], "Ewan Ko Ba": ["Music by: Purpo, Jem Blanco", "Lyrics by Purpo", "Ewan Ko Ba is a self-aware take on obsession and the insanity that sometimes comes with it. Someone gets so stuck in your head that they slowly become larger than life, until you’ve somehow convinced yourself that this perfectly ordinary person is the center of the universe. Musically, it ended up as this cool rock-synth groove: a product of me messing around with synths and blending it with my love for alt rock."], "Tag-Araw": ["Music by: Purpo, Ren Gamboa, Jem Blanco, Pablo Pacis", "Lyrics: Purpo, Jem Blanco", "Tag-araw is a reggae track I wrote with Jem Blanco and Ren Gamboa during our reggae days. Ren wanted a vibrant song we could play at the beach, so we ended up with a simple call for the sun to come out so the fun could begin. Jem added the playful Ilocano toasting in the bridge, which gave the song even more of its personality. Just friends, sunshine, reggae, and an excuse to have a good time."], "Alaala": ["Music and Lyrics by: Purpo", "", "I wrote Alaala in 2012 after my best friend from Isabela, who was studying law at the time, died from hazing. The song came out of both grief and anger at how unfair the world can be, how some people have to work twice as hard just to get somewhere, only for everything they worked for to disappear in an instant."], "Sa Bundok": ["Music by: Purpo, Jem Blanco", "Lyrics by: Purpo", "I started hiking in 2015, and over the years it became a huge part of my life, shaping a lot of how I see the world and how I move through it. I wrote Sa Bundok in 2022 as a way of putting that part of my life into a song: a little thank you to the trails, the experiences, and especially the people I met along the way."], "Panaginip": ["Music by: Purpo, Jem Blanco", "Lyrics by: Purpo", "Panaginip was inspired by personal stories, poems, and artwork by my close friend Wipo. It’s a story of love and lust driven by the need for companionship, unfolding with the haziness of a dream where it’s hard to tell what’s real and what you just want to be real. Then, at some point, you wake up and realize that whatever the two of you had probably wasn’t love at all."], "Magkaibigan": ["Music by: Purpo, Jem Blanco", "Lyrics by: Purpo", "Back when I was working at an agency, I became friends with two writers who were very obviously falling in love right in front of us. It got to the point where everyone seemed to know what was happening except the two people involved, or at least they didn’t want to admit it. At the time, these unlabeled situationships were pretty common among millennials, and Magkaibigan was my attempt to capture that weird space between being “just friends” and clearly being something more.\n\nFortunately, this particular situationship worked out. They’re married now."]};
+document.querySelectorAll('.tracks').forEach(box=>{box.dataset.tracks.split('|').forEach(name=>{const row=document.createElement('div');row.className='track';const d=songCopy[name]||['','',''];const paras=d[2].split('\n\n').map(x=>`<p>${x}</p>`).join('');const credits=[d[0],d[1]].filter(Boolean).map(x=>`<div>${x}</div>`).join('');row.innerHTML=`<button type="button">${name}</button><div class="track-desc"><div class="track-desc-inner"><div class="song-credits">${credits}</div><div class="song-story">${paras}</div></div></div>`;row.querySelector('button').onclick=()=>{const was=row.classList.contains('open');box.querySelectorAll('.track.open').forEach(x=>x.classList.remove('open'));if(!was)row.classList.add('open')};box.appendChild(row)})});
 function go(n){
   n=Math.max(0,Math.min(scenes.length-1,n));
   if(n===current||locked)return;
@@ -105,7 +185,17 @@ function go(n){
     },260);
   }
 }
-document.querySelectorAll('.jump').forEach(a=>a.onclick=e=>{e.preventDefault();go(+a.dataset.target)});addEventListener('wheel',e=>{if(Math.abs(e.deltaY)<12)return;e.preventDefault();go(current+(e.deltaY>0?1:-1))},{passive:false});addEventListener('keydown',e=>{if(['ArrowDown','PageDown',' '].includes(e.key))go(current+1);if(['ArrowUp','PageUp'].includes(e.key))go(current-1)});addEventListener('touchstart',e=>startY=e.touches[0].clientY,{passive:true});addEventListener('touchend',e=>{const dy=e.changedTouches[0].clientY-startY;if(Math.abs(dy)>55)go(current+(dy<0?1:-1))},{passive:true});
+document.querySelectorAll('.jump').forEach(a=>a.onclick=e=>{e.preventDefault();go(+a.dataset.target)});addEventListener('wheel',e=>{if(Math.abs(e.deltaY)<12)return;e.preventDefault();go(current+(e.deltaY>0?1:-1))},{passive:false});addEventListener('keydown',e=>{if(['ArrowDown','PageDown',' '].includes(e.key))go(current+1);if(['ArrowUp','PageUp'].includes(e.key))go(current-1)});addEventListener('touchstart',e=>startY=e.touches[0].clientY,{passive:true});addEventListener('touchend',e=>{
+  const dy=e.changedTouches[0].clientY-startY;
+  if(Math.abs(dy)<=55)return;
+  const s=scenes[current];
+  const listen=s.querySelector('.tracks');
+  if(listen && s.scrollHeight>s.clientHeight+2){
+    const atTop=s.scrollTop<=1, atBottom=s.scrollTop+s.clientHeight>=s.scrollHeight-2;
+    if((dy<0&&!atBottom)||(dy>0&&!atTop))return;
+  }
+  go(current+(dy<0?1:-1));
+},{passive:true});
 addEventListener('mousemove',e=>{tx=(e.clientX/innerWidth-.5)*2;ty=(e.clientY/innerHeight-.5)*2;const near=e.clientY<=innerHeight*.18;nav.classList.toggle('ui-dimmed',!near);vig.style.opacity=near?'1':'0'});function anim(){mx+=(tx-mx)*.08;my+=(ty-my)*.08;document.documentElement.style.setProperty('--mx',mx.toFixed(3));document.documentElement.style.setProperty('--my',my.toFixed(3));requestAnimationFrame(anim)}anim();
 if('DeviceOrientationEvent'in window)addEventListener('deviceorientation',e=>{if(e.gamma!=null)tx=Math.max(-1,Math.min(1,e.gamma/28));if(e.beta!=null)ty=Math.max(-1,Math.min(1,(e.beta-45)/38))},{passive:true});
 
