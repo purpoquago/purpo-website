@@ -215,6 +215,42 @@ html,body{
   }
 }
 
+
+/* V13 — mobile STORY centering + desktop LISTEN overscroll correction */
+
+/* Desktop LISTEN: default scene stays viewport-locked.
+   JS enables .content-overflow only when an open song genuinely exceeds viewport height. */
+@media(min-width:801px) and (hover:hover){
+  .scene:has(.tracks){
+    overflow-y:hidden!important;
+    overscroll-behavior-y:none!important;
+  }
+  .scene:has(.tracks).content-overflow{
+    overflow-y:auto!important;
+    overscroll-behavior-y:contain!important;
+    scrollbar-width:none!important;
+  }
+  .scene:has(.tracks).content-overflow::-webkit-scrollbar{display:none!important}
+}
+
+/* Mobile STORY pages: center the full cover + metadata + description composition.
+   This supersedes V12's fixed 96px cover anchor. */
+@media(max-width:800px),(hover:none) and (pointer:coarse){
+  .scene:not(:has(.tracks)) .front:has(.cover){
+    align-items:center!important;
+    justify-content:center!important;
+    padding-top:82px!important;
+    padding-bottom:38px!important;
+    overflow-y:auto!important;
+    overflow-x:clip!important;
+  }
+  .scene:not(:has(.tracks)) .front:has(.cover) .pair{
+    margin-top:auto!important;
+    margin-bottom:auto!important;
+    align-self:center!important;
+  }
+}
+
 </style></head><body>
 <div class="stage" id="stage">
 <section class="scene active" data-bg="a"><img class="bg" src="assets/mallig-bg.jpg"><div class="shade"></div><div class="front"><div class="index-grid"><a class="album-choice jump" data-target="1" href="#mallig-story"><img class="cover" src="assets/mallig-sideA.jpg"><div class="choice-title">Mallig EP (2021)</div></a><a class="album-choice jump" data-target="3" href="#sideb-story"><img class="cover" src="assets/mallig-sideB.jpg"><div class="choice-title">Mallig Side B EP (2022)</div></a></div></div></section>
@@ -304,5 +340,23 @@ addEventListener('touchmove', e => {
   }
 }, {passive:true});
 addEventListener('orientationchange', () => _malligSetNavHidden(false), {passive:true});
+
+
+function syncListenOverflow(){
+  document.querySelectorAll('.scene:has(.tracks)').forEach(s=>{
+    if(matchMedia('(min-width:801px) and (hover:hover)').matches){
+      const front=s.querySelector('.front');
+      const needs=!!s.querySelector('.track.open') && front && front.scrollHeight > s.clientHeight + 2;
+      s.classList.toggle('content-overflow',needs);
+      if(!needs) s.scrollTop=0;
+    }else{
+      s.classList.remove('content-overflow');
+    }
+  });
+}
+document.addEventListener('click',e=>{
+  if(e.target.closest('.track button')) requestAnimationFrame(()=>requestAnimationFrame(syncListenOverflow));
+});
+addEventListener('resize',syncListenOverflow,{passive:true});
 
 </script></body></html>
