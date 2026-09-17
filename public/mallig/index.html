@@ -277,11 +277,9 @@ html,body{
 }
 
 
-/* V15 TEST — deterministic mobile STORY position.
-   Both album-description compositions begin exactly 40px from viewport top.
-   No automated vertical centering, auto margins, or Story scrolling. */
+/* V17 CLEANUP — mobile Story positioning applies ONLY to Scene 2 + Scene 4 */
 @media(max-width:800px),(hover:none) and (pointer:coarse){
-  .scene:not(:has(.tracks)) .front:has(.cover){
+  .story-scene .front{
     position:absolute!important;
     inset:0!important;
     height:100%!important;
@@ -290,9 +288,9 @@ html,body{
     padding:0 6vw!important;
     overflow:hidden!important;
   }
-  .scene:not(:has(.tracks)) .front:has(.cover) .pair{
+  .story-scene .front .pair{
     position:absolute!important;
-    top:40px!important;
+    top:7dvh!important;
     left:6vw!important;
     right:6vw!important;
     width:auto!important;
@@ -304,20 +302,12 @@ html,body{
   }
 }
 
-
-/* V16 TEST — responsive mobile STORY top anchor */
-@media(max-width:800px),(hover:none) and (pointer:coarse){
-  .scene:not(:has(.tracks)) .front:has(.cover) .pair{
-    top:7dvh!important;
-  }
-}
-
 </style></head><body>
 <div class="stage" id="stage">
 <section class="scene active" data-bg="a"><img class="bg" src="assets/mallig-bg.jpg"><div class="shade"></div><div class="front"><div class="index-grid"><a class="album-choice jump" data-target="1" href="#mallig-story"><img class="cover" src="assets/mallig-sideA.jpg"><div class="choice-title">Mallig EP (2021)</div></a><a class="album-choice jump" data-target="3" href="#sideb-story"><img class="cover" src="assets/mallig-sideB.jpg"><div class="choice-title">Mallig Side B EP (2022)</div></a></div></div></section>
-<section class="scene" id="mallig-story" data-bg="a"><img class="bg" src="assets/mallig-bg.jpg"><div class="shade"></div><div class="front"><div class="detail-grid"><img class="cover" src="assets/mallig-sideA.jpg"><div class="copy-box"><h1 class="heading">Mallig EP (2021)</h1><div class="meta">by Purpo<br>Produced by: Purpo, Chuck Joson, Jem Blanco</div><div class="description">Mallig is a collection of deeply personal songs written at different points in my life. Rooted in the alternative OPM sound I grew up with, the EP moves through stories of freedom, love, expectations, and the passage of time. A lot of these songs came from moments when life seemed to be moving faster than I could make sense of it. At its heart, Mallig is about moving forward while still carrying pieces of where I came from.</div></div></div></div></section>
+<section class="scene story-scene" id="mallig-story" data-bg="a"><img class="bg" src="assets/mallig-bg.jpg"><div class="shade"></div><div class="front"><div class="detail-grid"><img class="cover" src="assets/mallig-sideA.jpg"><div class="copy-box"><h1 class="heading">Mallig EP (2021)</h1><div class="meta">by Purpo<br>Produced by: Purpo, Chuck Joson, Jem Blanco</div><div class="description">Mallig is a collection of deeply personal songs written at different points in my life. Rooted in the alternative OPM sound I grew up with, the EP moves through stories of freedom, love, expectations, and the passage of time. A lot of these songs came from moments when life seemed to be moving faster than I could make sense of it. At its heart, Mallig is about moving forward while still carrying pieces of where I came from.</div></div></div></div></section>
 <section class="scene" data-bg="a"><img class="bg" src="assets/mallig-bg.jpg"><div class="shade"></div><div class="front"><div class="detail-grid"><div class="player-box"><iframe class="spotify" loading="lazy" src="https://open.spotify.com/embed/album/4DRSbW4YmOMaOD5sueHCvC?utm_source=generator" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe></div><div class="copy-box"><h1 class="heading">Mallig EP (2021)</h1><div class="meta">by Purpo<br>Produced by: Purpo, Chuck Joson, Jem Blanco</div><div class="tracks" data-tracks="Kalayaan|Sa Wakas|Chance Encounter|Still Breathing|Mallig|Bukas"></div></div></div></div></section>
-<section class="scene" id="sideb-story" data-bg="b"><img class="bg" src="assets/side-b-bg.jpg"><div class="shade"></div><div class="front"><div class="detail-grid"><img class="cover" src="assets/mallig-sideB.jpg"><div class="copy-box"><h1 class="heading">Mallig Side B EP (2022)</h1><div class="meta">by Purpo<br>Produced by: Purpo, Jem Blanco</div><div class="description">Mallig Side B is a collection of stories I gathered from the new places and people I encountered along the way. Most of them aren’t really my stories, but stories of and for people I loved and have come to love. In one way or another, they explore different kinds of love whether for a person, or an idea.</div></div></div></div></section>
+<section class="scene story-scene" id="sideb-story" data-bg="b"><img class="bg" src="assets/side-b-bg.jpg"><div class="shade"></div><div class="front"><div class="detail-grid"><img class="cover" src="assets/mallig-sideB.jpg"><div class="copy-box"><h1 class="heading">Mallig Side B EP (2022)</h1><div class="meta">by Purpo<br>Produced by: Purpo, Jem Blanco</div><div class="description">Mallig Side B is a collection of stories I gathered from the new places and people I encountered along the way. Most of them aren’t really my stories, but stories of and for people I loved and have come to love. In one way or another, they explore different kinds of love whether for a person, or an idea.</div></div></div></div></section>
 <section class="scene" data-bg="b"><img class="bg" src="assets/side-b-bg.jpg"><div class="shade"></div><div class="front"><div class="detail-grid"><div class="player-box"><iframe class="spotify" loading="lazy" src="https://open.spotify.com/embed/album/39BBNBQsAtyV0ZNPQlzgVS?utm_source=generator" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe></div><div class="copy-box"><h1 class="heading">Mallig Side B EP (2022)</h1><div class="meta">by Purpo<br>Produced by: Purpo, Jem Blanco</div><div class="tracks" data-tracks="Ewan Ko Ba|Tag-Araw|Alaala|Sa Bundok|Panaginip|Magkaibigan"></div></div></div></div></section>
 </div><div class="blackout" id="blackout"></div><div class="ui-vignette" id="uiVignette"></div>
 <nav class="site-nav" id="siteNav"><a class="logo-link" href="../"><img src="assets/ui/purpo-logo-white.png"></a><div class="menu"><a class="nav-item nav-sa" href="../sa-gitna-ng-lahat/"><span class="nav-art"><img class="base" src="assets/ui/sa-gitna-white.png"><img class="pink" src="assets/ui/sa-gitna-pink.png"></span></a><a class="nav-item nav-fade" href="../fade-away/"><span class="nav-art"><img class="base" src="assets/ui/fade-away-white.png"><img class="pink hover-pink" src="assets/ui/fade-away-white.png"></span></a><a class="nav-item nav-malilig" href="./"><span class="nav-art"><img class="base" src="assets/ui/malilig-white.png"><img class="pink hover-pink" src="assets/ui/malilig-white.png"></span></a><a class="nav-item nav-visuals" href="#visuals"><span class="nav-art"><img class="base" src="assets/ui/visuals-white.png"><img class="pink hover-pink" src="assets/ui/visuals-white.png"></span></a><a class="nav-item nav-about" href="#about"><span class="nav-art"><img class="base" src="assets/ui/about-white.png"><img class="pink hover-pink" src="assets/ui/about-white.png"></span></a></div></nav><div class="hint">Scroll / swipe to explore</div>
