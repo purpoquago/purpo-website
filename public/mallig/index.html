@@ -327,6 +327,36 @@ html,body{
   }
 }
 
+
+/* Story-page overflow safety: preserve the 7dvh cover anchor, allow natural scrolling only when needed. */
+@media(max-width:800px),(hover:none) and (pointer:coarse){
+  .story-scene{
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    overscroll-behavior-y:contain;
+    -webkit-overflow-scrolling:touch;
+  }
+  .story-scene .front{
+    position:relative!important;
+    inset:auto!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:100dvh!important;
+    overflow:visible!important;
+  }
+  .story-scene .detail-grid{
+    position:relative!important;
+    top:auto!important;
+    left:auto!important;
+    right:auto!important;
+    width:88vw!important;
+    margin:0 auto!important;
+    padding-top:7dvh!important;
+    padding-bottom:7dvh!important;
+    box-sizing:border-box!important;
+  }
+}
+
 </style></head><body>
 <div class="stage" id="stage">
 <section class="scene active" data-bg="a"><img class="bg" src="assets/mallig-bg.jpg"><div class="shade"></div><div class="front"><div class="index-grid"><a class="album-choice jump" data-target="1" href="#mallig-story"><img class="cover" src="assets/mallig-sideA.jpg"><div class="choice-title">Mallig EP (2021)</div></a><a class="album-choice jump" data-target="3" href="#sideb-story"><img class="cover" src="assets/mallig-sideB.jpg"><div class="choice-title">Mallig Side B EP (2022)</div></a></div></div></section>
@@ -379,12 +409,23 @@ function go(n){
     },260);
   }
 }
-document.querySelectorAll('.jump').forEach(a=>a.onclick=e=>{e.preventDefault();go(+a.dataset.target)});addEventListener('wheel',e=>{if(Math.abs(e.deltaY)<12)return;e.preventDefault();go(current+(e.deltaY>0?1:-1))},{passive:false});addEventListener('keydown',e=>{if(['ArrowDown','PageDown',' '].includes(e.key))go(current+1);if(['ArrowUp','PageUp'].includes(e.key))go(current-1)});addEventListener('touchstart',e=>startY=e.touches[0].clientY,{passive:true});addEventListener('touchend',e=>{
+document.querySelectorAll('.jump').forEach(a=>a.onclick=e=>{e.preventDefault();go(+a.dataset.target)});
+addEventListener('wheel',e=>{
+  if(Math.abs(e.deltaY)<12)return;
+  const s=scenes[current];
+  if(s.classList.contains('story-scene') && s.scrollHeight>s.clientHeight+2){
+    const atTop=s.scrollTop<=1, atBottom=s.scrollTop+s.clientHeight>=s.scrollHeight-2;
+    if((e.deltaY>0&&!atBottom)||(e.deltaY<0&&!atTop))return;
+  }
+  e.preventDefault();
+  go(current+(e.deltaY>0?1:-1));
+},{passive:false});addEventListener('keydown',e=>{if(['ArrowDown','PageDown',' '].includes(e.key))go(current+1);if(['ArrowUp','PageUp'].includes(e.key))go(current-1)});addEventListener('touchstart',e=>startY=e.touches[0].clientY,{passive:true});addEventListener('touchend',e=>{
   const dy=e.changedTouches[0].clientY-startY;
   if(Math.abs(dy)<=55)return;
   const s=scenes[current];
   const listen=s.querySelector('.tracks');
-  if(listen && s.scrollHeight>s.clientHeight+2){
+  const scrollableStory=s.classList.contains('story-scene');
+  if((listen || scrollableStory) && s.scrollHeight>s.clientHeight+2){
     const atTop=s.scrollTop<=1, atBottom=s.scrollTop+s.clientHeight>=s.scrollHeight-2;
     if((dy<0&&!atBottom)||(dy>0&&!atTop))return;
   }
