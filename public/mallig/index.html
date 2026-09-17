@@ -302,6 +302,31 @@ html,body{
   }
 }
 
+
+/* V18 TEST — target the ACTUAL Story composition on Scene 2 + Scene 4 only */
+@media(max-width:800px),(hover:none) and (pointer:coarse){
+  .story-scene .front{
+    position:absolute!important;
+    inset:0!important;
+    height:100%!important;
+    min-height:0!important;
+    display:block!important;
+    padding:0!important;
+    overflow:hidden!important;
+  }
+  .story-scene .detail-grid{
+    position:absolute!important;
+    top:7dvh!important;
+    left:6vw!important;
+    right:6vw!important;
+    width:auto!important;
+    margin:0!important;
+    transform:none!important;
+    max-height:none!important;
+    overflow:visible!important;
+  }
+}
+
 </style></head><body>
 <div class="stage" id="stage">
 <section class="scene active" data-bg="a"><img class="bg" src="assets/mallig-bg.jpg"><div class="shade"></div><div class="front"><div class="index-grid"><a class="album-choice jump" data-target="1" href="#mallig-story"><img class="cover" src="assets/mallig-sideA.jpg"><div class="choice-title">Mallig EP (2021)</div></a><a class="album-choice jump" data-target="3" href="#sideb-story"><img class="cover" src="assets/mallig-sideB.jpg"><div class="choice-title">Mallig Side B EP (2022)</div></a></div></div></section>
