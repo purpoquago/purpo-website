@@ -369,6 +369,55 @@ html,body{
   }
 }
 
+
+/* Story-page fix: stationary background + independently scrolling foreground */
+@media(max-width:800px),(hover:none) and (pointer:coarse){
+  .story-scene{
+    overflow:hidden!important;
+  }
+  .story-scene .bg{
+    position:absolute!important;
+    inset:-2vh -2vw!important;
+    width:104vw!important;
+    height:104dvh!important;
+    transform:none!important;
+  }
+  .story-scene .front{
+    position:absolute!important;
+    inset:0!important;
+    width:100%!important;
+    height:100dvh!important;
+    min-height:0!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    overscroll-behavior-y:contain;
+    -webkit-overflow-scrolling:touch;
+  }
+  .story-scene .detail-grid{
+    position:relative!important;
+    top:auto!important;
+    left:auto!important;
+    right:auto!important;
+    width:88vw!important;
+    margin:0 auto!important;
+    padding-top:7dvh!important;
+    padding-bottom:7dvh!important;
+    box-sizing:border-box!important;
+  }
+}
+
+
+/* Mobile Story cover size: match Page 1 (72vw, max 310px) while keeping copy at 88vw. */
+@media(max-width:800px),(hover:none) and (pointer:coarse){
+  .story-scene .cover{
+    width:72vw!important;
+    max-width:310px!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+    display:block!important;
+  }
+}
+
 </style></head><body>
 <div class="stage" id="stage">
 <section class="scene active" data-bg="a"><img class="bg" src="assets/mallig-bg.jpg"><div class="shade"></div><div class="front"><div class="index-grid"><a class="album-choice jump" data-target="1" href="#mallig-story"><img class="cover" src="assets/mallig-sideA.jpg"><div class="choice-title">Mallig EP (2021)</div></a><a class="album-choice jump" data-target="3" href="#sideb-story"><img class="cover" src="assets/mallig-sideB.jpg"><div class="choice-title">Mallig Side B EP (2022)</div></a></div></div></section>
@@ -425,9 +474,12 @@ document.querySelectorAll('.jump').forEach(a=>a.onclick=e=>{e.preventDefault();g
 addEventListener('wheel',e=>{
   if(Math.abs(e.deltaY)<12)return;
   const s=scenes[current];
-  if(s.classList.contains('story-scene') && s.scrollHeight>s.clientHeight+2){
-    const atTop=s.scrollTop<=1, atBottom=s.scrollTop+s.clientHeight>=s.scrollHeight-2;
-    if((e.deltaY>0&&!atBottom)||(e.deltaY<0&&!atTop))return;
+  if(s.classList.contains('story-scene')){
+    const sc=s.querySelector('.front');
+    if(sc && sc.scrollHeight>sc.clientHeight+2){
+      const atTop=sc.scrollTop<=1, atBottom=sc.scrollTop+sc.clientHeight>=sc.scrollHeight-2;
+      if((e.deltaY>0&&!atBottom)||(e.deltaY<0&&!atTop))return;
+    }
   }
   e.preventDefault();
   go(current+(e.deltaY>0?1:-1));
@@ -436,8 +488,13 @@ addEventListener('wheel',e=>{
   if(Math.abs(dy)<=55)return;
   const s=scenes[current];
   const listen=s.querySelector('.tracks');
-  const scrollableStory=s.classList.contains('story-scene');
-  if((listen || scrollableStory) && s.scrollHeight>s.clientHeight+2){
+  if(s.classList.contains('story-scene')){
+    const sc=s.querySelector('.front');
+    if(sc && sc.scrollHeight>sc.clientHeight+2){
+      const atTop=sc.scrollTop<=1, atBottom=sc.scrollTop+sc.clientHeight>=sc.scrollHeight-2;
+      if((dy<0&&!atBottom)||(dy>0&&!atTop))return;
+    }
+  } else if(listen && s.scrollHeight>s.clientHeight+2){
     const atTop=s.scrollTop<=1, atBottom=s.scrollTop+s.clientHeight>=s.scrollHeight-2;
     if((dy<0&&!atBottom)||(dy>0&&!atTop))return;
   }
