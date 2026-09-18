@@ -2565,6 +2565,43 @@ html,body{overscroll-behavior-y:none}
 }
 </style>
 
+
+<style id="fadeaway-mobile-v20-p6-p7-visibility-fix">
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+  body.fa-m-page6 .page6-layer,
+  body.fa-m-page7 .page7-layer{
+    opacity:1!important;
+    visibility:visible!important;
+  }
+
+  body.fa-m-p6s2 .page6-editorial,
+  body.fa-m-p6s2 .page6-header,
+  body.fa-m-p6s2 .page6-copy{
+    opacity:1!important;
+    visibility:visible!important;
+    filter:none!important;
+  }
+  body.fa-m-p6s2 .page6-header,
+  body.fa-m-p6s2 .page6-copy{
+    transform:none!important;
+  }
+
+  body.fa-m-p7s1 .page7-spread,
+  body.fa-m-p7s1 .page7-left,
+  body.fa-m-p7s1 .page7-right-col,
+  body.fa-m-p7s1 .page7-inset{
+    opacity:1!important;
+    visibility:visible!important;
+    filter:none!important;
+  }
+  body.fa-m-p7s1 .page7-left,
+  body.fa-m-p7s1 .page7-right-col,
+  body.fa-m-p7s1 .page7-inset{
+    transform:none!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
