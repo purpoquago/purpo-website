@@ -4616,19 +4616,24 @@ updateSideRailState();
   next();
 })();
 </script>
+<div id="faMobileWhite" aria-hidden="true"></div>
 <div id="faMobileBlack" aria-hidden="true"></div>
 </body>
 </html>
 
 
 
-<style id="fadeaway-mobile-v10">
+<style id="fadeaway-mobile-v11">
 @media(max-width:800px){
  body.fa-m-exiting .hero-video,body.fa-m-exiting .page2-bg,body.fa-m-exiting .page3-bg{
  transition:none!important;
 }
-#faMobileBlack{position:fixed;inset:0;z-index:9998;background:#000;opacity:0;pointer-events:none;transition:opacity .34s ease}
+#faMobileWhite{position:fixed;inset:0;z-index:9997;background:#fff;opacity:0;pointer-events:none;transition:none}
+ #faMobileWhite.is-on{opacity:1}
+ #faMobileWhite.is-revealing{transition:opacity .42s ease;opacity:0}
+ #faMobileBlack{position:fixed;inset:0;z-index:9998;background:#000;opacity:0;pointer-events:none;transition:none}
  #faMobileBlack.is-on{opacity:1}
+ #faMobileBlack.is-revealing{transition:opacity .42s ease;opacity:0}
 
  html,body{height:100%;overflow:hidden!important;overscroll-behavior:none}.hero-scroll{height:100dvh!important}.hero{position:fixed!important;inset:0;height:100dvh!important;min-height:0!important}.snap-indicator,.scroll-cue{display:none!important}
  .hero-video{transition:object-position .72s cubic-bezier(.22,.72,.22,1)!important;object-position:10% center!important}body.fa-m-p1s2 .hero-video,body.fa-m-hold-p1s2 .hero-video{object-position:72% center!important}
@@ -4680,7 +4685,7 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
 </style>
 <div class="fa-mobile-grabquote" aria-hidden="true"><img src="assets/page4-grab-quote.png" alt=""></div>
 
-<script id="fadeaway-mobile-v10-controller">
+<script id="fadeaway-mobile-v11-controller">
 (()=>{
  if(!matchMedia('(max-width:800px)').matches)return;
  const b=document.body,p2=document.querySelector('.page2-panel'),p3=document.querySelector('.page3-article'),p4=document.querySelector('.page4-mobile-article');
@@ -4708,12 +4713,14 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
  if(n==='p5s1'||n==='p5s2') ensureP5Pan();b.classList.add('fa-m-'+n);const pg=n.slice(1,2);if(+pg>=2)b.classList.add('fa-m-page'+pg);if(p2&&n!=='p2s2')p2.scrollTop=0;if(p3&&n!=='p3s1')p3.scrollTop=0;if(p4&&n!=='p4s1')p4.scrollTop=0;if(n==='p1s2'||n==='p2s2'||n==='p3s1'||n==='p3s2'||n==='p4s1'||n==='p5s2')t=setTimeout(()=>b.classList.add('fa-m-reveal'),n==='p3s2'?450:700)};
  const sc=()=>states[i]==='p2s2'?p2:states[i]==='p3s1'?p3:states[i]==='p4s1'?p4:null;
  const black=document.getElementById('faMobileBlack');
- const needsBlack=(a,b)=>(
-   (states[a].startsWith('p1')&&states[b].startsWith('p2'))||
-   (states[a].startsWith('p2')&&states[b].startsWith('p3'))||
-   (states[a].startsWith('p2')&&states[b].startsWith('p1'))||
-   (states[a].startsWith('p3')&&states[b].startsWith('p2'))
- );
+ const white=document.getElementById('faMobileWhite');
+ const pageOf=n=>n.slice(0,2);
+ const curtainFor=(a,bx)=>{
+   const A=pageOf(states[a]),B=pageOf(states[bx]);
+   if((A==='p1'&&B==='p2')||(A==='p2'&&B==='p1')||(A==='p2'&&B==='p3')||(A==='p3'&&B==='p2')) return black;
+   if((A==='p3'&&B==='p4')||(A==='p4'&&B==='p3')) return white;
+   return null;
+ };
  const freezeCamera=()=>{
    const n=states[i];
    const el=n.startsWith('p1')?document.querySelector('.hero-video'):
@@ -4725,30 +4732,36 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
    el.style.setProperty('object-position',pos,'important');
    return el;
  };
- const unfreezeCamera=(el)=>{
-   if(el) el.style.removeProperty('object-position');
-   b.classList.remove('fa-m-exiting');
-   clearHolds();
+ const unfreezeCamera=el=>{
+   if(el)el.style.removeProperty('object-position');
+   b.classList.remove('fa-m-exiting');clearHolds();
+ };
+ const revealCurtain=c=>{
+   c.classList.add('is-revealing');
+   requestAnimationFrame(()=>requestAnimationFrame(()=>c.classList.remove('is-on')));
+   setTimeout(()=>c.classList.remove('is-revealing'),500);
  };
  const move=d=>{
    if(lock)return;
    const x=Math.max(0,Math.min(states.length-1,i+d));if(x===i)return;
-   lock=true;
-   clearHolds();
-   const frozen=freezeCamera();
-   if(needsBlack(i,x)&&black){
-     /* Do not apply the destination state until the old scene is fully hidden. */
-     black.classList.add('is-on');
-     setTimeout(()=>{
+   lock=true;clearHolds();
+   const frozen=freezeCamera(), curtain=curtainFor(i,x);
+   if(curtain){
+     /* Curtain covers the old shot BEFORE destination state changes. */
+     curtain.classList.remove('is-revealing');
+     curtain.classList.add('is-on');
+     requestAnimationFrame(()=>requestAnimationFrame(()=>{
        i=x;apply();unfreezeCamera(frozen);
-       requestAnimationFrame(()=>requestAnimationFrame(()=>black.classList.remove('is-on')));
-     },360);
-     setTimeout(()=>lock=false,1120);
+       /* Destination gets a full paint while hidden. */
+       requestAnimationFrame(()=>requestAnimationFrame(()=>revealCurtain(curtain)));
+     }));
+     setTimeout(()=>lock=false,1050);
    }else{
-     i=x;apply();requestAnimationFrame(()=>requestAnimationFrame(()=>unfreezeCamera(frozen)));setTimeout(()=>lock=false,900);
+     i=x;apply();
+     requestAnimationFrame(()=>requestAnimationFrame(()=>unfreezeCamera(frozen)));
+     setTimeout(()=>lock=false,900);
    }
  };
- window.scrollTo(0,0);apply();
  document.addEventListener('touchstart',e=>{const q=e.touches[0];sy=q.clientY;sx=q.clientX},{passive:true});
  document.addEventListener('touchend',e=>{const q=e.changedTouches[0],dy=q.clientY-sy,dx=q.clientX-sx;if(Math.abs(dy)<45||Math.abs(dy)<Math.abs(dx)*1.15)return;const s=sc();if(s){const top=s.scrollTop<=1,bot=s.scrollTop+s.clientHeight>=s.scrollHeight-2;if((dy<0&&!bot)||(dy>0&&!top))return}move(dy<0?1:-1)},{passive:true});
  window.addEventListener('keydown',e=>{if(e.key==='ArrowDown'||e.key==='PageDown'||e.key===' '){e.preventDefault();move(1)}if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();move(-1)}});
