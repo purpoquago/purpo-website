@@ -4622,9 +4622,12 @@ updateSideRailState();
 
 
 
-<style id="fadeaway-mobile-v9">
+<style id="fadeaway-mobile-v10">
 @media(max-width:800px){
- #faMobileBlack{position:fixed;inset:0;z-index:9998;background:#000;opacity:0;pointer-events:none;transition:opacity .34s ease}
+ body.fa-m-exiting .hero-video,body.fa-m-exiting .page2-bg,body.fa-m-exiting .page3-bg{
+ transition:none!important;
+}
+#faMobileBlack{position:fixed;inset:0;z-index:9998;background:#000;opacity:0;pointer-events:none;transition:opacity .34s ease}
  #faMobileBlack.is-on{opacity:1}
 
  html,body{height:100%;overflow:hidden!important;overscroll-behavior:none}.hero-scroll{height:100dvh!important}.hero{position:fixed!important;inset:0;height:100dvh!important;min-height:0!important}.snap-indicator,.scroll-cue{display:none!important}
@@ -4663,13 +4666,13 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
  /* P5-S2: darken 40%, handwriting centered vertically, Spotify at bottom */
  
  .page5-overlay{
- position:absolute!important;z-index:3!important;left:0!important;right:auto!important;top:0!important;
- width:125vw!important;height:100dvh!important;max-width:none!important;max-height:none!important;
- object-fit:cover!important;object-position:left center!important;
- transform:none!important;filter:none!important;clip-path:inset(0 25vw 0 0)!important;
+ position:absolute!important;z-index:3!important;left:0!important;right:auto!important;top:50%!important;
+ width:100vw!important;height:auto!important;max-width:100vw!important;max-height:72dvh!important;
+ object-fit:contain!important;object-position:left center!important;
+ transform:translateY(-50%)!important;filter:none!important;
  opacity:0!important;transition:opacity .38s ease!important;pointer-events:none!important;
 }
- body.fa-m-p5s2.fa-m-reveal .page5-overlay{opacity:1!important;filter:none!important;transform:none!important}
+ body.fa-m-p5s2.fa-m-reveal .page5-overlay{opacity:1!important;filter:none!important;transform:translateY(-50%)!important}
  .page5-player{position:absolute!important;left:5vw!important;right:5vw!important;bottom:max(18px,env(safe-area-inset-bottom))!important;width:auto!important;height:80px!important;z-index:30!important;display:block!important;visibility:visible!important;opacity:0!important;transform:none!important;transition:opacity .38s ease!important}
  .page5-player iframe{width:100%!important;height:80px!important;border:0!important;border-radius:12px!important}
  body.fa-m-p5s2.fa-m-reveal .page5-player{opacity:1!important;pointer-events:auto!important;display:block!important;visibility:visible!important}
@@ -4677,7 +4680,7 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
 </style>
 <div class="fa-mobile-grabquote" aria-hidden="true"><img src="assets/page4-grab-quote.png" alt=""></div>
 
-<script id="fadeaway-mobile-v9-controller">
+<script id="fadeaway-mobile-v10-controller">
 (()=>{
  if(!matchMedia('(max-width:800px)').matches)return;
  const b=document.body,p2=document.querySelector('.page2-panel'),p3=document.querySelector('.page3-article'),p4=document.querySelector('.page4-mobile-article');
@@ -4711,23 +4714,38 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
    (states[a].startsWith('p2')&&states[b].startsWith('p1'))||
    (states[a].startsWith('p3')&&states[b].startsWith('p2'))
  );
+ const freezeCamera=()=>{
+   const n=states[i];
+   const el=n.startsWith('p1')?document.querySelector('.hero-video'):
+            n.startsWith('p2')?document.querySelector('.page2-bg'):
+            n.startsWith('p3')?document.querySelector('.page3-bg'):null;
+   if(!el)return null;
+   const pos=getComputedStyle(el).objectPosition;
+   b.classList.add('fa-m-exiting');
+   el.style.setProperty('object-position',pos,'important');
+   return el;
+ };
+ const unfreezeCamera=(el)=>{
+   if(el) el.style.removeProperty('object-position');
+   b.classList.remove('fa-m-exiting');
+   clearHolds();
+ };
  const move=d=>{
    if(lock)return;
    const x=Math.max(0,Math.min(states.length-1,i+d));if(x===i)return;
    lock=true;
    clearHolds();
-   const leaving=states[i];
-   if(leaving.endsWith('s2')) b.classList.add('fa-m-hold-'+leaving);
+   const frozen=freezeCamera();
    if(needsBlack(i,x)&&black){
      /* Do not apply the destination state until the old scene is fully hidden. */
      black.classList.add('is-on');
      setTimeout(()=>{
-       i=x;apply();
-       requestAnimationFrame(()=>requestAnimationFrame(()=>{clearHolds();black.classList.remove('is-on')}));
+       i=x;apply();unfreezeCamera(frozen);
+       requestAnimationFrame(()=>requestAnimationFrame(()=>black.classList.remove('is-on')));
      },360);
      setTimeout(()=>lock=false,1120);
    }else{
-     i=x;apply();requestAnimationFrame(()=>requestAnimationFrame(clearHolds));setTimeout(()=>lock=false,900);
+     i=x;apply();requestAnimationFrame(()=>requestAnimationFrame(()=>unfreezeCamera(frozen)));setTimeout(()=>lock=false,900);
    }
  };
  window.scrollTo(0,0);apply();
