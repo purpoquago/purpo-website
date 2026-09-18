@@ -2602,6 +2602,68 @@ html,body{overscroll-behavior-y:none}
 }
 </style>
 
+
+<style id="fadeaway-mobile-v21-p6-p7-revs">
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+
+  /* P6-S2: content fade-in */
+  body.fa-m-p6s2 .page6-editorial{
+    opacity:0!important;
+    transition:opacity .7s ease!important;
+  }
+  body.fa-m-p6s2.fa-m-reveal .page6-editorial{
+    opacity:1!important;
+  }
+
+  /* P6-S3: grab quote fade-in */
+  body.fa-m-p6s3 .page6-quote{
+    opacity:0!important;
+    transition:opacity .7s ease!important;
+  }
+  body.fa-m-p6s3.fa-m-reveal .page6-quote{
+    opacity:1!important;
+  }
+
+  /* P7 inset: top third of source image only, then article below in blue-green box */
+  body.fa-m-p7s1 .page7-inset{
+    display:flex!important;
+    flex-direction:column!important;
+    position:relative!important;
+    width:100%!important;
+    height:auto!important;
+    margin:24px 0!important;
+    overflow:visible!important;
+    background:none!important;
+  }
+
+  body.fa-m-p7s1 .page7-inset-bg{
+    display:block!important;
+    position:relative!important;
+    width:100%!important;
+    height:auto!important;
+    aspect-ratio:3/1!important;
+    object-fit:cover!important;
+    object-position:center top!important;
+    overflow:hidden!important;
+  }
+
+  body.fa-m-p7s1 .page7-inset-copy{
+    display:block!important;
+    position:relative!important;
+    inset:auto!important;
+    width:100%!important;
+    height:auto!important;
+    box-sizing:border-box!important;
+    padding:22px 20px 24px!important;
+    overflow:visible!important;
+    background:rgb(65,112,111)!important;
+    color:#fff!important;
+    font-size:16px!important;
+    line-height:1.38!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
