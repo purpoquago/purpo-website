@@ -338,20 +338,7 @@ html,body{
     overscroll-behavior-y:contain;
     -webkit-overflow-scrolling:touch;
   }
-
-  /* Keep the original background dimensions/scale; pin it while Story content scrolls. */
-  .story-scene > .bg,
-  .story-scene .bg{
-    position:sticky!important;
-    top:0!important;
-    left:0!important;
-    width:100%!important;
-    height:100dvh!important;
-    min-height:100dvh!important;
-    margin-bottom:-100dvh!important;
-  }
-
-  .story-scene .front{
+.story-scene .front{
     position:relative!important;
     inset:auto!important;
     width:100%!important;
@@ -385,28 +372,10 @@ html,body{
     display:block!important;
   }
 }
-
-
-/* V19 TEST — background geometry only. Story scrolling/navigation untouched. */
-@media(max-width:800px),(hover:none) and (pointer:coarse){
-  .story-scene > .bg,
-  .story-scene .bg{
-    position:sticky!important;
-    top:-2vh!important;
-    left:-2vw!important;
-    width:104vw!important;
-    height:104dvh!important;
-    min-height:104dvh!important;
-    margin-bottom:-104dvh!important;
-    transform:none!important;
-  }
-}
-
-
 /* MALLIG V21 — MOBILE STORY NORMALIZATION */
 @media(max-width:800px),(hover:none) and (pointer:coarse){
   .story-scene{height:100dvh!important;min-height:100dvh!important;max-height:100dvh!important;overflow:hidden!important;overscroll-behavior:none!important;}
-  .story-scene > .bg,.story-scene .bg{position:absolute!important;top:0!important;right:0!important;bottom:0!important;left:0!important;width:100%!important;height:100%!important;min-height:0!important;margin:0!important;}
+
   .story-scene .front{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;min-height:0!important;overflow:hidden!important;display:block!important;padding:0!important;}
   .story-scene .detail-grid{position:absolute!important;top:7dvh!important;left:6vw!important;right:6vw!important;width:auto!important;margin:0!important;padding:0!important;transform:none!important;max-height:none!important;overflow:visible!important;}
   .story-scene .cover{width:72vw!important;max-width:310px!important;margin-left:auto!important;margin-right:auto!important;display:block!important;}
