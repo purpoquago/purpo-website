@@ -2756,6 +2756,52 @@ html,body{overscroll-behavior-y:none}
 }
 </style>
 
+
+<style id="fadeaway-mobile-v24-page8">
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+  body.fa-m-page8 .page8-layer{
+    display:block!important;opacity:1!important;visibility:visible!important;
+    position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;
+    overflow:hidden!important;background:#000!important;
+  }
+
+  /* P8-S1/S2 share exactly the same centered video geometry. */
+  body.fa-m-p8s1 .page8-intro,
+  body.fa-m-p8s2 .page8-loop{
+    display:block!important;position:absolute!important;left:50%!important;top:50%!important;
+    width:100vw!important;height:100dvh!important;max-width:none!important;
+    transform:translate(-50%,-50%)!important;object-fit:cover!important;object-position:center center!important;
+    opacity:1!important;visibility:visible!important;
+  }
+  body.fa-m-p8s1 .page8-loop,
+  body.fa-m-p8s2 .page8-intro{opacity:0!important;visibility:hidden!important}
+
+  /* P8-S3: same centered loop beneath handwritten overlay. */
+  body.fa-m-p8s3 .page8-loop{
+    display:block!important;position:absolute!important;left:50%!important;top:50%!important;
+    width:100vw!important;height:100dvh!important;max-width:none!important;
+    transform:translate(-50%,-50%)!important;object-fit:cover!important;object-position:center center!important;
+    opacity:1!important;visibility:visible!important;
+  }
+  body.fa-m-p8s3 .page8-intro{opacity:0!important;visibility:hidden!important}
+  body.fa-m-p8s1 .page8-overlay,body.fa-m-p8s2 .page8-overlay{opacity:0!important;visibility:hidden!important}
+  body.fa-m-p8s3 .page8-overlay{
+    display:block!important;position:absolute!important;z-index:8!important;
+    left:5vw!important;top:50%!important;width:90vw!important;height:auto!important;max-width:none!important;
+    transform:translateY(-50%)!important;object-fit:contain!important;opacity:0!important;visibility:visible!important;
+    transition:opacity .7s ease!important;
+  }
+  body.fa-m-p8s3.fa-m-reveal .page8-overlay{opacity:1!important}
+
+  body.fa-m-p8s3 .page8-player{
+    display:block!important;position:absolute!important;z-index:12!important;
+    left:5vw!important;right:5vw!important;bottom:max(18px,env(safe-area-inset-bottom))!important;
+    width:90vw!important;height:80px!important;opacity:1!important;visibility:visible!important;
+  }
+  body.fa-m-p8s3 .page8-player iframe{display:block!important;width:100%!important;height:80px!important;border:0!important}
+}
+</style>
+
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
@@ -3084,8 +3130,8 @@ html,body{overscroll-behavior-y:none}
       <video class="page8-video page8-loop" id="page8Loop" muted playsinline loop preload="auto">
         <source src="assets/stuck-on-rewind-play-loop.mp4" type="video/mp4">
       </video>
-      <img class="page8-overlay" id="page8Overlay" src="assets/page8-overlay.png" alt="Stuck on Rewind">
-      <div class="page8-player" id="page8Player"></div>
+      <img class="page8-overlay page8-overlay" id="page8Overlay" src="assets/page8-overlay.png" alt="Stuck on Rewind">
+      <div class="page8-player page8-player" id="page8Player"></div>
     </section>
 
     <section class="page9-layer" id="page9" aria-label="Correspondent Feature: Annika">
@@ -4976,7 +5022,7 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
 (()=>{
  if(!matchMedia('(max-width:800px)').matches)return;
  const b=document.body,p2=document.querySelector('.page2-panel'),p3=document.querySelector('.page3-article'),p4=document.querySelector('.page4-mobile-article');
- const states=['p1s1','p1s2','p2s1','p2s2','p3s1','p3s2','p4s1','p5s1','p5s2','p6s1','p6s2','p6s3','p7s1'];
+ const states=['p1s1','p1s2','p2s1','p2s2','p3s1','p3s2','p4s1','p5s1','p5s2','p6s1','p6s2','p6s3','p7s1','p8s1','p8s2','p8s3'];
  let i=0,sy=0,sx=0,lock=false,t=0;
  const p5bg=document.querySelector('.page5-bg');
  let p5raf=0,p5start=0;
@@ -4994,12 +5040,12 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
  };
  const ensureP5Pan=()=>{if(!p5raf){p5start=0;p5raf=requestAnimationFrame(p5pan)}};
  const clear=()=>[...b.classList].forEach(c=>{
-   if((c.startsWith('fa-m-p')&&c!=='fa-m-page-transition')||/^fa-m-page[2-7]$/.test(c)||c==='fa-m-reveal')b.classList.remove(c)
+   if((c.startsWith('fa-m-p')&&c!=='fa-m-page-transition')||/^fa-m-page[2-8]$/.test(c)||c==='fa-m-reveal')b.classList.remove(c)
  });
  const clearHolds=()=>[...b.classList].forEach(c=>{if(c.startsWith('fa-m-hold-'))b.classList.remove(c)});
  const apply=()=>{clearTimeout(t);clear();const n=states[i];
- if(typeof requestSpotifyTrack==='function') requestSpotifyTrack(n==='p5s2'?'page5':null);
- if(n==='p5s1'||n==='p5s2') ensureP5Pan();b.classList.add('fa-m-'+n);const pg=n.slice(1,2);if(+pg>=2)b.classList.add('fa-m-page'+pg);if(p2&&n!=='p2s2')p2.scrollTop=0;if(p3&&n!=='p3s1')p3.scrollTop=0;if(p4&&n!=='p4s1')p4.scrollTop=0;if(n==='p1s2'||n==='p2s2'||n==='p3s1'||n==='p3s2'||n==='p4s1'||n==='p5s2'||n==='p6s2'||n==='p6s3'||n==='p7s1')t=setTimeout(()=>b.classList.add('fa-m-reveal'),n==='p3s2'?450:700)};
+ if(typeof requestSpotifyTrack==='function') requestSpotifyTrack(n==='p5s2'?'page5':n==='p8s3'?'page8':null);
+ if(n==='p5s1'||n==='p5s2') ensureP5Pan();b.classList.add('fa-m-'+n);const pg=n.slice(1,2);if(+pg>=2)b.classList.add('fa-m-page'+pg);if(p2&&n!=='p2s2')p2.scrollTop=0;if(p3&&n!=='p3s1')p3.scrollTop=0;if(p4&&n!=='p4s1')p4.scrollTop=0;if(n==='p1s2'||n==='p2s2'||n==='p3s1'||n==='p3s2'||n==='p4s1'||n==='p5s2'||n==='p6s2'||n==='p6s3'||n==='p7s1'||n==='p8s3')t=setTimeout(()=>b.classList.add('fa-m-reveal'),n==='p3s2'?450:700)};
  const sc=()=>states[i]==='p2s2'?p2:states[i]==='p3s1'?p3:states[i]==='p4s1'?p4:states[i]==='p6s2'?document.querySelector('.page6-editorial'):states[i]==='p7s1'?document.querySelector('.page7-layer'):null;
  const black=document.getElementById('faMobileBlack');
  const white=document.getElementById('faMobileWhite');
@@ -5008,7 +5054,7 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
    const A=pageOf(states[a]),B=pageOf(states[bx]);
    if((A==='p1'&&B==='p2')||(A==='p2'&&B==='p1')||(A==='p2'&&B==='p3')||(A==='p3'&&B==='p2')) return black;
    if((A==='p3'&&B==='p4')||(A==='p4'&&B==='p3')) return white;
-   if((A==='p5'&&B==='p6')||(A==='p6'&&B==='p5')||(A==='p6'&&B==='p7')||(A==='p7'&&B==='p6')) return black;
+   if((A==='p5'&&B==='p6')||(A==='p6'&&B==='p5')||(A==='p6'&&B==='p7')||(A==='p7'&&B==='p6')||(A==='p7'&&B==='p8')||(A==='p8'&&B==='p7')) return black;
    return null;
  };
  const freezeCamera=()=>{
