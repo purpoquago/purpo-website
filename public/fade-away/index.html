@@ -4623,7 +4623,9 @@ updateSideRailState();
 
 
 
-<style id="fadeaway-mobile-v13">
+<style id="fadeaway-mobile-v14">
+@media (max-width:800px), (hover:none) and (pointer:coarse) {
+
 @media(max-width:800px){
  body.fa-m-exiting .hero-video,body.fa-m-exiting .page2-bg,body.fa-m-exiting .page3-bg{
  transition:none!important;
@@ -4710,10 +4712,12 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
  .page5-player iframe{width:100%!important;height:80px!important;border:0!important;border-radius:12px!important}
  body.fa-m-p5s2.fa-m-reveal .page5-player{opacity:1!important;pointer-events:auto!important;display:block!important;visibility:visible!important}
 }
+
+}
 </style>
 <div class="fa-mobile-grabquote" aria-hidden="true"><img src="assets/page4-grab-quote.png" alt=""></div>
 
-<script id="fadeaway-mobile-v13-controller">
+<script id="fadeaway-mobile-v14-controller">
 (()=>{
  if(!matchMedia('(max-width:800px)').matches)return;
  const b=document.body,p2=document.querySelector('.page2-panel'),p3=document.querySelector('.page3-article'),p4=document.querySelector('.page4-mobile-article');
