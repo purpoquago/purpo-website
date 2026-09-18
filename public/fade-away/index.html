@@ -5186,7 +5186,21 @@ if(n==='p1s2'||n==='p2s2'||n==='p3s1'||n==='p3s2'||n==='p4s1'||n==='p5s2'||n==='
    const loop=document.getElementById('page8Loop');
    if(loop)loop.pause();
    b.classList.remove('fa-p8-loop-phase');
-   runP8MobileRack(-1);
+   runP8MobileRack(-1,()=>{
+     if(states[i]!=='p8s1')return;
+     const target=states.indexOf('p6s3');
+     if(target<0)return;
+     const frozen=freezeCamera();
+     const curtain=curtainFor(i,target);
+     if(curtain){
+       lock=true;
+       doCurtain(curtain,target,frozen).finally(()=>{lock=false});
+     }else{
+       i=target;
+       apply();
+       requestAnimationFrame(()=>requestAnimationFrame(()=>unfreezeCamera(frozen)));
+     }
+   });
  };
  const syncP8Media=()=>{
    const n=states[i], loop=document.getElementById('page8Loop');
