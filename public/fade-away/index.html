@@ -2706,7 +2706,10 @@ html,body{overscroll-behavior-y:none}
             <p>No one is meant to stay here.<br>But for one night, it feels like you could.</p>
           </div>
         </div>
-      </div>
+      <article class="page4-mobile-article"><p class="dropcap">There’s no check-in process and strangely, no receptionist. Just a taped sign that reads: LEAVE PAYMENT and WAIT.</p><p>I slid a few bills on the desk—enough for a small room, probably. Lit a cigarette and waited outside. A couple of minutes later, I heard footsteps and the sound of drawers opening. When I came back, a single brass key with a red tag sat atop the reception desk: Room 6.</p><p>The hallway lights were working—dim and old, but steady. I passed the bar on the way up. No bartender. The stools were all there, but in disarray. Bottles long gone. The performer’s stage lit by a single spotlight, as if waiting for someone to step out from behind the curtain.</p><p>Room 6 was clean. Sparse. Concrete walls covered in vintage wallpaper. The AC hummed softly from a unit mounted above the window. A curtain pulled tight against the dusk. There was an old TV set that worked, but no channels were running—I had no reason to turn it on. No telephone. Just a mirror, a nightstand, and a power outlet that buzzed a bit when I plugged in my laptop. The sheets were crisp. Someone—or something—keeps this place running.</p><p>Dinner was whatever I was able to purchase from a roadside caravan a few 40 kms back: An assortment of bottled preserves, stale bread, a warm bottle of water. The restaurant here shut down a long time ago, like everything else after the Silence. The closest restaurant was 3 hours away so guests are expected to bring their own food.</p><p>Around 9, I went for a walk. The pool was dry but eerily pristine, like it hadn’t been used in years—but hadn’t decayed either. The laundromat still worked, though no one was there. Someone had left clothes spinning, at least giving a sense of life to the empty place.</p><p>I met a group hanging outside Room 13. A mixed bunch, drawn here by the legendary mystique of the motel. They came with an overflowing supply of beer and pizza. One last party before exploring the void, I guess.</p><p>Aice, was a veteran explorer of the city and is very familiar of the motel’s history.</p><p>“The motel’s a bit far from the usual entry point into the city,” he said. “You’ve got to take a detour—it adds maybe 30 or 40 kilometers to the trip. It’s a hassle, especially with how bad the roads are. But I’ve come to love the place. So I always include it in the itinerary.”</p><p>“This place wasn’t always this quiet,” he continued. “Back before the Great Silence, the motel was a last-minute kind of spot—wrong turns, trysts, afterparties that got out of hand. No one actually plans to come here, but you end up here if you want the party to never end.”</p><p>“We accidentally found this place more than a decade ago. My buddies and I lost our jobs thanks to some brilliant government fuckery. So we drove out of the city that night and ended up here. Best layoff of my life. Haha.”</p><p>Aice then veered into stories from his party days in the city before the Great Silence—which probably warrant an article of their own.</p><p>Mickey, a newbie explorer, chimed in—her voice bright and curious, untouched by the weight the others carried.</p><figure class="page4-mobile-photo">
+          <img src="assets/page4-photo.png" alt="The original Fade Away Hotel">
+          <figcaption>The original Fade Away Hotel, pictured here before its remodeling in the late 1980s. This is the only known surviving photo of the original building before it was replaced by the structure that stands today. Situated on the eastern edge of Metro Manila, the modest and unremarkable hotel served as a quiet stopover for travelers heading toward the Sierra Madre mountain range. An additional wing and the pool were added in the mid ‘90s. With the pool came a shift in design — the owners reoriented the entire layout to face inward.</figcaption>
+        </figure><p>“I still can’t believe this place is real,” she said. “I used to read stories about the Fade Away on old forums. You know, the ones that looked abandoned but somehow still had active comment sections?”</p><p>“There’s this user, papa_w1ns—they posted a full floorplan and photos of the motel back in 2012. It matches perfectly. Even the busted vending machine is still busted!” Mickey laughed. “The graffiti outside? Already there in those photos. Which is fucking prophetic. No one could’ve predicted that. I joined this trip specifically to see that tag. In person, it’s nothing special, but if you know the history, it’s full-on Nostradamus shit. Props to the artist.”</p><p>I stuck around the party a bit. Got myself a few free beers and a supplemental slice of pizza to top off my humble dinner.</p><p>There was a lot of buzz about the trip into the city tomorrow. A few people hung out by the empty pool, lighting a bonfire with other guests. Others climbed to the roof, hoping to catch a glimpse of the ruins.</p><p>There are no rules here. But there’s a strange order. Everyone cleans up. No one steals and no one dares trash the place. Maybe it’s because no one wants to be the one to break this sole reminder of the old world.</p><p>Back in my room, the AC cooled the space into something quiet and almost clean. I lay on the bed, wide awake. The silence was occasionally broken by laughter outside, then faded into stillness. I left the window cracked, letting the hum of the compressor lull me to sleep.</p><p>In the morning, I passed by Room 13. I meant to say goodbye, but it seemed they were still out cold from the night before.</p><p>I bumped into a couple from the room next door who were already up—they gave me a quick nod. I dropped the key back in the reception desk. Still no one there.</p><p>Then it was on to the car. Just the soft crunch of gravel under my tires as I pulled away.</p><p>The road ahead was empty. Very few people dare venture into the old city anymore— except for these daring outliers and their fancy masks, chasing the next adrenaline rush. The world felt a little more distant than it did yesterday.</p><p>The Fade Away stayed behind me—quiet, comfortingly intact, exactly as I found it.</p><p>No one is meant to stay here.<br>But for one night, it feels like you could.</p></article></div>
     </section>
 
 
@@ -4615,60 +4618,29 @@ updateSideRailState();
 </body>
 </html>
 
-<style id="fadeaway-mobile-v3">
-@media (max-width:800px){
+
+<style id="fadeaway-mobile-v4">
+@media(max-width:800px){
   html,body{height:100%;overflow:hidden!important;overscroll-behavior:none}
   .hero-scroll{height:100dvh!important}
   .hero{position:fixed!important;inset:0;height:100dvh!important;min-height:0!important}
   .snap-indicator,.scroll-cue{display:none!important}
 
-  /* Keep the original Fade Away UI. Music toggle remains in its original UI for now. */
-
-  /* P1-S1 / P1-S2 camera */
-  .hero-video{
-    transition:object-position .72s cubic-bezier(.22,.72,.22,1)!important;
-    object-position:15% center!important;
-  }
+  /* P1 */
+  .hero-video{transition:object-position .72s cubic-bezier(.22,.72,.22,1)!important;object-position:10% center!important}
   body.fa-m-p1s2 .hero-video{object-position:72% center!important}
+  .track-list{top:50%!important;left:50%!important;right:auto!important;width:76vw!important;min-width:0!important;transform:translate(-50%,-50%)!important;text-align:center!important}
+  .track-list a{opacity:0!important;transform:translateY(12px)!important;filter:blur(1px)!important;transition:opacity .34s ease,transform .34s ease,filter .34s ease!important;margin:0 auto 5.2vh!important;font-size:16px!important;pointer-events:none!important}
+  body.fa-m-p1s2.fa-m-reveal .track-list a{opacity:1!important;transform:none!important;filter:none!important;pointer-events:auto!important}
 
-  /* P1-S2: centered song titles */
-  .track-list{
-    top:50%!important;left:50%!important;right:auto!important;
-    width:76vw!important;min-width:0!important;
-    transform:translate(-50%,-50%)!important;text-align:center!important;
-  }
-  .track-list a{
-    opacity:0!important;transform:translateY(12px)!important;filter:blur(1px)!important;
-    transition:opacity .34s ease,transform .34s ease,filter .34s ease!important;
-    margin:0 auto 5.2vh!important;font-size:16px!important;pointer-events:none!important;
-  }
-  body.fa-m-p1s2.fa-m-reveal .track-list a{
-    opacity:1!important;transform:none!important;filter:none!important;pointer-events:auto!important;
-  }
-
-  /* P1-S3: original magazine opening movie */
-  .pageflip-layer{display:block!important;position:fixed!important;inset:0!important;z-index:10000!important}
-  .pageflip-video{width:100%!important;height:100%!important;object-fit:cover!important}
-
-  /* PAGE 2 */
-  .page2-layer{
-    opacity:0!important;transition:opacity .38s ease!important;pointer-events:none!important;
-  }
+  /* P2 */
+  .page2-layer{opacity:0!important;transition:opacity .38s ease!important;pointer-events:none!important}
   body.fa-m-page2 .page2-layer{opacity:1!important;pointer-events:auto!important}
-  body.fa-m-page2 .hero-video,body.fa-m-page3 .hero-video{opacity:0!important}
-  .page2-bg{
-    object-position:24% center!important;
-    transition:object-position .72s cubic-bezier(.22,.72,.22,1)!important;
-  }
+  body.fa-m-page2 .hero-video,body.fa-m-page3 .hero-video,body.fa-m-page4 .hero-video{opacity:0!important}
+  .page2-bg{object-position:24% center!important;transition:object-position .72s cubic-bezier(.22,.72,.22,1)!important}
   body.fa-m-p2s2 .page2-bg{object-position:72% center!important}
   .page2-layer::after{background:rgba(0,0,0,.20)!important}
-  .page2-panel{
-    top:12dvh!important;left:50%!important;width:86vw!important;max-width:520px!important;
-    height:auto!important;bottom:0!important;transform:translateX(-50%)!important;
-    overflow-y:auto!important;overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch;
-    padding:0 3vw 8dvh!important;scrollbar-width:none;
-    opacity:0!important;pointer-events:none!important;transition:opacity .34s ease!important;
-  }
+  .page2-panel{top:12dvh!important;left:50%!important;width:86vw!important;max-width:520px!important;height:auto!important;bottom:0!important;transform:translateX(-50%)!important;overflow-y:auto!important;overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch;padding:0 3vw 8dvh!important;scrollbar-width:none;opacity:0!important;pointer-events:none!important;transition:opacity .34s ease!important}
   .page2-panel::-webkit-scrollbar{display:none}
   body.fa-m-p2s2.fa-m-reveal .page2-panel{opacity:1!important;pointer-events:auto!important}
   .page2-reveal{opacity:1!important;transform:none!important;filter:none!important}
@@ -4676,144 +4648,71 @@ updateSideRailState();
   .page2-intro{font-size:16px!important;line-height:1.38!important}
   .page2-section-title{font-size:20px!important;margin:28px 0 22px!important}
   .amenities{grid-template-columns:1fr!important;row-gap:18px!important}
-  .amenity{grid-template-columns:70px 1fr!important;gap:14px!important}
-  .amenity img{max-height:66px!important}
+  .amenity{grid-template-columns:70px 1fr!important;gap:14px!important}.amenity img{max-height:66px!important}
   .amenity h3{font-size:16px!important}.amenity p{font-size:13px!important;line-height:1.3!important}
 
-  /* PAGE 3 */
-  .page3-layer{
-    opacity:0!important;transition:opacity .38s ease!important;pointer-events:none!important;
-  }
+  /* P3 */
+  .page3-layer{opacity:0!important;transition:opacity .38s ease!important;pointer-events:none!important}
   body.fa-m-page3 .page3-layer{opacity:1!important;pointer-events:auto!important}
   body.fa-m-page3 .page2-layer{opacity:0!important;pointer-events:none!important}
-  .page3-bg{
-    object-position:15% center!important;
-    transition:object-position .72s cubic-bezier(.22,.72,.22,1)!important;
-  }
-  body.fa-m-p3s2 .page3-bg{object-position:78% center!important}
+  .page3-bg{object-position:15% center!important;transition:object-position .72s cubic-bezier(.22,.72,.22,1)!important}
+  body.fa-m-p3s2 .page3-bg{object-position:72% center!important}
   .page3-vignette{background:rgba(0,0,0,.18)!important}
-  .page3-article{
-    left:50%!important;top:12dvh!important;bottom:0!important;width:86vw!important;max-width:520px!important;
-    transform:translateX(-50%)!important;overflow-y:auto!important;overscroll-behavior:contain!important;
-    -webkit-overflow-scrolling:touch;padding:0 3vw 9dvh!important;scrollbar-width:none;
-    opacity:0!important;pointer-events:none!important;transition:opacity .34s ease!important;
-  }
+  .page3-article{left:50%!important;top:50%!important;bottom:auto!important;width:86vw!important;max-width:520px!important;transform:translate(-50%,-50%)!important;max-height:76dvh!important;overflow-y:auto!important;overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch;padding:3dvh 3vw!important;box-sizing:border-box;scrollbar-width:none;opacity:0!important;pointer-events:none!important;transition:opacity .34s ease!important}
   .page3-article::-webkit-scrollbar{display:none}
   body.fa-m-p3s2.fa-m-reveal .page3-article{opacity:1!important;pointer-events:auto!important}
   .page3-reveal{opacity:1!important;transform:none!important;filter:none!important}
   .page3-header{width:100%!important;margin:0 0 1.4rem!important}
-  .page3-body{
-    width:100%!important;margin:0!important;font-size:16px!important;line-height:1.38!important;
-  }
+  .page3-body{width:100%!important;margin:0!important;font-size:16px!important;line-height:1.38!important}
 
-  /* V3 scope ends after P3-S2. */
-  .page4-layer,.page5-layer,.page6-layer,.page7-layer,.page8-layer,.page9-layer,.page10-layer,
-  .page11-layer,.page12-layer,.page13-layer,.page14-layer,.page15-layer,.page16-layer,.page17-layer,
-  .page18-layer,.page19-layer{pointer-events:none!important}
-  #fadeToBlack,#fadeToWhite{display:none!important}
+  /* P4 — paper world */
+  .page4-layer{display:block!important;position:fixed!important;inset:0!important;z-index:20!important;padding:0!important;background:#f7f5f1!important;color:#171313!important;opacity:0!important;pointer-events:none!important;overflow:hidden!important;transition:opacity .38s ease!important}
+  body.fa-m-page4 .page4-layer{opacity:1!important;pointer-events:auto!important}
+  body.fa-m-page4 .page3-layer{opacity:0!important;pointer-events:none!important}
+  .page4-spread{display:block!important;width:100%!important;height:100%!important;font-family:"EB Garamond",Garamond,"Times New Roman",serif!important}
+
+  /* P4-S1: clean white fade then grab quote */
+  .page4-quote{position:absolute!important;inset:0!important;display:flex!important;align-items:center!important;justify-content:center!important;margin:0!important;padding:10vw!important;box-sizing:border-box;opacity:0!important;transform:none!important;filter:none!important;transition:opacity .42s ease!important}
+  .page4-quote img{width:min(78vw,420px)!important;height:auto!important}
+  body.fa-m-p4s1.fa-m-reveal .page4-quote{opacity:1!important}
+
+  /* P4-S2: single continuous article */
+  body.fa-m-p4s2 .page4-quote{display:none!important}
+  .page4-copy-a,.page4-copy-b,.page4-photo-block,.page4-lower{display:none!important}
+  .page4-mobile-article{display:none}
+  body.fa-m-p4s2 .page4-mobile-article{display:block!important;position:absolute!important;inset:0!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:11dvh 8vw 12dvh!important;box-sizing:border-box;scrollbar-width:none;opacity:0;transition:opacity .34s ease}
+  .page4-mobile-article::-webkit-scrollbar{display:none}
+  body.fa-m-p4s2.fa-m-reveal .page4-mobile-article{opacity:1}
+  .page4-mobile-article p{font-size:16px;line-height:1.38;margin:0 0 1em}
+  .page4-mobile-article .dropcap::first-letter{float:left;font-size:3.1em;line-height:.76;padding:.08em .07em 0 0}
+  .page4-mobile-photo{margin:1.8rem 0 2rem;background:#d2d2d2;padding:4vw}
+  .page4-mobile-photo img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
+  .page4-mobile-photo figcaption{margin:.8rem .2rem 0;font-style:italic;font-size:13px;line-height:1.25;color:#333}
 }
 </style>
 
-<script id="fadeaway-mobile-v3-controller">
+<script id="fadeaway-mobile-v4-controller">
 (()=>{
-  if(!matchMedia('(max-width:800px)').matches) return;
-
-  const body=document.body;
-  const page2Panel=document.querySelector('.page2-panel');
-  const page3Article=document.querySelector('.page3-article');
-  const flipLayer=document.getElementById('pageFlipLayer');
-  const flipVideo=document.getElementById('pageFlipVideo');
-
-  const states=['p1s1','p1s2','p1s3','p2s1','p2s2','p3s1','p3s2'];
-  let state=0,startY=0,startX=0,locked=false,revealTimer=0,flipFallback=0;
-
-  const clearStateClasses=()=>{
-    [...body.classList].forEach(c=>{
-      if(c.startsWith('fa-m-p') || c==='fa-m-page2' || c==='fa-m-page3' || c==='fa-m-reveal'){
-        body.classList.remove(c);
-      }
-    });
-  };
-
-  const apply=()=>{
-    clearTimeout(revealTimer);
-    clearTimeout(flipFallback);
-    clearStateClasses();
-
-    const name=states[state];
-    body.classList.add('fa-m-'+name);
-    if(name.startsWith('p2')) body.classList.add('fa-m-page2');
-    if(name.startsWith('p3')) body.classList.add('fa-m-page3');
-
-    if(page2Panel && name!=='p2s2') page2Panel.scrollTop=0;
-    if(page3Article && name!=='p3s2') page3Article.scrollTop=0;
-
-    if(name==='p1s2' || name==='p2s2' || name==='p3s2'){
-      revealTimer=setTimeout(()=>body.classList.add('fa-m-reveal'),760);
-    }
-
-    if(name==='p1s3'){
-      locked=true;
-      if(flipLayer) flipLayer.classList.add('is-active');
-      if(flipVideo){
-        try{ flipVideo.currentTime=0; }catch(e){}
-        const done=()=>{
-          flipVideo.removeEventListener('ended',done);
-          if(flipLayer) flipLayer.classList.remove('is-active');
-          state=3; locked=false; apply();
-        };
-        flipVideo.addEventListener('ended',done,{once:true});
-        const p=flipVideo.play();
-        if(p && p.catch) p.catch(()=>{});
-        flipFallback=setTimeout(done,5600);
-      }else{
-        flipFallback=setTimeout(()=>{
-          if(flipLayer) flipLayer.classList.remove('is-active');
-          state=3;locked=false;apply();
-        },1200);
-      }
-    }
-  };
-
-  const activeScroller=()=>{
-    if(states[state]==='p2s2') return page2Panel;
-    if(states[state]==='p3s2') return page3Article;
-    return null;
-  };
-
-  const move=(dir)=>{
-    if(locked) return;
-    const next=Math.max(0,Math.min(states.length-1,state+dir));
-    if(next===state) return;
-    state=next;
-    locked=true;
-    apply();
-    if(states[state]!=='p1s3') setTimeout(()=>locked=false,900);
-  };
-
-  window.scrollTo(0,0);
-  apply();
-
-  document.addEventListener('touchstart',e=>{
-    const t=e.touches[0];startY=t.clientY;startX=t.clientX;
-  },{passive:true});
-
-  document.addEventListener('touchend',e=>{
-    const t=e.changedTouches[0],dy=t.clientY-startY,dx=t.clientX-startX;
-    if(Math.abs(dy)<45 || Math.abs(dy)<Math.abs(dx)*1.15) return;
-
-    const scroller=activeScroller();
-    if(scroller){
-      const atTop=scroller.scrollTop<=1;
-      const atBottom=scroller.scrollTop+scroller.clientHeight>=scroller.scrollHeight-2;
-      if((dy<0 && !atBottom)||(dy>0 && !atTop)) return;
-    }
-    move(dy<0?1:-1);
-  },{passive:true});
-
-  window.addEventListener('keydown',e=>{
-    if(e.key==='ArrowDown'||e.key==='PageDown'||e.key===' '){e.preventDefault();move(1)}
-    if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();move(-1)}
-  });
+ if(!matchMedia('(max-width:800px)').matches)return;
+ const body=document.body,p2=document.querySelector('.page2-panel'),p3=document.querySelector('.page3-article'),p4=document.querySelector('.page4-mobile-article');
+ const states=['p1s1','p1s2','p2s1','p2s2','p3s1','p3s2','p4s1','p4s2'];
+ let state=0,startY=0,startX=0,locked=false,timer=0;
+ const clear=()=>[...body.classList].forEach(c=>{if(c.startsWith('fa-m-p')||c==='fa-m-page2'||c==='fa-m-page3'||c==='fa-m-page4'||c==='fa-m-reveal')body.classList.remove(c)});
+ const apply=()=>{
+  clearTimeout(timer);clear();
+  const n=states[state];body.classList.add('fa-m-'+n);
+  if(n.startsWith('p2'))body.classList.add('fa-m-page2');
+  if(n.startsWith('p3'))body.classList.add('fa-m-page3');
+  if(n.startsWith('p4'))body.classList.add('fa-m-page4');
+  if(p2&&n!=='p2s2')p2.scrollTop=0;if(p3&&n!=='p3s2')p3.scrollTop=0;if(p4&&n!=='p4s2')p4.scrollTop=0;
+  const delay=n==='p4s1'?520:760;
+  if(n.endsWith('s2')||n==='p4s1')timer=setTimeout(()=>body.classList.add('fa-m-reveal'),delay);
+ };
+ const scroller=()=>states[state]==='p2s2'?p2:states[state]==='p3s2'?p3:states[state]==='p4s2'?p4:null;
+ const move=d=>{if(locked)return;const nx=Math.max(0,Math.min(states.length-1,state+d));if(nx===state)return;state=nx;locked=true;apply();setTimeout(()=>locked=false,900)};
+ window.scrollTo(0,0);apply();
+ document.addEventListener('touchstart',e=>{const t=e.touches[0];startY=t.clientY;startX=t.clientX},{passive:true});
+ document.addEventListener('touchend',e=>{const t=e.changedTouches[0],dy=t.clientY-startY,dx=t.clientX-startX;if(Math.abs(dy)<45||Math.abs(dy)<Math.abs(dx)*1.15)return;const s=scroller();if(s){const top=s.scrollTop<=1,bottom=s.scrollTop+s.clientHeight>=s.scrollHeight-2;if((dy<0&&!bottom)||(dy>0&&!top))return}move(dy<0?1:-1)},{passive:true});
+ window.addEventListener('keydown',e=>{if(e.key==='ArrowDown'||e.key==='PageDown'||e.key===' '){e.preventDefault();move(1)}if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();move(-1)}});
 })();
 </script>
