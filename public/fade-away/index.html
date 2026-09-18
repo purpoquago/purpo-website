@@ -2802,6 +2802,41 @@ html,body{overscroll-behavior-y:none}
 }
 </style>
 
+
+<style id="fadeaway-mobile-v25-page8-fix">
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+  /* Undo V24's accidental intro alias on the loop video. */
+  body.fa-m-p8s1 #page8Loop{opacity:0!important;visibility:hidden!important}
+  body.fa-m-p8s1 #page8RackingCanvas{
+    display:block!important;position:absolute!important;left:50%!important;top:50%!important;
+    width:100vw!important;height:100dvh!important;transform:translate(-50%,-50%)!important;
+    opacity:1!important;visibility:visible!important;filter:none!important;
+  }
+  body.fa-m-p8s2 #page8RackingCanvas,
+  body.fa-m-p8s3 #page8RackingCanvas{opacity:0!important;visibility:hidden!important}
+
+  body.fa-m-p8s2 #page8Loop,
+  body.fa-m-p8s3 #page8Loop{
+    display:block!important;position:absolute!important;left:50%!important;top:50%!important;
+    width:100vw!important;height:100dvh!important;max-width:none!important;
+    transform:translate(-50%,-50%)!important;object-fit:cover!important;object-position:center center!important;
+    opacity:1!important;visibility:visible!important;filter:none!important;
+  }
+
+  /* Overlay must resolve sharply in its final state; no inherited blur/filter/scale transition. */
+  body.fa-m-p8s3 #page8Overlay{
+    left:5vw!important;right:auto!important;top:50%!important;width:90vw!important;max-width:none!important;
+    height:auto!important;transform:translateY(-50%)!important;
+    transform-origin:center center!important;filter:none!important;
+    will-change:opacity!important;backface-visibility:hidden!important;
+    transition:opacity .7s ease!important;
+  }
+  body.fa-m-p8s3.fa-m-reveal #page8Overlay{
+    opacity:1!important;filter:none!important;transform:translateY(-50%)!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
@@ -5045,7 +5080,23 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
  const clearHolds=()=>[...b.classList].forEach(c=>{if(c.startsWith('fa-m-hold-'))b.classList.remove(c)});
  const apply=()=>{clearTimeout(t);clear();const n=states[i];
  if(typeof requestSpotifyTrack==='function') requestSpotifyTrack(n==='p5s2'?'page5':n==='p8s3'?'page8':null);
- if(n==='p5s1'||n==='p5s2') ensureP5Pan();b.classList.add('fa-m-'+n);const pg=n.slice(1,2);if(+pg>=2)b.classList.add('fa-m-page'+pg);if(p2&&n!=='p2s2')p2.scrollTop=0;if(p3&&n!=='p3s1')p3.scrollTop=0;if(p4&&n!=='p4s1')p4.scrollTop=0;if(n==='p1s2'||n==='p2s2'||n==='p3s1'||n==='p3s2'||n==='p4s1'||n==='p5s2'||n==='p6s2'||n==='p6s3'||n==='p7s1'||n==='p8s3')t=setTimeout(()=>b.classList.add('fa-m-reveal'),n==='p3s2'?450:700)};
+ if(n==='p5s1'||n==='p5s2') ensureP5Pan();b.classList.add('fa-m-'+n);const pg=n.slice(1,2);if(+pg>=2)b.classList.add('fa-m-page'+pg);if(p2&&n!=='p2s2')p2.scrollTop=0;if(p3&&n!=='p3s1')p3.scrollTop=0;if(p4&&n!=='p4s1')p4.scrollTop=0;syncP8Media();if(n==='p1s2'||n==='p2s2'||n==='p3s1'||n==='p3s2'||n==='p4s1'||n==='p5s2'||n==='p6s2'||n==='p6s3'||n==='p7s1'||n==='p8s3')t=setTimeout(()=>b.classList.add('fa-m-reveal'),n==='p3s2'?450:700)};
+ const syncP8Media=()=>{
+   const n=states[i], loop=document.getElementById('page8Loop');
+   if(loop){
+     if(n==='p8s2'||n==='p8s3'){ loop.muted=true; const q=loop.play(); if(q&&q.catch)q.catch(()=>{}); }
+     else if(!n.startsWith('p8')) loop.pause();
+   }
+   // Existing desktop Page 8 renderer owns the racking canvas. Trigger its normal
+   // Page 8 entry path by exposing the mobile state; the fallback below ensures its
+   // source video is allowed to play if present.
+   const rv=document.querySelector('#page8 video:not(#page8Loop)');
+   if(rv){
+     if(n==='p8s1'){rv.muted=true;rv.currentTime=0;const q=rv.play();if(q&&q.catch)q.catch(()=>{});}
+     else rv.pause();
+   }
+ };
+
  const sc=()=>states[i]==='p2s2'?p2:states[i]==='p3s1'?p3:states[i]==='p4s1'?p4:states[i]==='p6s2'?document.querySelector('.page6-editorial'):states[i]==='p7s1'?document.querySelector('.page7-layer'):null;
  const black=document.getElementById('faMobileBlack');
  const white=document.getElementById('faMobileWhite');
