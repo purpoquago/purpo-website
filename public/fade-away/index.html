@@ -2561,6 +2561,19 @@ html,body{overscroll-behavior-y:none}
     </div>
   </nav>
 
+  
+  <!-- Mobile homepage-style navigation prototype -->
+  <nav class="fa-mobile-home-nav" aria-label="Mobile primary navigation">
+    <a class="fa-mobile-logo" href="../" aria-label="PURPO home"><img src="assets/purpo-logo-white.png" alt="PURPO"></a>
+    <div class="fa-mobile-menu">
+      <a href="../sa-gitna-ng-lahat/">Sa Gitna</a>
+      <a class="active" href="../fade-away/">Fade Away</a>
+      <a href="../mallig/">Mallig</a>
+      <a href="../#visuals">Visuals</a>
+      <a href="../#about">About</a>
+    </div>
+  </nav>
+
   <div class="track-list" aria-label="Fade Away track list">
     <a href="#page5" data-song-snap="8">fade away</a>
     <a href="#page8" data-song-snap="13">stuck on rewind</a>
@@ -4622,11 +4635,11 @@ updateSideRailState();
   .snap-indicator,.scroll-cue{display:none!important}
 
   /* Mobile camera: Page 1 panorama */
-  .hero-video{transition:object-position .72s cubic-bezier(.22,.72,.22,1)!important;object-position:36% center!important}
+  .hero-video{transition:object-position .72s cubic-bezier(.22,.72,.22,1)!important;object-position:24% center!important}
   body.fa-m-s1 .hero-video{object-position:72% center!important}
 
   /* Page 1 titles are a single reveal beat after the camera pan. */
-  .track-list{top:50%!important;right:8vw!important;left:auto!important;width:48vw!important;min-width:0!important;transform:translateY(-50%);text-align:center!important}
+  .track-list{top:50%!important;left:50%!important;right:auto!important;width:76vw!important;min-width:0!important;transform:translate(-50%,-50%);text-align:center!important}
   .track-list a{opacity:0!important;transform:translateY(12px)!important;filter:blur(1px)!important;transition:opacity .34s ease,transform .34s ease,filter .34s ease!important;margin:0 auto 5.2vh!important;font-size:16px!important;pointer-events:none!important}
   body.fa-m-s1.fa-m-reveal .track-list a{opacity:1!important;transform:none!important;filter:none!important;pointer-events:auto!important}
 
@@ -4634,13 +4647,13 @@ updateSideRailState();
   .page2-layer{opacity:0!important;transition:opacity .38s ease!important;pointer-events:none!important}
   body.fa-m-page2 .page2-layer{opacity:1!important;pointer-events:auto!important}
   body.fa-m-page2 .hero-video{opacity:0!important}
-  .page2-bg{object-position:42% center!important;transition:object-position .72s cubic-bezier(.22,.72,.22,1)!important}
+  .page2-bg{object-position:24% center!important;transition:object-position .72s cubic-bezier(.22,.72,.22,1)!important}
   body.fa-m-s3 .page2-bg{object-position:72% center!important}
   .page2-layer::after{background:rgba(0,0,0,.20)!important}
 
   .page2-panel{
     top:12dvh!important;left:50%!important;width:86vw!important;max-width:520px!important;
-    height:76dvh!important;transform:translateX(-50%)!important;
+    height:auto!important;bottom:0!important;transform:translateX(-50%)!important;
     overflow-y:auto!important;overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch;
     padding:0 3vw 8dvh!important;scrollbar-width:none;
     opacity:0!important;pointer-events:none!important;
@@ -4661,6 +4674,22 @@ updateSideRailState();
   .page3-layer,.page4-layer,.page5-layer,.page6-layer,.page7-layer,.page8-layer,.page9-layer,.page10-layer,.page11-layer,.page12-layer,.page13-layer,.page14-layer,.page15-layer,.page16-layer,.page17-layer,.page18-layer,.page19-layer{pointer-events:none!important}
   .pageflip-layer,#fadeToBlack,#fadeToWhite{display:none!important}
 }
+
+  /* V2: homepage-style functional mobile UI. */
+  .site-nav{display:none!important}
+  .fa-mobile-home-nav{
+    display:flex!important;position:fixed;z-index:10020;left:0;right:0;top:0;
+    padding:18px 18px 0;align-items:flex-start;justify-content:space-between;
+    opacity:1;transform:translateY(0);transition:opacity .38s ease,transform .38s ease;
+    pointer-events:auto;
+  }
+  .fa-mobile-home-nav.ui-dimmed{opacity:.10;transform:translateY(-4px)}
+  .fa-mobile-logo{display:block;width:112px}
+  .fa-mobile-logo img{display:block;width:100%;height:auto}
+  .fa-mobile-menu{display:flex;flex-direction:column;align-items:flex-end;gap:7px;padding-top:1px}
+  .fa-mobile-menu a{color:#fff;text-decoration:none;font:400 16px/1.08 Arial,sans-serif;letter-spacing:.01em;text-shadow:0 1px 10px rgba(0,0,0,.7)}
+  .fa-mobile-menu a.active{font-weight:700}
+  .fa-mobile-home-nav::before{content:"";position:absolute;z-index:-1;inset:-18px -18px -42px;background:linear-gradient(to bottom,rgba(0,0,0,.55),rgba(0,0,0,0));pointer-events:none}
 </style>
 <script id="fadeaway-mobile-v1-controller">
 (()=>{
@@ -4685,6 +4714,16 @@ updateSideRailState();
     state=next;locked=true;apply();setTimeout(()=>locked=false,900);
   };
   window.scrollTo(0,0); apply();
+  const mobileNav=document.querySelector('.fa-mobile-home-nav');
+  let navTimer=0;
+  const wakeNav=()=>{
+    if(!mobileNav)return;
+    mobileNav.classList.remove('ui-dimmed');
+    clearTimeout(navTimer);
+    navTimer=setTimeout(()=>mobileNav.classList.add('ui-dimmed'),2200);
+  };
+  wakeNav();
+  ['touchstart','pointerdown'].forEach(type=>document.addEventListener(type,wakeNav,{passive:true}));
   document.addEventListener('touchstart',e=>{
     const t=e.touches[0];startY=t.clientY;startX=t.clientX;
   },{passive:true});
