@@ -5132,9 +5132,20 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
    if((c.startsWith('fa-m-p')&&c!=='fa-m-page-transition')||/^fa-m-page[2-8]$/.test(c)||c==='fa-m-reveal')b.classList.remove(c)
  });
  const clearHolds=()=>[...b.classList].forEach(c=>{if(c.startsWith('fa-m-hold-'))b.classList.remove(c)});
- const apply=()=>{clearTimeout(t);clear();const n=states[i];
+ let faMPrevState=null;
+ const apply=()=>{
+   const faMCurrentState=states[i];
+   const faMWasState=faMPrevState;
+   faMPrevState=faMCurrentState;
+clearTimeout(t);clear();const n=states[i];
  if(typeof requestSpotifyTrack==='function') requestSpotifyTrack(n==='p5s2'?'page5':n==='p8s3'?'page8':null);
- if(n==='p5s1'||n==='p5s2') ensureP5Pan();b.classList.add('fa-m-'+n);const pg=n.slice(1,2);if(+pg>=2)b.classList.add('fa-m-page'+pg);if(p2&&n!=='p2s2')p2.scrollTop=0;if(p3&&n!=='p3s1')p3.scrollTop=0;if(p4&&n!=='p4s1')p4.scrollTop=0;syncP8Media();if(n==='p1s2'||n==='p2s2'||n==='p3s1'||n==='p3s2'||n==='p4s1'||n==='p5s2'||n==='p6s2'||n==='p6s3'||n==='p7s1'||n==='p8s3')t=setTimeout(()=>b.classList.add('fa-m-reveal'),n==='p3s2'?450:700)};
+ if(n==='p5s1'||n==='p5s2') ensureP5Pan();b.classList.add('fa-m-'+n);const pg=n.slice(1,2);if(+pg>=2)b.classList.add('fa-m-page'+pg);if(p2&&n!=='p2s2')p2.scrollTop=0;if(p3&&n!=='p3s1')p3.scrollTop=0;if(p4&&n!=='p4s1')p4.scrollTop=0;syncP8Media();
+   if(faMCurrentState==='p8s1' && faMWasState==='p8s3'){
+     requestAnimationFrame(()=>enterP8Reverse());
+   }else if(faMCurrentState==='p8s1' && faMWasState!=='p8s1'){
+     requestAnimationFrame(()=>enterP8Forward());
+   }
+if(n==='p1s2'||n==='p2s2'||n==='p3s1'||n==='p3s2'||n==='p4s1'||n==='p5s2'||n==='p6s2'||n==='p6s3'||n==='p7s1'||n==='p8s3')t=setTimeout(()=>b.classList.add('fa-m-reveal'),n==='p3s2'?450:700)};
  
  let p8MobileRackRaf=0,p8MobileRackStart=0,p8MobileRackDir=1;
  const stopP8MobileRack=()=>{
@@ -5228,9 +5239,6 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
    await waitTransition(curtain);              // outgoing shot remains untouched until fully covered
    const oldState=states[i];
    i=x;apply();                                // hard swap while fully hidden
-   if(states[i]==='p8s1'){
-     if(oldState==='p8s3') enterP8Reverse(); else enterP8Forward();
-   }
    unfreezeCamera(frozen);
    await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))); // paint destination under curtain
    curtain.classList.remove('is-on');
