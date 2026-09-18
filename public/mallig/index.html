@@ -386,6 +386,22 @@ html,body{
   }
 }
 
+
+/* V19 TEST — background geometry only. Story scrolling/navigation untouched. */
+@media(max-width:800px),(hover:none) and (pointer:coarse){
+  .story-scene > .bg,
+  .story-scene .bg{
+    position:sticky!important;
+    top:-2vh!important;
+    left:-2vw!important;
+    width:104vw!important;
+    height:104dvh!important;
+    min-height:104dvh!important;
+    margin-bottom:-104dvh!important;
+    transform:none!important;
+  }
+}
+
 </style></head><body>
 <div class="stage" id="stage">
 <section class="scene active" data-bg="a"><img class="bg" src="assets/mallig-bg.jpg"><div class="shade"></div><div class="front"><div class="index-grid"><a class="album-choice jump" data-target="1" href="#mallig-story"><img class="cover" src="assets/mallig-sideA.jpg"><div class="choice-title">Mallig EP (2021)</div></a><a class="album-choice jump" data-target="3" href="#sideb-story"><img class="cover" src="assets/mallig-sideB.jpg"><div class="choice-title">Mallig Side B EP (2022)</div></a></div></div></section>
