@@ -2837,6 +2837,23 @@ html,body{overscroll-behavior-y:none}
 }
 </style>
 
+
+<style id="fadeaway-mobile-v26-page8">
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+  /* P8-S3 readability veil, between moving video and handwriting/player */
+  body.fa-m-p8s3 .page8-layer::after{
+    content:""!important;
+    position:absolute!important;
+    inset:0!important;
+    z-index:6!important;
+    background:rgba(0,0,0,.30)!important;
+    pointer-events:none!important;
+  }
+  body.fa-m-p8s3 #page8Overlay{z-index:8!important}
+  body.fa-m-p8s3 #page8Player{z-index:12!important}
+}
+</style>
+
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
@@ -5081,8 +5098,31 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
  const apply=()=>{clearTimeout(t);clear();const n=states[i];
  if(typeof requestSpotifyTrack==='function') requestSpotifyTrack(n==='p5s2'?'page5':n==='p8s3'?'page8':null);
  if(n==='p5s1'||n==='p5s2') ensureP5Pan();b.classList.add('fa-m-'+n);const pg=n.slice(1,2);if(+pg>=2)b.classList.add('fa-m-page'+pg);if(p2&&n!=='p2s2')p2.scrollTop=0;if(p3&&n!=='p3s1')p3.scrollTop=0;if(p4&&n!=='p4s1')p4.scrollTop=0;syncP8Media();if(n==='p1s2'||n==='p2s2'||n==='p3s1'||n==='p3s2'||n==='p4s1'||n==='p5s2'||n==='p6s2'||n==='p6s3'||n==='p7s1'||n==='p8s3')t=setTimeout(()=>b.classList.add('fa-m-reveal'),n==='p3s2'?450:700)};
+ 
+ let p8MobileRackRaf=0,p8MobileRackStart=0;
+ const stopP8MobileRack=()=>{
+   if(p8MobileRackRaf)cancelAnimationFrame(p8MobileRackRaf);
+   p8MobileRackRaf=0;p8MobileRackStart=0;
+ };
+ const startP8MobileRack=()=>{
+   stopP8MobileRack();
+   p8MobileRackStart=performance.now();
+   const duration=4200;
+   const tick=now=>{
+     if(states[i]!=='p8s1'){stopP8MobileRack();return}
+     const u=Math.min(1,(now-p8MobileRackStart)/duration);
+     const eased=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;
+     const frame=Math.round(eased*(PAGE8_FRAME_COUNT-1));
+     if(typeof drawPage8Frame==='function')drawPage8Frame(frame);
+     if(u<1)p8MobileRackRaf=requestAnimationFrame(tick);
+     else p8MobileRackRaf=0;
+   };
+   p8MobileRackRaf=requestAnimationFrame(tick);
+ };
+
  const syncP8Media=()=>{
    const n=states[i], loop=document.getElementById('page8Loop');
+   if(n==='p8s1')startP8MobileRack(); else stopP8MobileRack();
    if(loop){
      if(n==='p8s2'||n==='p8s3'){ loop.muted=true; const q=loop.play(); if(q&&q.catch)q.catch(()=>{}); }
      else if(!n.startsWith('p8')) loop.pause();
