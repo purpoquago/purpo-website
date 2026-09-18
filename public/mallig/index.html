@@ -402,6 +402,16 @@ html,body{
   }
 }
 
+
+/* MALLIG V21 — MOBILE STORY NORMALIZATION */
+@media(max-width:800px),(hover:none) and (pointer:coarse){
+  .story-scene{height:100dvh!important;min-height:100dvh!important;max-height:100dvh!important;overflow:hidden!important;overscroll-behavior:none!important;}
+  .story-scene > .bg,.story-scene .bg{position:absolute!important;top:0!important;right:0!important;bottom:0!important;left:0!important;width:100%!important;height:100%!important;min-height:0!important;margin:0!important;}
+  .story-scene .front{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;min-height:0!important;overflow:hidden!important;display:block!important;padding:0!important;}
+  .story-scene .detail-grid{position:absolute!important;top:7dvh!important;left:6vw!important;right:6vw!important;width:auto!important;margin:0!important;padding:0!important;transform:none!important;max-height:none!important;overflow:visible!important;}
+  .story-scene .cover{width:72vw!important;max-width:310px!important;margin-left:auto!important;margin-right:auto!important;display:block!important;}
+}
+
 </style></head><body>
 <div class="stage" id="stage">
 <section class="scene active" data-bg="a"><img class="bg" src="assets/mallig-bg.jpg"><div class="shade"></div><div class="front"><div class="index-grid"><a class="album-choice jump" data-target="1" href="#mallig-story"><img class="cover" src="assets/mallig-sideA.jpg"><div class="choice-title">Mallig EP (2021)</div></a><a class="album-choice jump" data-target="3" href="#sideb-story"><img class="cover" src="assets/mallig-sideB.jpg"><div class="choice-title">Mallig Side B EP (2022)</div></a></div></div></section>
@@ -457,12 +467,6 @@ function go(n){
 document.querySelectorAll('.jump').forEach(a=>a.onclick=e=>{e.preventDefault();go(+a.dataset.target)});addEventListener('wheel',e=>{
   if(Math.abs(e.deltaY)<12)return;
   const s=scenes[current];
-  const mobileStoryScroll=matchMedia('(max-width:800px), (hover:none) and (pointer:coarse)').matches;
-  if(mobileStoryScroll && s.classList.contains('story-scene') && s.scrollHeight>s.clientHeight+2){
-    const atTop=s.scrollTop<=1;
-    const atBottom=s.scrollTop+s.clientHeight>=s.scrollHeight-2;
-    if((e.deltaY>0&&!atBottom)||(e.deltaY<0&&!atTop))return;
-  }
   e.preventDefault();
   go(current+(e.deltaY>0?1:-1));
 },{passive:false});addEventListener('keydown',e=>{if(['ArrowDown','PageDown',' '].includes(e.key))go(current+1);if(['ArrowUp','PageUp'].includes(e.key))go(current-1)});addEventListener('touchstart',e=>startY=e.touches[0].clientY,{passive:true});addEventListener('touchend',e=>{
@@ -470,8 +474,7 @@ document.querySelectorAll('.jump').forEach(a=>a.onclick=e=>{e.preventDefault();g
   if(Math.abs(dy)<=55)return;
   const s=scenes[current];
   const listen=s.querySelector('.tracks');
-  const internalScroll=(listen || s.classList.contains('story-scene'));
-  if(internalScroll && s.scrollHeight>s.clientHeight+2){
+  if(listen && s.scrollHeight>s.clientHeight+2){
     const atTop=s.scrollTop<=1, atBottom=s.scrollTop+s.clientHeight>=s.scrollHeight-2;
     if((dy<0&&!atBottom)||(dy>0&&!atTop))return;
   }
