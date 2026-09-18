@@ -4622,19 +4622,19 @@ updateSideRailState();
 
 
 
-<style id="fadeaway-mobile-v8">
+<style id="fadeaway-mobile-v9">
 @media(max-width:800px){
  #faMobileBlack{position:fixed;inset:0;z-index:9998;background:#000;opacity:0;pointer-events:none;transition:opacity .34s ease}
  #faMobileBlack.is-on{opacity:1}
 
  html,body{height:100%;overflow:hidden!important;overscroll-behavior:none}.hero-scroll{height:100dvh!important}.hero{position:fixed!important;inset:0;height:100dvh!important;min-height:0!important}.snap-indicator,.scroll-cue{display:none!important}
- .hero-video{transition:object-position .72s cubic-bezier(.22,.72,.22,1)!important;object-position:10% center!important}body.fa-m-p1s2 .hero-video{object-position:72% center!important}
+ .hero-video{transition:object-position .72s cubic-bezier(.22,.72,.22,1)!important;object-position:10% center!important}body.fa-m-p1s2 .hero-video,body.fa-m-hold-p1s2 .hero-video{object-position:72% center!important}
  .track-list{top:50%!important;left:50%!important;right:auto!important;width:76vw!important;min-width:0!important;transform:translate(-50%,-50%)!important;text-align:center!important}.track-list a{opacity:0!important;transform:translateY(12px)!important;filter:none!important;transition:opacity .34s ease,transform .34s ease!important;margin:0 auto 5.2vh!important;font-size:16px!important;pointer-events:none!important}body.fa-m-p1s2.fa-m-reveal .track-list a{opacity:1!important;transform:none!important;pointer-events:auto!important}
  .page2-layer,.page3-layer,.page4-layer,.page5-layer{opacity:0!important;transition:opacity .38s ease!important;pointer-events:none!important}
  body.fa-m-page2 .page2-layer,body.fa-m-page3 .page3-layer,body.fa-m-page4 .page4-layer,body.fa-m-page5 .page5-layer{opacity:1!important;pointer-events:auto!important}
  body.fa-m-page2 .hero-video,body.fa-m-page3 .hero-video,body.fa-m-page4 .hero-video,body.fa-m-page5 .hero-video{opacity:0!important}
  body.fa-m-page3 .page2-layer,body.fa-m-page4 .page3-layer,body.fa-m-page5 .page4-layer{opacity:0!important;pointer-events:none!important}
- .page2-bg{object-position:24% center!important;transition:object-position .72s cubic-bezier(.22,.72,.22,1)!important}body.fa-m-p2s2 .page2-bg{object-position:72% center!important}.page2-layer::after{background:rgba(0,0,0,.20)!important}
+ .page2-bg{object-position:24% center!important;transition:object-position .72s cubic-bezier(.22,.72,.22,1)!important}body.fa-m-p2s2 .page2-bg,body.fa-m-hold-p2s2 .page2-bg{object-position:72% center!important}.page2-layer::after{background:rgba(0,0,0,.20)!important}
  .page2-panel{top:12dvh!important;left:50%!important;width:86vw!important;max-width:520px!important;height:auto!important;bottom:0!important;transform:translateX(-50%)!important;overflow-y:auto!important;overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch;padding:0 3vw 8dvh!important;scrollbar-width:none;opacity:0!important;pointer-events:none!important;transition:opacity .34s ease!important}.page2-panel::-webkit-scrollbar{display:none}body.fa-m-p2s2.fa-m-reveal .page2-panel{opacity:1!important;pointer-events:auto!important}.page2-reveal{opacity:1!important;transform:none!important;filter:none!important}.page2-heading,.page2-subhead{width:100%!important}.page2-intro{font-size:16px!important;line-height:1.38!important}.page2-section-title{font-size:20px!important;margin:28px 0 22px!important}.amenities{grid-template-columns:1fr!important;row-gap:18px!important}.amenity{grid-template-columns:70px 1fr!important;gap:14px!important}.amenity img{max-height:66px!important}.amenity h3{font-size:16px!important}.amenity p{font-size:13px!important;line-height:1.3!important}
 
  /* P3-S1 now owns the article. 3–4pt smaller than P2 body. */
@@ -4642,7 +4642,7 @@ updateSideRailState();
  .page3-article{left:50%!important;overflow-x:hidden!important;top:50%!important;bottom:auto!important;width:86vw!important;max-width:520px!important;transform:translate(-50%,-50%)!important;max-height:76dvh!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:3dvh 3vw!important;box-sizing:border-box;scrollbar-width:none;opacity:0!important;pointer-events:none!important;transition:opacity .34s ease!important}.page3-article::-webkit-scrollbar{display:none}body.fa-m-p3s1.fa-m-reveal .page3-article{opacity:1!important;pointer-events:auto!important}.page3-reveal{opacity:1!important;transform:none!important;filter:none!important}.page3-header{width:110%!important;max-width:none!important;margin-left:-5%!important;display:block!important;}margin:0 0 1.2rem!important}.page3-body{width:100%!important;margin:0!important;font-size:12.5px!important;line-height:1.42!important}
 
  /* P3-S2: grab quote on white */
- body.fa-m-p3s2 .page3-bg{object-position:72% center!important}body.fa-m-p3s2 .page3-article{display:none!important}
+ body.fa-m-p3s2 .page3-bg,body.fa-m-hold-p3s2 .page3-bg{object-position:72% center!important}body.fa-m-p3s2 .page3-article{display:none!important}
  .fa-mobile-grabquote{display:none;position:fixed;inset:0;background:transparent;z-index:21;align-items:center;justify-content:center;padding:10vw;box-sizing:border-box;opacity:0;transition:opacity .42s ease}
  .fa-mobile-grabquote img{width:min(78vw,420px);height:auto}
  body.fa-m-p3s2 .fa-mobile-grabquote{display:flex}body.fa-m-p3s2.fa-m-reveal .fa-mobile-grabquote{opacity:1}
@@ -4663,10 +4663,10 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
  /* P5-S2: darken 40%, handwriting centered vertically, Spotify at bottom */
  
  .page5-overlay{
- position:absolute!important;z-index:3!important;left:0!important;top:0!important;
- width:100vw!important;height:100dvh!important;max-width:none!important;max-height:none!important;
- object-fit:cover!important;object-position:center!important;
- transform:none!important;filter:none!important;clip-path:inset(0)!important;
+ position:absolute!important;z-index:3!important;left:0!important;right:auto!important;top:0!important;
+ width:125vw!important;height:100dvh!important;max-width:none!important;max-height:none!important;
+ object-fit:cover!important;object-position:left center!important;
+ transform:none!important;filter:none!important;clip-path:inset(0 25vw 0 0)!important;
  opacity:0!important;transition:opacity .38s ease!important;pointer-events:none!important;
 }
  body.fa-m-p5s2.fa-m-reveal .page5-overlay{opacity:1!important;filter:none!important;transform:none!important}
@@ -4677,7 +4677,7 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
 </style>
 <div class="fa-mobile-grabquote" aria-hidden="true"><img src="assets/page4-grab-quote.png" alt=""></div>
 
-<script id="fadeaway-mobile-v8-controller">
+<script id="fadeaway-mobile-v9-controller">
 (()=>{
  if(!matchMedia('(max-width:800px)').matches)return;
  const b=document.body,p2=document.querySelector('.page2-panel'),p3=document.querySelector('.page3-article'),p4=document.querySelector('.page4-mobile-article');
@@ -4699,6 +4699,7 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
  };
  const ensureP5Pan=()=>{if(!p5raf){p5start=0;p5raf=requestAnimationFrame(p5pan)}};
  const clear=()=>[...b.classList].forEach(c=>{if(c.startsWith('fa-m-p')||/^fa-m-page[2-5]$/.test(c)||c==='fa-m-reveal')b.classList.remove(c)});
+ const clearHolds=()=>[...b.classList].forEach(c=>{if(c.startsWith('fa-m-hold-'))b.classList.remove(c)});
  const apply=()=>{clearTimeout(t);clear();const n=states[i];
  if(typeof requestSpotifyTrack==='function') requestSpotifyTrack(n==='p5s2'?'page5':null);
  if(n==='p5s1'||n==='p5s2') ensureP5Pan();b.classList.add('fa-m-'+n);const pg=n.slice(1,2);if(+pg>=2)b.classList.add('fa-m-page'+pg);if(p2&&n!=='p2s2')p2.scrollTop=0;if(p3&&n!=='p3s1')p3.scrollTop=0;if(p4&&n!=='p4s1')p4.scrollTop=0;if(n==='p1s2'||n==='p2s2'||n==='p3s1'||n==='p3s2'||n==='p4s1'||n==='p5s2')t=setTimeout(()=>b.classList.add('fa-m-reveal'),n==='p3s2'?450:700)};
@@ -4714,16 +4715,19 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
    if(lock)return;
    const x=Math.max(0,Math.min(states.length-1,i+d));if(x===i)return;
    lock=true;
+   clearHolds();
+   const leaving=states[i];
+   if(leaving.endsWith('s2')) b.classList.add('fa-m-hold-'+leaving);
    if(needsBlack(i,x)&&black){
      /* Do not apply the destination state until the old scene is fully hidden. */
      black.classList.add('is-on');
      setTimeout(()=>{
        i=x;apply();
-       requestAnimationFrame(()=>requestAnimationFrame(()=>black.classList.remove('is-on')));
+       requestAnimationFrame(()=>requestAnimationFrame(()=>{clearHolds();black.classList.remove('is-on')}));
      },360);
      setTimeout(()=>lock=false,1120);
    }else{
-     i=x;apply();setTimeout(()=>lock=false,900);
+     i=x;apply();requestAnimationFrame(()=>requestAnimationFrame(clearHolds));setTimeout(()=>lock=false,900);
    }
  };
  window.scrollTo(0,0);apply();
