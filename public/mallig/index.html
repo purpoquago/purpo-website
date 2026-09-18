@@ -389,8 +389,44 @@ html,body{
   }
 }
 
+
+/* MALLIG V24 — one persistent background plane per album world on mobile */
+.mobile-shared-bg{display:none}
+@media(max-width:800px),(hover:none) and (pointer:coarse){
+  .mobile-shared-bg{
+    display:block;
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+    overflow:hidden;
+  }
+  .mobile-shared-bg-img{
+    position:absolute;
+    inset:-4%;
+    width:108%;
+    height:108%;
+    max-width:none;
+    object-fit:cover;
+    transform:translate3d(0,0,0) scale(1.02);
+    opacity:0;
+    transition:opacity .38s ease;
+  }
+  .mobile-shared-bg-img.is-a{opacity:1}
+  .mobile-shared-bg.show-b .is-a{opacity:0}
+  .mobile-shared-bg.show-b .is-b{opacity:1}
+
+  /* Scene-local duplicate backgrounds are hidden on mobile only. */
+  .scene > .bg{display:none!important}
+  .scene{z-index:1}
+}
+
 </style></head><body>
 <div class="stage" id="stage">
+<div class="mobile-shared-bg" aria-hidden="true">
+  <img class="mobile-shared-bg-img is-a" src="assets/mallig-bg.jpg" alt="">
+  <img class="mobile-shared-bg-img is-b" src="assets/side-b-bg.jpg" alt="">
+</div>
 <section class="scene active" data-bg="a"><img class="bg" src="assets/mallig-bg.jpg"><div class="shade"></div><div class="front"><div class="index-grid"><a class="album-choice jump" data-target="1" href="#mallig-story"><img class="cover" src="assets/mallig-sideA.jpg"><div class="choice-title">Mallig EP (2021)</div></a><a class="album-choice jump" data-target="3" href="#sideb-story"><img class="cover" src="assets/mallig-sideB.jpg"><div class="choice-title">Mallig Side B EP (2022)</div></a></div></div></section>
 <section class="scene story-scene" id="mallig-story" data-bg="a"><img class="bg" src="assets/mallig-bg.jpg"><div class="shade"></div><div class="front"><div class="detail-grid"><img class="cover" src="assets/mallig-sideA.jpg"><div class="copy-box"><h1 class="heading">Mallig EP (2021)</h1><div class="meta">by Purpo<br>Produced by: Purpo, Chuck Joson, Jem Blanco</div><div class="description">Mallig EP is the more introspective half of the record, made up of songs I wrote at different points in my life about the things that stayed with me from where I came from. There are bits of my upbringing, old friendships, old ideas about freedom and love, and the expectations I had for myself when I was younger. A lot of these songs came from moments when life was moving much faster than I could make sense of it, and writing them became a way of looking back at what I had left behind and what I ended up carrying forward.</div></div></div></div></section>
 <section class="scene" data-bg="a"><img class="bg" src="assets/mallig-bg.jpg"><div class="shade"></div><div class="front"><div class="detail-grid"><div class="player-box"><iframe class="spotify" loading="lazy" src="https://open.spotify.com/embed/album/4DRSbW4YmOMaOD5sueHCvC?utm_source=generator" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe></div><div class="copy-box"><h1 class="heading">Mallig EP (2021)</h1><div class="meta">by Purpo<br>Produced by: Purpo, Chuck Joson, Jem Blanco</div><div class="tracks" data-tracks="Kalayaan|Sa Wakas|Chance Encounter|Still Breathing|Mallig|Bukas"></div></div></div></div></section>
@@ -408,6 +444,8 @@ function go(n){
   locked=true;
   const from=current;
   const bgChange=scenes[n].dataset.bg!==scenes[from].dataset.bg;
+  const sharedBg=document.querySelector('.mobile-shared-bg');
+  const mobileShared=matchMedia('(max-width:800px), (hover:none) and (pointer:coarse)').matches;
 
   if(bgChange){
     /* Only use black when the actual background world changes. */
@@ -416,6 +454,7 @@ function go(n){
     setTimeout(()=>{
       scenes[from].classList.remove('active');
       current=n;
+      if(mobileShared && sharedBg) sharedBg.classList.toggle('show-b', scenes[current].dataset.bg==='b');
       scenes[current].classList.add('active');
       black.style.opacity='0';
       setTimeout(()=>locked=false,520);
