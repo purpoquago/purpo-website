@@ -2664,6 +2664,54 @@ html,body{overscroll-behavior-y:none}
 }
 </style>
 
+
+<style id="fadeaway-mobile-v22-p6-p7-revs">
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+
+  /* P6-S2/S3: persistent 40% black readability overlay over the background */
+  body.fa-m-p6s2 .page6-layer::after,
+  body.fa-m-p6s3 .page6-layer::after{
+    content:""!important;
+    position:absolute!important;
+    inset:0!important;
+    z-index:3!important;
+    background:rgba(0,0,0,.40)!important;
+    pointer-events:none!important;
+  }
+  body.fa-m-p6s2 .page6-layer::after{
+    opacity:0!important;
+    transition:opacity .7s ease!important;
+  }
+  body.fa-m-p6s2.fa-m-reveal .page6-layer::after{
+    opacity:1!important;
+  }
+  body.fa-m-p6s3 .page6-layer::after{
+    opacity:1!important;
+  }
+
+  /* Remove the box from P6-S2; content floats directly over darkened image */
+  body.fa-m-p6s2 .page6-editorial{
+    z-index:5!important;
+    background:transparent!important;
+    padding:0!important;
+  }
+
+  /* Keep P6-S3 quote above inherited overlay */
+  body.fa-m-p6s3 .page6-quote{
+    z-index:6!important;
+  }
+
+  /* P7 inset: show LOWER two-thirds of the source photo */
+  body.fa-m-p7s1 .page7-inset-bg{
+    width:100%!important;
+    height:auto!important;
+    aspect-ratio:3/2!important;
+    object-fit:cover!important;
+    object-position:center bottom!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
