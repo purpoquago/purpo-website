@@ -4623,17 +4623,33 @@ updateSideRailState();
 
 
 
-<style id="fadeaway-mobile-v11">
+<style id="fadeaway-mobile-v12">
 @media(max-width:800px){
  body.fa-m-exiting .hero-video,body.fa-m-exiting .page2-bg,body.fa-m-exiting .page3-bg{
  transition:none!important;
 }
-#faMobileWhite{position:fixed;inset:0;z-index:9997;background:#fff;opacity:0;pointer-events:none;transition:none}
+
+ body.fa-m-page-transition .hero-video,
+ body.fa-m-page-transition .track-list,
+ body.fa-m-page-transition .page2-layer,
+ body.fa-m-page-transition .page2-bg,
+ body.fa-m-page-transition .page2-panel,
+ body.fa-m-page-transition .page2-reveal,
+ body.fa-m-page-transition .page3-layer,
+ body.fa-m-page-transition .page3-bg,
+ body.fa-m-page-transition .page3-vignette,
+ body.fa-m-page-transition .page3-article,
+ body.fa-m-page-transition .page3-reveal,
+ body.fa-m-page-transition .page4-layer,
+ body.fa-m-page-transition .fa-mobile-page4-article{
+   transition:none!important;
+   animation:none!important;
+ }
+
+ #faMobileWhite{position:fixed;inset:0;z-index:9997;background:#fff;opacity:0;pointer-events:none;transition:opacity .42s ease}
  #faMobileWhite.is-on{opacity:1}
- #faMobileWhite.is-revealing{transition:opacity .42s ease;opacity:0}
- #faMobileBlack{position:fixed;inset:0;z-index:9998;background:#000;opacity:0;pointer-events:none;transition:none}
+ #faMobileBlack{position:fixed;inset:0;z-index:9998;background:#000;opacity:0;pointer-events:none;transition:opacity .42s ease}
  #faMobileBlack.is-on{opacity:1}
- #faMobileBlack.is-revealing{transition:opacity .42s ease;opacity:0}
 
  html,body{height:100%;overflow:hidden!important;overscroll-behavior:none}.hero-scroll{height:100dvh!important}.hero{position:fixed!important;inset:0;height:100dvh!important;min-height:0!important}.snap-indicator,.scroll-cue{display:none!important}
  .hero-video{transition:object-position .72s cubic-bezier(.22,.72,.22,1)!important;object-position:10% center!important}body.fa-m-p1s2 .hero-video,body.fa-m-hold-p1s2 .hero-video{object-position:72% center!important}
@@ -4672,7 +4688,7 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
  
  .page5-overlay{
  position:absolute!important;z-index:3!important;left:0!important;right:auto!important;top:50%!important;
- width:100vw!important;height:auto!important;max-width:100vw!important;max-height:72dvh!important;
+ width:175vw!important;height:auto!important;max-width:none!important;max-height:none!important;
  object-fit:contain!important;object-position:left center!important;
  transform:translateY(-50%)!important;filter:none!important;
  opacity:0!important;transition:opacity .38s ease!important;pointer-events:none!important;
@@ -4685,7 +4701,7 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
 </style>
 <div class="fa-mobile-grabquote" aria-hidden="true"><img src="assets/page4-grab-quote.png" alt=""></div>
 
-<script id="fadeaway-mobile-v11-controller">
+<script id="fadeaway-mobile-v12-controller">
 (()=>{
  if(!matchMedia('(max-width:800px)').matches)return;
  const b=document.body,p2=document.querySelector('.page2-panel'),p3=document.querySelector('.page3-article'),p4=document.querySelector('.page4-mobile-article');
@@ -4727,19 +4743,27 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
             n.startsWith('p2')?document.querySelector('.page2-bg'):
             n.startsWith('p3')?document.querySelector('.page3-bg'):null;
    if(!el)return null;
-   const pos=getComputedStyle(el).objectPosition;
-   b.classList.add('fa-m-exiting');
-   el.style.setProperty('object-position',pos,'important');
+   el.style.setProperty('object-position',getComputedStyle(el).objectPosition,'important');
    return el;
  };
- const unfreezeCamera=el=>{
-   if(el)el.style.removeProperty('object-position');
-   b.classList.remove('fa-m-exiting');clearHolds();
- };
- const revealCurtain=c=>{
-   c.classList.add('is-revealing');
-   requestAnimationFrame(()=>requestAnimationFrame(()=>c.classList.remove('is-on')));
-   setTimeout(()=>c.classList.remove('is-revealing'),500);
+ const unfreezeCamera=el=>{if(el)el.style.removeProperty('object-position');clearHolds()};
+ const waitTransition=(el,timeout=520)=>new Promise(resolve=>{
+   let done=false;
+   const finish=()=>{if(done)return;done=true;el.removeEventListener('transitionend',onEnd);resolve()};
+   const onEnd=e=>{if(e.target===el&&e.propertyName==='opacity')finish()};
+   el.addEventListener('transitionend',onEnd);
+   setTimeout(finish,timeout);
+ });
+ const doCurtain=async(curtain,x,frozen)=>{
+   b.classList.add('fa-m-page-transition');
+   curtain.classList.add('is-on');
+   await waitTransition(curtain);              // outgoing shot remains untouched until fully covered
+   i=x;apply();                                // hard swap while fully hidden
+   unfreezeCamera(frozen);
+   await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))); // paint destination under curtain
+   curtain.classList.remove('is-on');
+   await waitTransition(curtain);              // reveal only after destination is stable
+   b.classList.remove('fa-m-page-transition');
  };
  const move=d=>{
    if(lock)return;
@@ -4747,15 +4771,7 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
    lock=true;clearHolds();
    const frozen=freezeCamera(), curtain=curtainFor(i,x);
    if(curtain){
-     /* Curtain covers the old shot BEFORE destination state changes. */
-     curtain.classList.remove('is-revealing');
-     curtain.classList.add('is-on');
-     requestAnimationFrame(()=>requestAnimationFrame(()=>{
-       i=x;apply();unfreezeCamera(frozen);
-       /* Destination gets a full paint while hidden. */
-       requestAnimationFrame(()=>requestAnimationFrame(()=>revealCurtain(curtain)));
-     }));
-     setTimeout(()=>lock=false,1050);
+     doCurtain(curtain,x,frozen).finally(()=>{lock=false});
    }else{
      i=x;apply();
      requestAnimationFrame(()=>requestAnimationFrame(()=>unfreezeCamera(frozen)));
