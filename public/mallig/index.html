@@ -381,6 +381,14 @@ html,body{
   .story-scene .cover{width:72vw!important;max-width:310px!important;margin-left:auto!important;margin-right:auto!important;display:block!important;}
 }
 
+
+/* MALLIG V23 — mobile Story backgrounds keep normal size/crop but do not parallax. */
+@media(max-width:800px),(hover:none) and (pointer:coarse){
+  .story-scene .bg{
+    transform:translate3d(0,0,0) scale(1.02)!important;
+  }
+}
+
 </style></head><body>
 <div class="stage" id="stage">
 <section class="scene active" data-bg="a"><img class="bg" src="assets/mallig-bg.jpg"><div class="shade"></div><div class="front"><div class="index-grid"><a class="album-choice jump" data-target="1" href="#mallig-story"><img class="cover" src="assets/mallig-sideA.jpg"><div class="choice-title">Mallig EP (2021)</div></a><a class="album-choice jump" data-target="3" href="#sideb-story"><img class="cover" src="assets/mallig-sideB.jpg"><div class="choice-title">Mallig Side B EP (2022)</div></a></div></div></section>
