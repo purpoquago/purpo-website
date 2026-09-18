@@ -457,7 +457,8 @@ function go(n){
 document.querySelectorAll('.jump').forEach(a=>a.onclick=e=>{e.preventDefault();go(+a.dataset.target)});addEventListener('wheel',e=>{
   if(Math.abs(e.deltaY)<12)return;
   const s=scenes[current];
-  if(s.classList.contains('story-scene') && s.scrollHeight>s.clientHeight+2){
+  const mobileStoryScroll=matchMedia('(max-width:800px), (hover:none) and (pointer:coarse)').matches;
+  if(mobileStoryScroll && s.classList.contains('story-scene') && s.scrollHeight>s.clientHeight+2){
     const atTop=s.scrollTop<=1;
     const atBottom=s.scrollTop+s.clientHeight>=s.scrollHeight-2;
     if((e.deltaY>0&&!atBottom)||(e.deltaY<0&&!atTop))return;
