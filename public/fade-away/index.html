@@ -2561,19 +2561,6 @@ html,body{overscroll-behavior-y:none}
     </div>
   </nav>
 
-  
-  <!-- Mobile homepage-style navigation prototype -->
-  <nav class="fa-mobile-home-nav" aria-label="Mobile primary navigation">
-    <a class="fa-mobile-logo" href="../" aria-label="PURPO home"><img src="assets/purpo-logo-white.png" alt="PURPO"></a>
-    <div class="fa-mobile-menu">
-      <a href="../sa-gitna-ng-lahat/">Sa Gitna</a>
-      <a class="active" href="../fade-away/">Fade Away</a>
-      <a href="../mallig/">Mallig</a>
-      <a href="../#visuals">Visuals</a>
-      <a href="../#about">About</a>
-    </div>
-  </nav>
-
   <div class="track-list" aria-label="Fade Away track list">
     <a href="#page5" data-song-snap="8">fade away</a>
     <a href="#page8" data-song-snap="13">stuck on rewind</a>
@@ -4627,40 +4614,63 @@ updateSideRailState();
 </script>
 </body>
 </html>
-<style id="fadeaway-mobile-v1">
+
+<style id="fadeaway-mobile-v3">
 @media (max-width:800px){
   html,body{height:100%;overflow:hidden!important;overscroll-behavior:none}
   .hero-scroll{height:100dvh!important}
   .hero{position:fixed!important;inset:0;height:100dvh!important;min-height:0!important}
   .snap-indicator,.scroll-cue{display:none!important}
 
-  /* Mobile camera: Page 1 panorama */
-  .hero-video{transition:object-position .72s cubic-bezier(.22,.72,.22,1)!important;object-position:24% center!important}
-  body.fa-m-s1 .hero-video{object-position:72% center!important}
+  /* Keep the original Fade Away UI. Music toggle remains in its original UI for now. */
 
-  /* Page 1 titles are a single reveal beat after the camera pan. */
-  .track-list{top:50%!important;left:50%!important;right:auto!important;width:76vw!important;min-width:0!important;transform:translate(-50%,-50%);text-align:center!important}
-  .track-list a{opacity:0!important;transform:translateY(12px)!important;filter:blur(1px)!important;transition:opacity .34s ease,transform .34s ease,filter .34s ease!important;margin:0 auto 5.2vh!important;font-size:16px!important;pointer-events:none!important}
-  body.fa-m-s1.fa-m-reveal .track-list a{opacity:1!important;transform:none!important;filter:none!important;pointer-events:auto!important}
+  /* P1-S1 / P1-S2 camera */
+  .hero-video{
+    transition:object-position .72s cubic-bezier(.22,.72,.22,1)!important;
+    object-position:15% center!important;
+  }
+  body.fa-m-p1s2 .hero-video{object-position:72% center!important}
 
-  /* Page 2 uses the same camera idea, but content is its own scroll plane. */
-  .page2-layer{opacity:0!important;transition:opacity .38s ease!important;pointer-events:none!important}
+  /* P1-S2: centered song titles */
+  .track-list{
+    top:50%!important;left:50%!important;right:auto!important;
+    width:76vw!important;min-width:0!important;
+    transform:translate(-50%,-50%)!important;text-align:center!important;
+  }
+  .track-list a{
+    opacity:0!important;transform:translateY(12px)!important;filter:blur(1px)!important;
+    transition:opacity .34s ease,transform .34s ease,filter .34s ease!important;
+    margin:0 auto 5.2vh!important;font-size:16px!important;pointer-events:none!important;
+  }
+  body.fa-m-p1s2.fa-m-reveal .track-list a{
+    opacity:1!important;transform:none!important;filter:none!important;pointer-events:auto!important;
+  }
+
+  /* P1-S3: original magazine opening movie */
+  .pageflip-layer{display:block!important;position:fixed!important;inset:0!important;z-index:10000!important}
+  .pageflip-video{width:100%!important;height:100%!important;object-fit:cover!important}
+
+  /* PAGE 2 */
+  .page2-layer{
+    opacity:0!important;transition:opacity .38s ease!important;pointer-events:none!important;
+  }
   body.fa-m-page2 .page2-layer{opacity:1!important;pointer-events:auto!important}
-  body.fa-m-page2 .hero-video{opacity:0!important}
-  .page2-bg{object-position:24% center!important;transition:object-position .72s cubic-bezier(.22,.72,.22,1)!important}
-  body.fa-m-s3 .page2-bg{object-position:72% center!important}
+  body.fa-m-page2 .hero-video,body.fa-m-page3 .hero-video{opacity:0!important}
+  .page2-bg{
+    object-position:24% center!important;
+    transition:object-position .72s cubic-bezier(.22,.72,.22,1)!important;
+  }
+  body.fa-m-p2s2 .page2-bg{object-position:72% center!important}
   .page2-layer::after{background:rgba(0,0,0,.20)!important}
-
   .page2-panel{
     top:12dvh!important;left:50%!important;width:86vw!important;max-width:520px!important;
     height:auto!important;bottom:0!important;transform:translateX(-50%)!important;
     overflow-y:auto!important;overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch;
     padding:0 3vw 8dvh!important;scrollbar-width:none;
-    opacity:0!important;pointer-events:none!important;
-    transition:opacity .34s ease!important;
+    opacity:0!important;pointer-events:none!important;transition:opacity .34s ease!important;
   }
   .page2-panel::-webkit-scrollbar{display:none}
-  body.fa-m-s3.fa-m-reveal .page2-panel{opacity:1!important;pointer-events:auto!important}
+  body.fa-m-p2s2.fa-m-reveal .page2-panel{opacity:1!important;pointer-events:auto!important}
   .page2-reveal{opacity:1!important;transform:none!important;filter:none!important}
   .page2-heading,.page2-subhead{width:100%!important}
   .page2-intro{font-size:16px!important;line-height:1.38!important}
@@ -4670,74 +4680,137 @@ updateSideRailState();
   .amenity img{max-height:66px!important}
   .amenity h3{font-size:16px!important}.amenity p{font-size:13px!important;line-height:1.3!important}
 
-  /* V1 scope: later pages cannot leak into the four-state prototype. */
-  .page3-layer,.page4-layer,.page5-layer,.page6-layer,.page7-layer,.page8-layer,.page9-layer,.page10-layer,.page11-layer,.page12-layer,.page13-layer,.page14-layer,.page15-layer,.page16-layer,.page17-layer,.page18-layer,.page19-layer{pointer-events:none!important}
-  .pageflip-layer,#fadeToBlack,#fadeToWhite{display:none!important}
-}
-
-  /* V2: homepage-style functional mobile UI. */
-  .site-nav{display:none!important}
-  .fa-mobile-home-nav{
-    display:flex!important;position:fixed;z-index:10020;left:0;right:0;top:0;
-    padding:18px 18px 0;align-items:flex-start;justify-content:space-between;
-    opacity:1;transform:translateY(0);transition:opacity .38s ease,transform .38s ease;
-    pointer-events:auto;
+  /* PAGE 3 */
+  .page3-layer{
+    opacity:0!important;transition:opacity .38s ease!important;pointer-events:none!important;
   }
-  .fa-mobile-home-nav.ui-dimmed{opacity:.10;transform:translateY(-4px)}
-  .fa-mobile-logo{display:block;width:112px}
-  .fa-mobile-logo img{display:block;width:100%;height:auto}
-  .fa-mobile-menu{display:flex;flex-direction:column;align-items:flex-end;gap:7px;padding-top:1px}
-  .fa-mobile-menu a{color:#fff;text-decoration:none;font:400 16px/1.08 Arial,sans-serif;letter-spacing:.01em;text-shadow:0 1px 10px rgba(0,0,0,.7)}
-  .fa-mobile-menu a.active{font-weight:700}
-  .fa-mobile-home-nav::before{content:"";position:absolute;z-index:-1;inset:-18px -18px -42px;background:linear-gradient(to bottom,rgba(0,0,0,.55),rgba(0,0,0,0));pointer-events:none}
+  body.fa-m-page3 .page3-layer{opacity:1!important;pointer-events:auto!important}
+  body.fa-m-page3 .page2-layer{opacity:0!important;pointer-events:none!important}
+  .page3-bg{
+    object-position:15% center!important;
+    transition:object-position .72s cubic-bezier(.22,.72,.22,1)!important;
+  }
+  body.fa-m-p3s2 .page3-bg{object-position:78% center!important}
+  .page3-vignette{background:rgba(0,0,0,.18)!important}
+  .page3-article{
+    left:50%!important;top:12dvh!important;bottom:0!important;width:86vw!important;max-width:520px!important;
+    transform:translateX(-50%)!important;overflow-y:auto!important;overscroll-behavior:contain!important;
+    -webkit-overflow-scrolling:touch;padding:0 3vw 9dvh!important;scrollbar-width:none;
+    opacity:0!important;pointer-events:none!important;transition:opacity .34s ease!important;
+  }
+  .page3-article::-webkit-scrollbar{display:none}
+  body.fa-m-p3s2.fa-m-reveal .page3-article{opacity:1!important;pointer-events:auto!important}
+  .page3-reveal{opacity:1!important;transform:none!important;filter:none!important}
+  .page3-header{width:100%!important;margin:0 0 1.4rem!important}
+  .page3-body{
+    width:100%!important;margin:0!important;font-size:16px!important;line-height:1.38!important;
+  }
+
+  /* V3 scope ends after P3-S2. */
+  .page4-layer,.page5-layer,.page6-layer,.page7-layer,.page8-layer,.page9-layer,.page10-layer,
+  .page11-layer,.page12-layer,.page13-layer,.page14-layer,.page15-layer,.page16-layer,.page17-layer,
+  .page18-layer,.page19-layer{pointer-events:none!important}
+  #fadeToBlack,#fadeToWhite{display:none!important}
+}
 </style>
-<script id="fadeaway-mobile-v1-controller">
+
+<script id="fadeaway-mobile-v3-controller">
 (()=>{
   if(!matchMedia('(max-width:800px)').matches) return;
-  let state=0, startY=0, startX=0, locked=false, revealTimer=0;
+
   const body=document.body;
-  const panel=document.querySelector('.page2-panel');
+  const page2Panel=document.querySelector('.page2-panel');
+  const page3Article=document.querySelector('.page3-article');
+  const flipLayer=document.getElementById('pageFlipLayer');
+  const flipVideo=document.getElementById('pageFlipVideo');
+
+  const states=['p1s1','p1s2','p1s3','p2s1','p2s2','p3s1','p3s2'];
+  let state=0,startY=0,startX=0,locked=false,revealTimer=0,flipFallback=0;
+
+  const clearStateClasses=()=>{
+    [...body.classList].forEach(c=>{
+      if(c.startsWith('fa-m-p') || c==='fa-m-page2' || c==='fa-m-page3' || c==='fa-m-reveal'){
+        body.classList.remove(c);
+      }
+    });
+  };
+
   const apply=()=>{
     clearTimeout(revealTimer);
-    body.classList.remove('fa-m-s0','fa-m-s1','fa-m-s2','fa-m-s3','fa-m-page2','fa-m-reveal');
-    body.classList.add('fa-m-s'+state);
-    if(state>=2) body.classList.add('fa-m-page2');
-    if(panel && state!==3) panel.scrollTop=0;
-    if(state===1 || state===3){
+    clearTimeout(flipFallback);
+    clearStateClasses();
+
+    const name=states[state];
+    body.classList.add('fa-m-'+name);
+    if(name.startsWith('p2')) body.classList.add('fa-m-page2');
+    if(name.startsWith('p3')) body.classList.add('fa-m-page3');
+
+    if(page2Panel && name!=='p2s2') page2Panel.scrollTop=0;
+    if(page3Article && name!=='p3s2') page3Article.scrollTop=0;
+
+    if(name==='p1s2' || name==='p2s2' || name==='p3s2'){
       revealTimer=setTimeout(()=>body.classList.add('fa-m-reveal'),760);
     }
+
+    if(name==='p1s3'){
+      locked=true;
+      if(flipLayer) flipLayer.classList.add('is-active');
+      if(flipVideo){
+        try{ flipVideo.currentTime=0; }catch(e){}
+        const done=()=>{
+          flipVideo.removeEventListener('ended',done);
+          if(flipLayer) flipLayer.classList.remove('is-active');
+          state=3; locked=false; apply();
+        };
+        flipVideo.addEventListener('ended',done,{once:true});
+        const p=flipVideo.play();
+        if(p && p.catch) p.catch(()=>{});
+        flipFallback=setTimeout(done,5600);
+      }else{
+        flipFallback=setTimeout(()=>{
+          if(flipLayer) flipLayer.classList.remove('is-active');
+          state=3;locked=false;apply();
+        },1200);
+      }
+    }
   };
+
+  const activeScroller=()=>{
+    if(states[state]==='p2s2') return page2Panel;
+    if(states[state]==='p3s2') return page3Article;
+    return null;
+  };
+
   const move=(dir)=>{
     if(locked) return;
-    const next=Math.max(0,Math.min(3,state+dir));
+    const next=Math.max(0,Math.min(states.length-1,state+dir));
     if(next===state) return;
-    state=next;locked=true;apply();setTimeout(()=>locked=false,900);
+    state=next;
+    locked=true;
+    apply();
+    if(states[state]!=='p1s3') setTimeout(()=>locked=false,900);
   };
-  window.scrollTo(0,0); apply();
-  const mobileNav=document.querySelector('.fa-mobile-home-nav');
-  let navTimer=0;
-  const wakeNav=()=>{
-    if(!mobileNav)return;
-    mobileNav.classList.remove('ui-dimmed');
-    clearTimeout(navTimer);
-    navTimer=setTimeout(()=>mobileNav.classList.add('ui-dimmed'),2200);
-  };
-  wakeNav();
-  ['touchstart','pointerdown'].forEach(type=>document.addEventListener(type,wakeNav,{passive:true}));
+
+  window.scrollTo(0,0);
+  apply();
+
   document.addEventListener('touchstart',e=>{
     const t=e.touches[0];startY=t.clientY;startX=t.clientX;
   },{passive:true});
+
   document.addEventListener('touchend',e=>{
     const t=e.changedTouches[0],dy=t.clientY-startY,dx=t.clientX-startX;
     if(Math.abs(dy)<45 || Math.abs(dy)<Math.abs(dx)*1.15) return;
-    /* On Page 2 reveal, let the content panel consume vertical gestures until an edge. */
-    if(state===3 && panel){
-      const atTop=panel.scrollTop<=1;
-      const atBottom=panel.scrollTop+panel.clientHeight>=panel.scrollHeight-2;
+
+    const scroller=activeScroller();
+    if(scroller){
+      const atTop=scroller.scrollTop<=1;
+      const atBottom=scroller.scrollTop+scroller.clientHeight>=scroller.scrollHeight-2;
       if((dy<0 && !atBottom)||(dy>0 && !atTop)) return;
     }
     move(dy<0?1:-1);
   },{passive:true});
+
   window.addEventListener('keydown',e=>{
     if(e.key==='ArrowDown'||e.key==='PageDown'||e.key===' '){e.preventDefault();move(1)}
     if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();move(-1)}
