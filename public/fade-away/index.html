@@ -2712,6 +2712,50 @@ html,body{overscroll-behavior-y:none}
 }
 </style>
 
+
+<style id="fadeaway-mobile-v23-p6-p7-revs">
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+
+  /* P6-S2: P2-style reading plane — no cropped content box.
+     Article begins centered but can continue below the viewport and scroll naturally. */
+  body.fa-m-p6s2 .page6-editorial{
+    left:7vw!important;
+    right:7vw!important;
+    top:14dvh!important;
+    bottom:0!important;
+    width:auto!important;
+    max-width:none!important;
+    max-height:none!important;
+    height:auto!important;
+    transform:none!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    box-sizing:border-box!important;
+    padding:0 0 12dvh!important;
+    background:transparent!important;
+    scrollbar-width:none!important;
+  }
+  body.fa-m-p6s2 .page6-editorial::-webkit-scrollbar{display:none!important}
+
+  /* P7 inset: preserve exactly the lower 2/3 of the complete source image.
+     150% image height means the viewport shows 2/3 of the original; bottom anchored
+     discards only the upper third. */
+  body.fa-m-p7s1 .page7-inset{
+    overflow:visible!important;
+  }
+  body.fa-m-p7s1 .page7-inset-bg{
+    display:block!important;
+    width:100%!important;
+    height:auto!important;
+    aspect-ratio:auto!important;
+    object-fit:initial!important;
+    object-position:initial!important;
+    clip-path:inset(33.333% 0 0 0)!important;
+    margin-top:-33.333%!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
