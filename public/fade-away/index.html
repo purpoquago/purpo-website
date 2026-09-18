@@ -4623,7 +4623,7 @@ updateSideRailState();
 
 
 
-<style id="fadeaway-mobile-v12">
+<style id="fadeaway-mobile-v13">
 @media(max-width:800px){
  body.fa-m-exiting .hero-video,body.fa-m-exiting .page2-bg,body.fa-m-exiting .page3-bg{
  transition:none!important;
@@ -4644,6 +4644,18 @@ updateSideRailState();
  body.fa-m-page-transition .fa-mobile-page4-article{
    transition:none!important;
    animation:none!important;
+ }
+ body.fa-m-page-transition .hero-video,
+ body.fa-m-page-transition .page2-bg,
+ body.fa-m-page-transition .page3-bg{
+   will-change:auto!important;
+ }
+ body.fa-m-page-transition .page2-reveal,
+ body.fa-m-page-transition .page3-reveal,
+ body.fa-m-page-transition .track-list a{
+   transition:none!important;
+   animation:none!important;
+   filter:none!important;
  }
 
  #faMobileWhite{position:fixed;inset:0;z-index:9997;background:#fff;opacity:0;pointer-events:none;transition:opacity .42s ease}
@@ -4688,7 +4700,7 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
  
  .page5-overlay{
  position:absolute!important;z-index:3!important;left:0!important;right:auto!important;top:50%!important;
- width:175vw!important;height:auto!important;max-width:none!important;max-height:none!important;
+ width:200vw!important;height:auto!important;max-width:none!important;max-height:none!important;
  object-fit:contain!important;object-position:left center!important;
  transform:translateY(-50%)!important;filter:none!important;
  opacity:0!important;transition:opacity .38s ease!important;pointer-events:none!important;
@@ -4701,7 +4713,7 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
 </style>
 <div class="fa-mobile-grabquote" aria-hidden="true"><img src="assets/page4-grab-quote.png" alt=""></div>
 
-<script id="fadeaway-mobile-v12-controller">
+<script id="fadeaway-mobile-v13-controller">
 (()=>{
  if(!matchMedia('(max-width:800px)').matches)return;
  const b=document.body,p2=document.querySelector('.page2-panel'),p3=document.querySelector('.page3-article'),p4=document.querySelector('.page4-mobile-article');
@@ -4722,7 +4734,9 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
    p5raf=requestAnimationFrame(p5pan);
  };
  const ensureP5Pan=()=>{if(!p5raf){p5start=0;p5raf=requestAnimationFrame(p5pan)}};
- const clear=()=>[...b.classList].forEach(c=>{if(c.startsWith('fa-m-p')||/^fa-m-page[2-5]$/.test(c)||c==='fa-m-reveal')b.classList.remove(c)});
+ const clear=()=>[...b.classList].forEach(c=>{
+   if((c.startsWith('fa-m-p')&&c!=='fa-m-page-transition')||/^fa-m-page[2-5]$/.test(c)||c==='fa-m-reveal')b.classList.remove(c)
+ });
  const clearHolds=()=>[...b.classList].forEach(c=>{if(c.startsWith('fa-m-hold-'))b.classList.remove(c)});
  const apply=()=>{clearTimeout(t);clear();const n=states[i];
  if(typeof requestSpotifyTrack==='function') requestSpotifyTrack(n==='p5s2'?'page5':null);
@@ -4763,6 +4777,7 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
    await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))); // paint destination under curtain
    curtain.classList.remove('is-on');
    await waitTransition(curtain);              // reveal only after destination is stable
+   await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
    b.classList.remove('fa-m-page-transition');
  };
  const move=d=>{
