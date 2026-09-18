@@ -2513,7 +2513,7 @@ html,body{overscroll-behavior-y:none}
   <nav class="site-nav" aria-label="Primary navigation">
     <div class="nav-left">
       
-      <a class="logo-link" href="../" aria-label="PURPO home">
+      <a class="logo-link" href="#fade-away" aria-label="PURPO home">
         <img src="assets/purpo-logo-white.png" alt="PURPO">
       </a>
     </div>
@@ -2524,14 +2524,14 @@ html,body{overscroll-behavior-y:none}
         <img class="sound-on-img" src="assets/sound-on.png" alt="">
       </button>
       <span class="sound-divider" aria-hidden="true"></span>
-      <a class="nav-item nav-sa" href="../sa-gitna-ng-lahat/" aria-label="Sa Gitna ng Lahat EP">
+      <a class="nav-item nav-sa" href="#sa-gitna" aria-label="Sa Gitna ng Lahat EP">
         <span class="nav-art">
           <img class="white" src="assets/sa-gitna-white.png" alt="">
           <img class="yellow" src="assets/sa-gitna-yellow.png" alt="">
         </span>
       </a>
 
-      <a class="nav-item nav-fade active" href="./" aria-label="Fade Away EP">
+      <a class="nav-item nav-fade active" href="#fade-away" aria-label="Fade Away EP">
         <span class="nav-art">
           <img class="white" src="assets/fade-away-white.png" alt="">
           <img class="yellow" src="assets/fade-away-yellow.png" alt="">
@@ -4614,3 +4614,94 @@ updateSideRailState();
 </script>
 </body>
 </html>
+<style id="fadeaway-mobile-v1">
+@media (max-width:800px){
+  html,body{height:100%;overflow:hidden!important;overscroll-behavior:none}
+  .hero-scroll{height:100dvh!important}
+  .hero{position:fixed!important;inset:0;height:100dvh!important;min-height:0!important}
+  .snap-indicator,.scroll-cue{display:none!important}
+
+  /* Mobile camera: Page 1 panorama */
+  .hero-video{transition:object-position .72s cubic-bezier(.22,.72,.22,1)!important;object-position:36% center!important}
+  body.fa-m-s1 .hero-video{object-position:72% center!important}
+
+  /* Page 1 titles are a single reveal beat after the camera pan. */
+  .track-list{top:50%!important;right:8vw!important;left:auto!important;width:48vw!important;min-width:0!important;transform:translateY(-50%);text-align:center!important}
+  .track-list a{opacity:0!important;transform:translateY(12px)!important;filter:blur(1px)!important;transition:opacity .34s ease,transform .34s ease,filter .34s ease!important;margin:0 auto 5.2vh!important;font-size:16px!important;pointer-events:none!important}
+  body.fa-m-s1.fa-m-reveal .track-list a{opacity:1!important;transform:none!important;filter:none!important;pointer-events:auto!important}
+
+  /* Page 2 uses the same camera idea, but content is its own scroll plane. */
+  .page2-layer{opacity:0!important;transition:opacity .38s ease!important;pointer-events:none!important}
+  body.fa-m-page2 .page2-layer{opacity:1!important;pointer-events:auto!important}
+  body.fa-m-page2 .hero-video{opacity:0!important}
+  .page2-bg{object-position:42% center!important;transition:object-position .72s cubic-bezier(.22,.72,.22,1)!important}
+  body.fa-m-s3 .page2-bg{object-position:72% center!important}
+  .page2-layer::after{background:rgba(0,0,0,.20)!important}
+
+  .page2-panel{
+    top:12dvh!important;left:50%!important;width:86vw!important;max-width:520px!important;
+    height:76dvh!important;transform:translateX(-50%)!important;
+    overflow-y:auto!important;overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch;
+    padding:0 3vw 8dvh!important;scrollbar-width:none;
+    opacity:0!important;pointer-events:none!important;
+    transition:opacity .34s ease!important;
+  }
+  .page2-panel::-webkit-scrollbar{display:none}
+  body.fa-m-s3.fa-m-reveal .page2-panel{opacity:1!important;pointer-events:auto!important}
+  .page2-reveal{opacity:1!important;transform:none!important;filter:none!important}
+  .page2-heading,.page2-subhead{width:100%!important}
+  .page2-intro{font-size:16px!important;line-height:1.38!important}
+  .page2-section-title{font-size:20px!important;margin:28px 0 22px!important}
+  .amenities{grid-template-columns:1fr!important;row-gap:18px!important}
+  .amenity{grid-template-columns:70px 1fr!important;gap:14px!important}
+  .amenity img{max-height:66px!important}
+  .amenity h3{font-size:16px!important}.amenity p{font-size:13px!important;line-height:1.3!important}
+
+  /* V1 scope: later pages cannot leak into the four-state prototype. */
+  .page3-layer,.page4-layer,.page5-layer,.page6-layer,.page7-layer,.page8-layer,.page9-layer,.page10-layer,.page11-layer,.page12-layer,.page13-layer,.page14-layer,.page15-layer,.page16-layer,.page17-layer,.page18-layer,.page19-layer{pointer-events:none!important}
+  .pageflip-layer,#fadeToBlack,#fadeToWhite{display:none!important}
+}
+</style>
+<script id="fadeaway-mobile-v1-controller">
+(()=>{
+  if(!matchMedia('(max-width:800px)').matches) return;
+  let state=0, startY=0, startX=0, locked=false, revealTimer=0;
+  const body=document.body;
+  const panel=document.querySelector('.page2-panel');
+  const apply=()=>{
+    clearTimeout(revealTimer);
+    body.classList.remove('fa-m-s0','fa-m-s1','fa-m-s2','fa-m-s3','fa-m-page2','fa-m-reveal');
+    body.classList.add('fa-m-s'+state);
+    if(state>=2) body.classList.add('fa-m-page2');
+    if(panel && state!==3) panel.scrollTop=0;
+    if(state===1 || state===3){
+      revealTimer=setTimeout(()=>body.classList.add('fa-m-reveal'),760);
+    }
+  };
+  const move=(dir)=>{
+    if(locked) return;
+    const next=Math.max(0,Math.min(3,state+dir));
+    if(next===state) return;
+    state=next;locked=true;apply();setTimeout(()=>locked=false,900);
+  };
+  window.scrollTo(0,0); apply();
+  document.addEventListener('touchstart',e=>{
+    const t=e.touches[0];startY=t.clientY;startX=t.clientX;
+  },{passive:true});
+  document.addEventListener('touchend',e=>{
+    const t=e.changedTouches[0],dy=t.clientY-startY,dx=t.clientX-startX;
+    if(Math.abs(dy)<45 || Math.abs(dy)<Math.abs(dx)*1.15) return;
+    /* On Page 2 reveal, let the content panel consume vertical gestures until an edge. */
+    if(state===3 && panel){
+      const atTop=panel.scrollTop<=1;
+      const atBottom=panel.scrollTop+panel.clientHeight>=panel.scrollHeight-2;
+      if((dy<0 && !atBottom)||(dy>0 && !atTop)) return;
+    }
+    move(dy<0?1:-1);
+  },{passive:true});
+  window.addEventListener('keydown',e=>{
+    if(e.key==='ArrowDown'||e.key==='PageDown'||e.key===' '){e.preventDefault();move(1)}
+    if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();move(-1)}
+  });
+})();
+</script>
