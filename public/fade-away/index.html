@@ -2854,6 +2854,43 @@ html,body{overscroll-behavior-y:none}
 }
 </style>
 
+
+<style id="fadeaway-mobile-v27-page8">
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+  body.fa-m-p8s1 #page8RackingCanvas{
+    opacity:1!important;visibility:visible!important;
+  }
+  body.fa-m-p8s1.fa-p8-loop-phase #page8RackingCanvas{
+    opacity:0!important;visibility:hidden!important;
+  }
+  body.fa-m-p8s1 #page8Loop{
+    display:block!important;position:absolute!important;left:50%!important;top:50%!important;
+    width:100vw!important;height:100dvh!important;max-width:none!important;
+    transform:translate(-50%,-50%)!important;object-fit:cover!important;object-position:center!important;
+    opacity:0!important;visibility:hidden!important;filter:none!important;
+  }
+  body.fa-m-p8s1.fa-p8-loop-phase #page8Loop{
+    opacity:1!important;visibility:visible!important;
+  }
+
+  body.fa-m-p8s3 .page8-layer::after{background:rgba(0,0,0,.40)!important}
+
+  body.fa-m-p8s3 #page8Player{
+    z-index:20!important;
+    pointer-events:auto!important;
+    opacity:1!important;
+    visibility:visible!important;
+    transform:none!important;
+  }
+  body.fa-m-p8s3 #page8Player iframe{
+    position:relative!important;
+    z-index:21!important;
+    pointer-events:auto!important;
+    opacity:1!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
@@ -5074,7 +5111,7 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
 (()=>{
  if(!matchMedia('(max-width:800px)').matches)return;
  const b=document.body,p2=document.querySelector('.page2-panel'),p3=document.querySelector('.page3-article'),p4=document.querySelector('.page4-mobile-article');
- const states=['p1s1','p1s2','p2s1','p2s2','p3s1','p3s2','p4s1','p5s1','p5s2','p6s1','p6s2','p6s3','p7s1','p8s1','p8s2','p8s3'];
+ const states=['p1s1','p1s2','p2s1','p2s2','p3s1','p3s2','p4s1','p5s1','p5s2','p6s1','p6s2','p6s3','p7s1','p8s1','p8s3'];
  let i=0,sy=0,sx=0,lock=false,t=0;
  const p5bg=document.querySelector('.page5-bg');
  let p5raf=0,p5start=0;
@@ -5099,32 +5136,52 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
  if(typeof requestSpotifyTrack==='function') requestSpotifyTrack(n==='p5s2'?'page5':n==='p8s3'?'page8':null);
  if(n==='p5s1'||n==='p5s2') ensureP5Pan();b.classList.add('fa-m-'+n);const pg=n.slice(1,2);if(+pg>=2)b.classList.add('fa-m-page'+pg);if(p2&&n!=='p2s2')p2.scrollTop=0;if(p3&&n!=='p3s1')p3.scrollTop=0;if(p4&&n!=='p4s1')p4.scrollTop=0;syncP8Media();if(n==='p1s2'||n==='p2s2'||n==='p3s1'||n==='p3s2'||n==='p4s1'||n==='p5s2'||n==='p6s2'||n==='p6s3'||n==='p7s1'||n==='p8s3')t=setTimeout(()=>b.classList.add('fa-m-reveal'),n==='p3s2'?450:700)};
  
- let p8MobileRackRaf=0,p8MobileRackStart=0;
+ let p8MobileRackRaf=0,p8MobileRackStart=0,p8MobileRackDir=1;
  const stopP8MobileRack=()=>{
    if(p8MobileRackRaf)cancelAnimationFrame(p8MobileRackRaf);
    p8MobileRackRaf=0;p8MobileRackStart=0;
  };
- const startP8MobileRack=()=>{
+ const runP8MobileRack=(dir=1,onDone=null)=>{
    stopP8MobileRack();
+   p8MobileRackDir=dir;
    p8MobileRackStart=performance.now();
    const duration=4200;
    const tick=now=>{
      if(states[i]!=='p8s1'){stopP8MobileRack();return}
      const u=Math.min(1,(now-p8MobileRackStart)/duration);
      const eased=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;
-     const frame=Math.round(eased*(PAGE8_FRAME_COUNT-1));
+     const progress=dir>0?eased:1-eased;
+     const frame=Math.round(progress*(PAGE8_FRAME_COUNT-1));
      if(typeof drawPage8Frame==='function')drawPage8Frame(frame);
      if(u<1)p8MobileRackRaf=requestAnimationFrame(tick);
-     else p8MobileRackRaf=0;
+     else{
+       p8MobileRackRaf=0;
+       if(onDone)onDone();
+     }
    };
    p8MobileRackRaf=requestAnimationFrame(tick);
  };
-
+ const enterP8Forward=()=>{
+   b.classList.remove('fa-p8-loop-phase');
+   const loop=document.getElementById('page8Loop');
+   if(loop){loop.pause();loop.currentTime=0;}
+   runP8MobileRack(1,()=>{
+     if(states[i]!=='p8s1')return;
+     b.classList.add('fa-p8-loop-phase');
+     if(loop){loop.muted=true;const q=loop.play();if(q&&q.catch)q.catch(()=>{});}
+   });
+ };
+ const enterP8Reverse=()=>{
+   const loop=document.getElementById('page8Loop');
+   if(loop)loop.pause();
+   b.classList.remove('fa-p8-loop-phase');
+   runP8MobileRack(-1);
+ };
  const syncP8Media=()=>{
    const n=states[i], loop=document.getElementById('page8Loop');
-   if(n==='p8s1')startP8MobileRack(); else stopP8MobileRack();
+   if(n!=='p8s1'){stopP8MobileRack();b.classList.remove('fa-p8-loop-phase');}
    if(loop){
-     if(n==='p8s2'||n==='p8s3'){ loop.muted=true; const q=loop.play(); if(q&&q.catch)q.catch(()=>{}); }
+     if(n==='p8s3'){ loop.muted=true; const q=loop.play(); if(q&&q.catch)q.catch(()=>{}); }
      else if(!n.startsWith('p8')) loop.pause();
    }
    // Existing desktop Page 8 renderer owns the racking canvas. Trigger its normal
@@ -5169,7 +5226,11 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
    b.classList.add('fa-m-page-transition');
    curtain.classList.add('is-on');
    await waitTransition(curtain);              // outgoing shot remains untouched until fully covered
+   const oldState=states[i];
    i=x;apply();                                // hard swap while fully hidden
+   if(states[i]==='p8s1'){
+     if(oldState==='p8s3') enterP8Reverse(); else enterP8Forward();
+   }
    unfreezeCamera(frozen);
    await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))); // paint destination under curtain
    curtain.classList.remove('is-on');
