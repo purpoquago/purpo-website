@@ -3111,6 +3111,104 @@ body.fa-m-p13s2.fa-m-reveal .page13-header{opacity:1!important}
 }
 </style>
 
+
+<style id="fa-v40-2-adjustments">
+/* P5-S2 desktop: corrected PNG lives in the left half of the viewport.
+   Left-half center = 25vw; 15% of that half = 7.5vw leftward => 17.5vw center. */
+@media (min-width:801px) and (hover:hover){
+  .page5-overlay{
+    left:17.5vw!important;
+    top:50%!important;
+    width:50vw!important;
+    height:auto!important;
+    object-fit:contain!important;
+    transform:translate(-50%,-50%)!important;
+    transform-origin:center center!important;
+  }
+}
+
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+  /* P5-S2 mobile: corrected artwork at 90% viewport width. */
+  body.fa-m-p5s2 .page5-overlay{
+    left:5vw!important;
+    top:50%!important;
+    width:90vw!important;
+    height:auto!important;
+    object-fit:contain!important;
+    transform:translateY(-50%)!important;
+    transform-origin:center center!important;
+  }
+
+  /* P7: undo the broad V40/V40.1 shifts. Only collapse the actual
+     article -> inset-photo gap. The existing -33.333% image margin
+     already reclaims the clipped top third of the image itself. */
+  body.fa-m-p7s1 .page7-spread{
+    margin:11dvh auto 9dvh!important;
+    transform:none!important;
+  }
+  body.fa-m-p7s1 .page7-inset{
+    margin:0 0 24px!important;
+    transform:none!important;
+  }
+  body.fa-m-p7s1 .page7-inset-bg{
+    margin-top:-33.333%!important;
+  }
+
+  /* P9-S2: vertically center the complete editorial block. */
+  body.fa-m-p9s2 .page9-editorial{
+    top:50%!important;
+    bottom:auto!important;
+    height:auto!important;
+    max-height:82dvh!important;
+    padding:0!important;
+    transform:translateY(-50%)!important;
+    overflow-y:auto!important;
+  }
+
+  /* P12-S2: corrected header is now a normal element above the article;
+     the combined header + article group is vertically centered. */
+  body.fa-m-p12s2 .page12-layer{
+    overflow:hidden!important;
+  }
+  body.fa-m-p12s2 .page12-header{
+    display:block!important;
+    position:absolute!important;
+    z-index:9!important;
+    left:7vw!important;
+    right:7vw!important;
+    top:50%!important;
+    width:86vw!important;
+    height:auto!important;
+    max-width:none!important;
+    object-fit:contain!important;
+    transform:translateY(-210px)!important;
+    opacity:1!important;
+    visibility:visible!important;
+    filter:none!important;
+    -webkit-filter:none!important;
+  }
+  body.fa-m-p12s2 .page12-copy{
+    left:7vw!important;
+    right:7vw!important;
+    top:50%!important;
+    width:auto!important;
+    max-height:62dvh!important;
+    padding:34px 0 0!important;
+    transform:translateY(-50%)!important;
+  }
+
+  /* P13-S1: start already framed on the two drinks; no camera travel. */
+  body.fa-m-p13s1 .page13-bg{
+    object-position:24% center!important;
+    transition:none!important;
+    animation:none!important;
+    transform:none!important;
+  }
+
+  /* P13-S2 remains as accepted. */
+}
+</style>
+
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
