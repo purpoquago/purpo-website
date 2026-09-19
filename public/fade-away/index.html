@@ -3209,6 +3209,77 @@ body.fa-m-p13s2.fa-m-reveal .page13-header{opacity:1!important}
 }
 </style>
 
+
+<style id="fa-mobile-v40-3-cleanup">
+/* P5-S2 desktop: left-half container width is 50vw; scale to 90% = 45vw.
+   Center remains 15% left-offset within the left container. */
+@media (min-width:801px) and (hover:hover){
+  .page5-overlay{
+    left:17.5vw!important;top:50%!important;width:45vw!important;height:auto!important;
+    object-fit:contain!important;transform:translate(-50%,-50%)!important;
+  }
+
+  /* P12-S2 desktop: header follows article width and sits 35px above it. */
+  .page12-copy{position:absolute}
+  .page12-header{
+    left:50%!important;
+    width:var(--p12-article-width, 42vw)!important;
+    max-width:none!important;height:auto!important;
+    transform:translateX(-50%)!important;
+  }
+}
+
+/* P7 single mobile authority: neutralize all prior patch geometry. */
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+  body.fa-m-p7s1 .page7-spread{
+    width:88vw!important;max-width:560px!important;
+    margin:11dvh auto 9dvh!important;
+    transform:none!important;
+  }
+  body.fa-m-p7s1 .page7-left{margin-bottom:18px!important}
+  body.fa-m-p7s1 .page7-inset{
+    position:relative!important;width:100%!important;height:auto!important;
+    margin:0 0 24px!important;transform:none!important;overflow:visible!important;
+  }
+  /* Real crop viewport: visible box is 2/3 of the source image ratio.
+     No clip-path and no negative margin participate in document flow. */
+  body.fa-m-p7s1 .page7-inset-bg{
+    display:block!important;position:relative!important;
+    width:100%!important;height:auto!important;
+    margin:0!important;clip-path:none!important;transform:none!important;
+    object-fit:cover!important;object-position:center bottom!important;
+    aspect-ratio:3/2!important;
+  }
+  body.fa-m-p7s1 .page7-inset-copy{margin:0!important}
+
+  /* P12-S2 mobile: keep corrected header close to article and uncropped.
+     Group occupies the central reading region. */
+  body.fa-m-p12s2 .page12-layer{overflow:visible!important}
+  body.fa-m-p12s2 .page12-header{
+    display:block!important;position:absolute!important;z-index:9!important;
+    left:7vw!important;right:auto!important;top:17dvh!important;
+    width:86vw!important;height:auto!important;max-width:none!important;
+    object-fit:contain!important;object-position:center!important;
+    transform:none!important;clip-path:none!important;overflow:visible!important;
+    opacity:1!important;visibility:visible!important;filter:none!important;
+  }
+  body.fa-m-p12s2 .page12-copy{
+    top:50%!important;max-height:62dvh!important;padding:0!important;
+    transform:translateY(-42%)!important;
+  }
+
+  /* P13 camera owns its position immediately; transition is enabled so reverse
+     S2 -> S1 pans back instead of jumping. */
+  body.fa-m-p13s1 .page13-bg,
+  body.fa-m-p13s2 .page13-bg{
+    transition:object-position 1.05s ease!important;
+    animation:none!important;transform:none!important;
+  }
+  body.fa-m-p13s1 .page13-bg{object-position:24% center!important}
+  body.fa-m-p13s2 .page13-bg{object-position:82% center!important}
+}
+</style>
+
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
@@ -5327,6 +5398,21 @@ updateSideRailState();
 </script>
 <div id="faMobileWhite" aria-hidden="true"></div>
 <div id="faMobileBlack" aria-hidden="true"></div>
+
+<script id="fa-v40-3-p12-desktop-align">
+(function(){
+ function alignP12(){
+   if(innerWidth<=800)return;
+   const copy=document.querySelector('.page12-copy'), head=document.querySelector('.page12-header');
+   if(!copy||!head)return;
+   const r=copy.getBoundingClientRect();
+   document.documentElement.style.setProperty('--p12-article-width',r.width+'px');
+   head.style.setProperty('top',Math.max(0,r.top-35-head.getBoundingClientRect().height)+'px','important');
+ }
+ addEventListener('load',alignP12); addEventListener('resize',alignP12);
+})();
+</script>
+
 </body>
 </html>
 
