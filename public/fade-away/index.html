@@ -3083,6 +3083,34 @@ body.fa-m-p13s2.fa-m-reveal .page13-header{opacity:1!important}
 }
 </style>
 
+
+<style id="fa-mobile-v40-1-adjustments">
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+  /* P7: reclaim the clipped top third as layout space. */
+  body.fa-m-p7s1 .page7-spread{
+    transform:translateY(-10.5vw)!important;
+    margin-bottom:-10.5vw!important;
+  }
+
+  /* P11-S2: separate title and handwriting by 6.5dvh in opposite directions. */
+  body.fa-m-p11s2 .page11-title{top:11.5dvh!important}
+  body.fa-m-p11s2 .page11-lyrics{top:16.5dvh!important}
+
+  /* P13-S1: move camera substantially farther left to center the drinks. */
+  body.fa-m-p13s1 .page13-bg{object-position:20% center!important}
+
+  /* P13-S2: desktop reveal logic can leave blur on the Spotify host/iframe. */
+  body.fa-m-p13s2 .page13-player,
+  body.fa-m-p13s2 .page13-player iframe{
+    filter:none!important;
+    -webkit-filter:none!important;
+    opacity:1!important;
+    visibility:visible!important;
+    transform:none!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
