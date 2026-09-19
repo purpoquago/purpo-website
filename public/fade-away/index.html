@@ -3412,8 +3412,8 @@ body.fa-m-p13s2.fa-m-reveal .page13-header{opacity:1!important}
   .p12-content{
     opacity:0;
     transform:translateY(14px);
-    filter:blur(7px);
-    will-change:opacity,transform,filter;
+    filter:none;
+    will-change:opacity,transform;
     pointer-events:none;
   }
 }
@@ -4736,7 +4736,7 @@ function updateScrollReveal(){
       const p12CleanIn = Math.max(0, Math.min(1, (siteJourneyProgress - .782) / (.807 - .782)));
       p12CleanContent.style.opacity = p12CleanIn;
       p12CleanContent.style.transform = `translateY(${14 * (1 - p12CleanIn)}px)`;
-      p12CleanContent.style.filter = `blur(${7 * (1 - p12CleanIn)}px)`;
+      p12CleanContent.style.filter = 'none';
       p12CleanContent.style.pointerEvents = p12CleanIn > .98 ? 'auto' : 'none';
     }
   const page12Content = clamp((siteJourneyProgress-.782)/(.807-.782),0,1);
