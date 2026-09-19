@@ -3389,6 +3389,102 @@ body.fa-m-p13s2.fa-m-reveal .page13-header{opacity:1!important}
 }
 </style>
 
+
+<style id="fa-v40-8-p12-text-header">
+/* P12 header is now live type, not an image. */
+.page12-header{
+  font-family:"Alfa Slab One", Georgia, serif!important;
+  text-transform:uppercase!important;
+  color:#f4f1ea!important;
+}
+
+/* Desktop: preserve the existing article placement. Header follows the article's
+   actual rendered width and sits 35px above it. */
+@media (min-width:801px){
+  .page12-header{
+    position:absolute!important;
+    z-index:9!important;
+    right:auto!important;
+    bottom:auto!important;
+    height:auto!important;
+    max-width:none!important;
+    margin:0!important;
+    padding:0!important;
+    font-size:clamp(28px,2.55vw,52px)!important;
+    line-height:.96!important;
+    letter-spacing:.01em!important;
+    text-align:left!important;
+    transform:none!important;
+    filter:none!important;
+    opacity:1!important;
+    visibility:visible!important;
+  }
+}
+
+/* Mobile P12-S2: header and article are one normal-flow centered group.
+   No image container, clipping, transforms, or internal PNG whitespace. */
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+  body.fa-m-p12s2 .page12-layer{
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:center!important;
+    align-items:center!important;
+    width:100vw!important;
+    height:100dvh!important;
+    overflow:hidden!important;
+  }
+  body.fa-m-p12s2 .page12-header{
+    display:block!important;
+    position:relative!important;
+    inset:auto!important;
+    z-index:9!important;
+    width:86vw!important;
+    max-width:560px!important;
+    height:auto!important;
+    margin:0 auto 20px!important;
+    padding:0!important;
+    font-size:clamp(27px,8.1vw,42px)!important;
+    line-height:.94!important;
+    letter-spacing:.005em!important;
+    text-align:left!important;
+    transform:none!important;
+    filter:none!important;
+    -webkit-filter:none!important;
+    opacity:1!important;
+    visibility:visible!important;
+    flex:0 0 auto!important;
+  }
+  body.fa-m-p12s2 .page12-copy{
+    display:block!important;
+    position:relative!important;
+    inset:auto!important;
+    z-index:8!important;
+    width:86vw!important;
+    max-width:560px!important;
+    height:auto!important;
+    max-height:58dvh!important;
+    margin:0 auto!important;
+    padding:0!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    transform:none!important;
+    filter:none!important;
+    -webkit-filter:none!important;
+    opacity:1!important;
+    visibility:visible!important;
+    -webkit-overflow-scrolling:touch!important;
+    touch-action:pan-y!important;
+    scrollbar-width:none!important;
+    flex:0 1 auto!important;
+  }
+  body.fa-m-p12s2 .page12-copy::-webkit-scrollbar{display:none!important}
+  body.fa-m-p12s2 .page12-copy *{
+    filter:none!important;
+    -webkit-filter:none!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
@@ -3759,7 +3855,7 @@ body.fa-m-p13s2.fa-m-reveal .page13-header{opacity:1!important}
     <section class="page12-layer" id="page12" aria-label="Fade Away Bar and Restaurant">
       <img class="page12-bg" src="assets/page12-bg.webp" alt="">
       <div class="editorial-master page12-master">
-        <img class="page12-header" id="page12Header" src="assets/page12-header.png" alt="The Fade Away Bar and Restaurant">
+        <h2 class="page12-header">THE FADE AWAY BAR AND RESTAURANT</h2>
         <div class="page12-copy" id="page12Copy"><p>The Fade Away Restaurant and Bar was once a hotspot for the Metro’s hottest bands. With a wide selection of liquor and good food, weekend crowds filled the place. After the Great Silence, the restaurant and bar ceased operations. The venue remains largely functional, standing as a reminder of better days. Now, with virtually no corkage fee and a recently added videoke set on the stage, visitors can live out their rock-and-roll dreams of belting out their favorite songs on the once-popular stage.</p></div>
       </div>
     </section>
@@ -5509,6 +5605,27 @@ updateSideRailState();
 <div id="faMobileBlack" aria-hidden="true"></div>
 
 <script id="fa-v40-4-geometry">(function(){function a(){if(innerWidth<=800)return;const c=document.querySelector('.page12-copy'),x=document.querySelector('.page12-header');if(!c||!x)return;const r=c.getBoundingClientRect();x.classList.add('fa-p12-aligned');x.style.setProperty('left',r.left+'px','important');x.style.setProperty('width',r.width+'px','important');requestAnimationFrame(()=>{const hh=x.getBoundingClientRect().height;x.style.setProperty('top',Math.max(0,r.top-35-hh)+'px','important')})}addEventListener('load',()=>requestAnimationFrame(a));addEventListener('resize',a)})();</script>
+
+<script id="fa-v40-8-p12-text-align">
+(function(){
+  let raf=0;
+  function align(){
+    if(innerWidth<=800){raf=0;return}
+    const copy=document.querySelector('.page12-copy');
+    const head=document.querySelector('.page12-header');
+    if(!copy||!head)return;
+    const r=copy.getBoundingClientRect();
+    head.style.setProperty('left',r.left+'px','important');
+    head.style.setProperty('width',r.width+'px','important');
+    const hh=head.getBoundingClientRect().height;
+    head.style.setProperty('top',(r.top-hh-35)+'px','important');
+    raf=requestAnimationFrame(align);
+  }
+  addEventListener('load',align);
+  addEventListener('resize',()=>{if(innerWidth>800&&!raf)align()});
+})();
+</script>
+
 </body>
 </html>
 
