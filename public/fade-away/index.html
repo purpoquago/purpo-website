@@ -3280,6 +3280,10 @@ body.fa-m-p13s2.fa-m-reveal .page13-header{opacity:1!important}
 }
 </style>
 
+<style id="fa-v40-4-corrections">
+@media (min-width:801px){.page5-overlay{position:absolute!important;left:17.5vw!important;right:auto!important;top:50%!important;width:45vw!important;max-width:45vw!important;height:auto!important;max-height:90vh!important;object-fit:contain!important;transform:translate(-50%,-50%)!important}.page12-header.fa-p12-aligned{position:absolute!important;right:auto!important;bottom:auto!important;height:auto!important;max-width:none!important;object-fit:contain!important;transform:none!important}}
+@media (max-width:800px), (hover:none) and (pointer:coarse){body.fa-m-p7s1 .page7-inset-bg{display:block!important;position:relative!important;width:100%!important;height:auto!important;aspect-ratio:auto!important;object-fit:contain!important;object-position:center!important;clip-path:inset(33.333% 0 0 0)!important;margin-top:-33.333%!important;transform:none!important}body.fa-m-p13s1 .page13-bg{object-position:24% center!important;transition:none!important}body.fa-m-p13s2 .page13-bg{object-position:82% center!important;transition:none!important}}
+</style>
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
@@ -5399,20 +5403,7 @@ updateSideRailState();
 <div id="faMobileWhite" aria-hidden="true"></div>
 <div id="faMobileBlack" aria-hidden="true"></div>
 
-<script id="fa-v40-3-p12-desktop-align">
-(function(){
- function alignP12(){
-   if(innerWidth<=800)return;
-   const copy=document.querySelector('.page12-copy'), head=document.querySelector('.page12-header');
-   if(!copy||!head)return;
-   const r=copy.getBoundingClientRect();
-   document.documentElement.style.setProperty('--p12-article-width',r.width+'px');
-   head.style.setProperty('top',Math.max(0,r.top-35-head.getBoundingClientRect().height)+'px','important');
- }
- addEventListener('load',alignP12); addEventListener('resize',alignP12);
-})();
-</script>
-
+<script id="fa-v40-4-geometry">(function(){function a(){if(innerWidth<=800)return;const c=document.querySelector('.page12-copy'),x=document.querySelector('.page12-header');if(!c||!x)return;const r=c.getBoundingClientRect();x.classList.add('fa-p12-aligned');x.style.setProperty('left',r.left+'px','important');x.style.setProperty('width',r.width+'px','important');requestAnimationFrame(()=>{const hh=x.getBoundingClientRect().height;x.style.setProperty('top',Math.max(0,r.top-35-hh)+'px','important')})}addEventListener('load',()=>requestAnimationFrame(a));addEventListener('resize',a)})();</script>
 </body>
 </html>
 
@@ -5547,6 +5538,19 @@ const p12bg=document.querySelector('.page12-bg');let p12raf=0,p12start=0;
    const faMWasState=faMPrevState;
    faMPrevState=faMCurrentState;
 clearTimeout(t);clear();const n=states[i];
+ const p13bg=document.querySelector('.page13-bg');
+ if(n==='p13s1'&&p13bg){
+   if(faMWasState==='p13s2'){
+     p13bg.style.setProperty('transition','object-position 1.05s ease','important');
+     p13bg.style.setProperty('object-position','82% center','important');
+     requestAnimationFrame(()=>requestAnimationFrame(()=>p13bg.style.setProperty('object-position','24% center','important')));
+   }else{
+     p13bg.style.setProperty('transition','none','important');
+     p13bg.style.setProperty('object-position','24% center','important');
+   }
+ }
+ if(n==='p13s2'&&p13bg){p13bg.style.setProperty('transition','object-position 1.05s ease','important');p13bg.style.setProperty('object-position','82% center','important');}
+
  if(typeof requestSpotifyTrack==='function') requestSpotifyTrack(n==='p5s2'?'page5':n==='p8s2'?'page8':n==='p11s2'?'page11':n==='p13s2'?'page13':null);
  if(n==='p5s1'||n==='p5s2') ensureP5Pan();if(n==='p12s1'||n==='p12s2')ensureP12Pan();
 if(n==='p9s1')requestAnimationFrame(()=>startP9MobileZoom());else{stopP9MobileZoom();b.classList.remove('fa-p9-bg-phase')}b.classList.add('fa-m-'+n);const pm=n.match(/^p(\d+)s/),pg=pm?+pm[1]:0;if(pg>=2)b.classList.add('fa-m-page'+pg);
