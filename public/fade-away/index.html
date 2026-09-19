@@ -2999,6 +2999,45 @@ body.fa-m-p14s2 .page13-header{display:block!important;position:absolute!importa
 body.fa-m-p14s2.fa-m-reveal .page13-header{opacity:1!important}
 }
 </style>
+
+<style id="fa-mobile-v38-adjustments">
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+  /* P9-S2: desktop reveal logic can write blur inline, so neutralize every
+     editorial child as well as the parent. */
+  body.fa-m-p9s2 .page9-editorial,
+  body.fa-m-p9s2 .page9-editorial *,
+  body.fa-m-p9s2 .page9-header,
+  body.fa-m-p9s2 .page9-copy{
+    filter:none!important;
+    -webkit-filter:none!important;
+  }
+
+  /* Requested P11 overlay composition (mobile state p12s2 uses source Page 11):
+     50% shade, title + handwritten lyrics grouped as one left-aligned stack.
+     The former 90vw overlay is reduced 10% to 81vw; the title is then 50%
+     of that group width. */
+  body.fa-m-p12s2 .page11-layer::after{
+    background:rgba(0,0,0,.50)!important;
+  }
+  body.fa-m-p12s2 .page11-title,
+  body.fa-m-p12s2 .page11-lyrics{
+    left:9.5vw!important;
+    right:auto!important;
+    height:auto!important;
+    max-width:none!important;
+    transform:none!important;
+  }
+  body.fa-m-p12s2 .page11-title{
+    top:16dvh!important;
+    width:40.5vw!important;
+  }
+  body.fa-m-p12s2 .page11-lyrics{
+    top:30dvh!important;
+    width:81vw!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
