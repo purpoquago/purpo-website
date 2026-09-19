@@ -3393,9 +3393,9 @@ body.fa-m-p13s2.fa-m-reveal .page13-header{opacity:1!important}
 .p12-title{font-family:"Alfa Slab One",Georgia,serif;text-transform:uppercase;color:#f8e2bc;margin:0}
 .p12-article{box-sizing:border-box}
 @media (min-width:801px){
- .p12-content{position:absolute;z-index:8;left:3vw;top:60vh;width:37.5vw;height:40vh;display:flex;flex-direction:column;align-items:flex-start;overflow:hidden}
- .p12-title{flex:0 0 auto;width:100%;padding:6px 0 12px;font-size:34px;line-height:1;letter-spacing:.005em;text-align:left}
- .p12-article{flex:1 1 auto;min-height:0;width:100%;padding:10px 0 20px;font-size:18px;overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
+ .p12-content{position:absolute;z-index:8;left:4.85vw;top:75vh;width:min(735px,37.5vw);height:25vh;display:flex;flex-direction:column;align-items:flex-start;gap:8px;overflow:hidden}
+ .p12-title{flex:0 0 auto;width:100%;padding:0;font-size:30px;line-height:1;letter-spacing:.005em;text-align:left}
+ .p12-article{flex:1 1 auto;min-height:0;width:100%;padding:0 0 20px;font-size:18px;overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
  .p12-article::-webkit-scrollbar{display:none}
 }
 @media (max-width:800px), (hover:none) and (pointer:coarse){
@@ -3406,6 +3406,19 @@ body.fa-m-p13s2.fa-m-reveal .page13-header{opacity:1!important}
  body.fa-m-p12s2 .p12-article::-webkit-scrollbar{display:none!important}
 }
 </style>
+
+<style id="fa-v40-16-p12-desktop-snap">
+@media (min-width:801px){
+  .p12-content{
+    opacity:0;
+    transform:translateY(14px);
+    filter:blur(7px);
+    will-change:opacity,transform,filter;
+    pointer-events:none;
+  }
+}
+</style>
+
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
@@ -4715,6 +4728,17 @@ function updateScrollReveal(){
   }
   fadeToBlack.style.opacity = Math.max(parseFloat(fadeToBlack.style.opacity || 0), page1112Black);
 
+
+    // V40.16 — clean P12 desktop snap choreography:
+    // S1 = background only; S2 = foreground reveal.
+    const p12CleanContent = document.querySelector('.p12-content');
+    if (p12CleanContent) {
+      const p12CleanIn = Math.max(0, Math.min(1, (siteJourneyProgress - .782) / (.807 - .782)));
+      p12CleanContent.style.opacity = p12CleanIn;
+      p12CleanContent.style.transform = `translateY(${14 * (1 - p12CleanIn)}px)`;
+      p12CleanContent.style.filter = `blur(${7 * (1 - p12CleanIn)}px)`;
+      p12CleanContent.style.pointerEvents = p12CleanIn > .98 ? 'auto' : 'none';
+    }
   const page12Content = clamp((siteJourneyProgress-.782)/(.807-.782),0,1);
   const p12HeaderIn = smoothstep((page12Content-.00)/.45);
   const p12CopyIn = smoothstep((page12Content-.18)/.55);
