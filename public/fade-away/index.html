@@ -3028,6 +3028,40 @@ body.fa-m-p14s2.fa-m-reveal .page13-header{opacity:1!important}
 }
 </style>
 
+
+<style id="fa-mobile-v34-repairs">
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+  /* P9-S2: vertically center the editorial when it fits.
+     Keep it scrollable if a shorter viewport ever needs it. */
+  body.fa-m-p9s2 .page9-editorial{
+    top:50%!important;
+    bottom:auto!important;
+    height:auto!important;
+    max-height:100dvh!important;
+    transform:translateY(-50%)!important;
+    padding:10dvh 0!important;
+    overflow-y:auto!important;
+    box-sizing:border-box!important;
+  }
+
+  /* P10: make the actual fixed layer the scroll plane.
+     min-height:100% on the content lets its full natural height determine scrollHeight. */
+  body.fa-m-page10 .page10-layer{
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    -webkit-overflow-scrolling:touch!important;
+    overscroll-behavior-y:contain!important;
+    touch-action:pan-y!important;
+  }
+  body.fa-m-page10 .page10-canvas{
+    min-height:100%!important;
+    overflow:visible!important;
+    padding-bottom:10dvh!important;
+    box-sizing:border-box!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
