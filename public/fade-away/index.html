@@ -3062,6 +3062,59 @@ body.fa-m-p14s2.fa-m-reveal .page13-header{opacity:1!important}
 }
 </style>
 
+
+<style id="fa-mobile-v35-p10-scroll-fix">
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+  body.fa-m-page10 .page10-layer{
+    position:fixed!important;
+    inset:0!important;
+    width:100vw!important;
+    height:100dvh!important;
+    overflow:hidden!important;
+    touch-action:auto!important;
+  }
+
+  body.fa-m-page10 .page10-canvas{
+    position:absolute!important;
+    left:0!important;
+    right:0!important;
+    top:0!important;
+    bottom:0!important;
+    width:100%!important;
+    max-width:none!important;
+    height:100dvh!important;
+    min-height:0!important;
+    margin:0!important;
+    padding:11dvh 6vw 12dvh!important;
+    box-sizing:border-box!important;
+
+    display:flex!important;
+    flex-direction:column!important;
+    gap:24px!important;
+
+    overflow-y:scroll!important;
+    overflow-x:hidden!important;
+    -webkit-overflow-scrolling:touch!important;
+    overscroll-behavior-y:contain!important;
+    touch-action:pan-y!important;
+    scrollbar-width:none!important;
+  }
+  body.fa-m-page10 .page10-canvas::-webkit-scrollbar{display:none!important}
+
+  /* Ensure the final card creates real scrollable space instead of being
+     visually transformed outside the scroll box. */
+  body.fa-m-page10 .page10-item,
+  body.fa-m-page10 .page10-card,
+  body.fa-m-page10 .page10-header,
+  body.fa-m-page10 .page10-quote{
+    flex:0 0 auto!important;
+  }
+  body.fa-m-page10 .page10-card5{
+    margin-bottom:8dvh!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
@@ -5319,7 +5372,7 @@ clearTimeout(t);clear();const n=states[i];
 if(n==='p9s1')requestAnimationFrame(()=>startP9MobileZoom());else{stopP9MobileZoom();b.classList.remove('fa-p9-bg-phase')}b.classList.add('fa-m-'+n);const pm=n.match(/^p(\d+)s/),pg=pm?+pm[1]:0;if(pg>=2)b.classList.add('fa-m-page'+pg);
 if(n==='p12s2')b.classList.add('fa-m-page11');
 if(n==='p13s1'||n==='p13s2')b.classList.add('fa-m-page12');
-if(n==='p14s1'||n==='p14s2')b.classList.add('fa-m-page13');if(p2&&n!=='p2s2')p2.scrollTop=0;if(p3&&n!=='p3s1')p3.scrollTop=0;if(p4&&n!=='p4s1')p4.scrollTop=0;syncP8Media();
+if(n==='p14s1'||n==='p14s2')b.classList.add('fa-m-page13');if(p2&&n!=='p2s2')p2.scrollTop=0;if(p3&&n!=='p3s1')p3.scrollTop=0;if(p4&&n!=='p4s1')p4.scrollTop=0;const p10scroll=document.querySelector('.page10-canvas');if(p10scroll&&n!=='p10s1')p10scroll.scrollTop=0;syncP8Media();
    if(faMCurrentState==='p8s1' && faMWasState==='p8s3'){
      requestAnimationFrame(()=>enterP8Reverse());
    }else if(faMCurrentState==='p8s1' && faMWasState!=='p8s1'){
@@ -5411,7 +5464,7 @@ if(n==='p1s2'||n==='p2s2'||n==='p3s1'||n==='p3s2'||n==='p4s1'||n==='p5s2'||n==='
 
  const sc=()=>states[i]==='p2s2'?p2:states[i]==='p3s1'?p3:states[i]==='p4s1'?p4:states[i]==='p6s2'?document.querySelector('.page6-editorial'):states[i]==='p7s1'?document.querySelector('.page7-layer'):
  states[i]==='p9s2'?document.querySelector('.page9-editorial'):
- states[i]==='p10s1'?document.querySelector('.page10-layer'):
+ states[i]==='p10s1'?document.querySelector('.page10-canvas'):
  states[i]==='p13s2'?document.querySelector('.page12-master'):null;
  const black=document.getElementById('faMobileBlack');
  const white=document.getElementById('faMobileWhite');
