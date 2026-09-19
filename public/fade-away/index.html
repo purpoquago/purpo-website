@@ -3485,6 +3485,105 @@ body.fa-m-p13s2.fa-m-reveal .page13-header{opacity:1!important}
 }
 </style>
 
+
+<style id="fa-v40-9-p12-guide">
+/* P12 desktop guide:
+   left half = content world
+   6% side gutters + 88% content width + 6% side gutter
+   upper region = 60vh, lower content region begins at 60vh
+   header may grow and pushes body downward. */
+@media (min-width:801px){
+  .page12-layer{
+    overflow:hidden!important;
+  }
+  .page12-header{
+    position:absolute!important;
+    z-index:9!important;
+    left:3vw!important;             /* 6% of the 50vw half-screen */
+    top:60vh!important;
+    width:44vw!important;           /* 88% of the 50vw half-screen */
+    right:auto!important;
+    bottom:auto!important;
+    height:auto!important;
+    max-width:none!important;
+    margin:0!important;
+    padding:8px 0 10px!important;
+    box-sizing:border-box!important;
+    font-family:"Alfa Slab One",Georgia,serif!important;
+    font-size:clamp(22px,1.75vw,34px)!important;
+    line-height:1!important;
+    letter-spacing:.005em!important;
+    text-align:center!important;
+    color:#f4f1ea!important;
+    transform:none!important;
+    filter:none!important;
+    opacity:1!important;
+    visibility:visible!important;
+  }
+  .page12-copy{
+    position:absolute!important;
+    z-index:8!important;
+    left:3vw!important;
+    top:calc(60vh + 62px)!important;
+    width:44vw!important;
+    max-width:none!important;
+    height:auto!important;
+    max-height:calc(40vh - 62px)!important;
+    right:auto!important;
+    bottom:auto!important;
+    margin:0!important;
+    padding:14px 0 18px!important;
+    box-sizing:border-box!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    transform:none!important;
+    filter:none!important;
+    opacity:1!important;
+    visibility:visible!important;
+    scrollbar-width:none!important;
+  }
+  .page12-copy::-webkit-scrollbar{display:none!important}
+}
+
+/* Mobile refinement: 4pt smaller, cream type, and center the combined group. */
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+  body.fa-m-p12s2 .page12-layer{
+    display:flex!important;
+    flex-direction:column!important;
+    justify-content:center!important;
+    align-items:center!important;
+    height:100dvh!important;
+    overflow:hidden!important;
+  }
+  body.fa-m-p12s2 .page12-header{
+    position:relative!important;
+    inset:auto!important;
+    width:86vw!important;
+    max-width:560px!important;
+    margin:0 auto 18px!important;
+    padding:0!important;
+    font-size:clamp(23px,7vw,38px)!important; /* ~4pt down from V40.8 */
+    line-height:.96!important;
+    text-align:left!important;
+    color:#f8e2bc!important;
+    transform:none!important;
+    flex:0 0 auto!important;
+  }
+  body.fa-m-p12s2 .page12-copy{
+    position:relative!important;
+    inset:auto!important;
+    width:86vw!important;
+    max-width:560px!important;
+    height:auto!important;
+    max-height:58dvh!important;
+    margin:0 auto!important;
+    padding:0!important;
+    transform:none!important;
+    flex:0 1 auto!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
@@ -5605,27 +5704,6 @@ updateSideRailState();
 <div id="faMobileBlack" aria-hidden="true"></div>
 
 <script id="fa-v40-4-geometry">(function(){function a(){if(innerWidth<=800)return;const c=document.querySelector('.page12-copy'),x=document.querySelector('.page12-header');if(!c||!x)return;const r=c.getBoundingClientRect();x.classList.add('fa-p12-aligned');x.style.setProperty('left',r.left+'px','important');x.style.setProperty('width',r.width+'px','important');requestAnimationFrame(()=>{const hh=x.getBoundingClientRect().height;x.style.setProperty('top',Math.max(0,r.top-35-hh)+'px','important')})}addEventListener('load',()=>requestAnimationFrame(a));addEventListener('resize',a)})();</script>
-
-<script id="fa-v40-8-p12-text-align">
-(function(){
-  let raf=0;
-  function align(){
-    if(innerWidth<=800){raf=0;return}
-    const copy=document.querySelector('.page12-copy');
-    const head=document.querySelector('.page12-header');
-    if(!copy||!head)return;
-    const r=copy.getBoundingClientRect();
-    head.style.setProperty('left',r.left+'px','important');
-    head.style.setProperty('width',r.width+'px','important');
-    const hh=head.getBoundingClientRect().height;
-    head.style.setProperty('top',(r.top-hh-35)+'px','important');
-    raf=requestAnimationFrame(align);
-  }
-  addEventListener('load',align);
-  addEventListener('resize',()=>{if(innerWidth>800&&!raf)align()});
-})();
-</script>
-
 </body>
 </html>
 
