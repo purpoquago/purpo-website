@@ -2956,6 +2956,78 @@ body.fa-m-p14s2 .page13-header{display:block!important;position:absolute!importa
 body.fa-m-p14s2.fa-m-reveal .page13-header{opacity:1!important}
 }
 </style>
+
+<style id="fa-mobile-v33-repairs">
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+  body.fa-m-page9 #page9ZoomCanvas{
+    display:block!important;position:absolute!important;inset:0!important;
+    width:100vw!important;height:100dvh!important;z-index:2!important;
+    opacity:1!important;visibility:visible!important;filter:none!important;transform:none!important;
+  }
+  body.fa-m-p9s1.fa-p9-bg-phase #page9ZoomCanvas,
+  body.fa-m-p9s2 #page9ZoomCanvas{opacity:0!important;visibility:hidden!important}
+
+  /* Desktop scroll reveal was leaving these in an intermediate blur state. */
+  body.fa-m-p9s2 .page9-editorial,
+  body.fa-m-p9s2 .page9-header,
+  body.fa-m-p9s2 .page9-copy{
+    filter:none!important;transform:none!important;
+  }
+  body.fa-m-p9s2 .page9-header,
+  body.fa-m-p9s2 .page9-copy{opacity:1!important;visibility:visible!important}
+
+  /* P10: neutralize desktop absolute/blur choreography on every child, not just wrapper. */
+  body.fa-m-page10 .page10-layer,
+  body.fa-m-page10 .page10-canvas,
+  body.fa-m-page10 .page10-item,
+  body.fa-m-page10 .page10-header,
+  body.fa-m-page10 .page10-card,
+  body.fa-m-page10 .page10-card .page10-photo,
+  body.fa-m-page10 .page10-card3 .page10-photo,
+  body.fa-m-page10 .page10-quote,
+  body.fa-m-page10 figcaption,
+  body.fa-m-page10 .page10-card3-caption{
+    filter:none!important;opacity:1!important;visibility:visible!important;
+  }
+  body.fa-m-page10 .page10-canvas{
+    transform:none!important;left:auto!important;top:auto!important;
+  }
+  body.fa-m-page10 .page10-card{
+    position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
+    width:100%!important;height:auto!important;min-height:0!important;transform:none!important;
+  }
+  body.fa-m-page10 .page10-card .page10-photo,
+  body.fa-m-page10 .page10-card3 .page10-photo{
+    position:relative!important;inset:auto!important;width:100%!important;height:auto!important;
+    object-fit:contain!important;transform:none!important;
+  }
+  body.fa-m-page10 .page10-card figcaption,
+  body.fa-m-page10 .page10-card.landscape figcaption,
+  body.fa-m-page10 .page10-card3-caption{
+    position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
+    width:100%!important;height:auto!important;display:block!important;
+    padding:12px 2px 0!important;transform:none!important;
+  }
+  body.fa-m-page10 .page10-header{
+    position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
+    width:100%!important;height:auto!important;transform:none!important;
+  }
+  body.fa-m-page10 .page10-quote{
+    position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
+    width:100%!important;height:auto!important;transform:none!important;
+  }
+
+  /* Later scenes: fully override desktop scroll reveal blur/transforms. */
+  body.fa-m-p11s1 .page11-bg,body.fa-m-p12s2 .page11-bg,
+  body.fa-m-p12s2 .page11-title,body.fa-m-p12s2 .page11-lyrics,
+  body.fa-m-p13s1 .page12-bg,body.fa-m-p13s2 .page12-bg,
+  body.fa-m-p13s2 .page12-master,body.fa-m-p13s2 .page12-header,body.fa-m-p13s2 .page12-copy,
+  body.fa-m-p14s1 .page13-bg,body.fa-m-p14s2 .page13-bg,body.fa-m-p14s2 .page13-header{
+    filter:none!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
@@ -3764,6 +3836,7 @@ function preloadPage8Frames(){
   }
 }
 preloadPage8Frames();
+preloadPage9Frames();
 
 const soundToggle = document.getElementById("soundToggle");
 let ambientEnabled = false;
@@ -5277,8 +5350,14 @@ if(n==='p1s2'||n==='p2s2'||n==='p3s1'||n==='p3s2'||n==='p4s1'||n==='p5s2'||n==='
  };
  let p9MobileRaf=0,p9MobileStart=0;
  const stopP9MobileZoom=()=>{if(p9MobileRaf)cancelAnimationFrame(p9MobileRaf);p9MobileRaf=0;p9MobileStart=0};
- const startP9MobileZoom=()=>{stopP9MobileZoom();b.classList.remove('fa-p9-bg-phase');p9MobileStart=performance.now();const duration=4200;
- const tick=now=>{if(states[i]!=='p9s1'){stopP9MobileZoom();return}const u=Math.min(1,(now-p9MobileStart)/duration),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2,frame=Math.round(e*(PAGE9_FRAME_COUNT-1));if(typeof drawPage9Frame==='function')drawPage9Frame(frame);if(u<1)p9MobileRaf=requestAnimationFrame(tick);else{p9MobileRaf=0;b.classList.add('fa-p9-bg-phase')}};p9MobileRaf=requestAnimationFrame(tick)};
+ const startP9MobileZoom=()=>{stopP9MobileZoom();b.classList.remove('fa-p9-bg-phase');preloadPage9Frames();p9MobileStart=0;const duration=4200;
+ const tick=now=>{if(states[i]!=='p9s1'){stopP9MobileZoom();return}
+ const first=page9Frames[0];if(!first||!first.complete||!first.naturalWidth){p9MobileRaf=requestAnimationFrame(tick);return}
+ if(!p9MobileStart)p9MobileStart=now;
+ const u=Math.min(1,(now-p9MobileStart)/duration),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2,frame=Math.round(e*(PAGE9_FRAME_COUNT-1));
+ let f=frame;while(f>0&&(!page9Frames[f]||!page9Frames[f].complete||!page9Frames[f].naturalWidth))f--;
+ drawPage9Frame(f);
+ if(u<1)p9MobileRaf=requestAnimationFrame(tick);else{p9MobileRaf=0;b.classList.add('fa-p9-bg-phase')}};p9MobileRaf=requestAnimationFrame(tick)};
  const syncP8Media=()=>{
    const n=states[i], loop=document.getElementById('page8Loop');
    if(n!=='p8s1'){stopP8MobileRack();b.classList.remove('fa-p8-loop-phase');}
