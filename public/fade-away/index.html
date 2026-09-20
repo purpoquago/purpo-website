@@ -6401,7 +6401,7 @@ nav.innerHTML='<div class="fa-holdnav-list">'+src.map((x,i)=>'<div class="fa-hol
 let dot=document.querySelector(".fa-holdnav-anchor-dot");if(!dot){dot=document.createElement("div");dot.className="fa-holdnav-anchor-dot";document.body.appendChild(dot)}
 const list=nav.firstElementChild,items=[...list.children];
 const VISUAL=32,SCRUB=24,HOLD=430,DEAD=32;
-let pid=null,timer=0,ax=0,ay=0,startY=0,active=false,start=0,sel=0,moved=false;
+let pid=null,activeTouchId=null,timer=0,ax=0,ay=0,startY=0,active=false,start=0,sel=0,moved=false;
 
 const blocked=el=>!!el?.closest?.('iframe,button,input,textarea,select,option,[contenteditable="true"],audio,video,.page5-player,.page8-player,.page11-player,.page13-player,.page15-player,.page18-player,.page19-player');
 const idxFor=s=>{const p=String(s||"").match(/^p(\d+)/);if(!p)return 0;let bi=0,bd=999;src.forEach((x,n)=>{const q=x.state.match(/^p(\d+)/),d=Math.abs(+q[1]-+p[1]);if(d<bd){bd=d;bi=n}});return bi};
@@ -6409,7 +6409,7 @@ const render=()=>{sel=Math.max(0,Math.min(src.length-1,sel));items.forEach((e,n)
 const open=()=>{if(pid===null)return;active=true;moved=false;try{document.documentElement.setPointerCapture?.(pid)}catch(_){}
 start=idxFor(window.faMGetState?.());sel=start;document.body.classList.add("fa-holdnav-active");veil.classList.add("is-active");nav.classList.add("is-active");const w=Math.min(innerWidth*.58,238),left=ax>innerWidth/2?Math.max(8,ax-w-24):Math.min(innerWidth-w-8,ax+24);nav.style.left=left+"px";dot.style.left=ax+"px";dot.style.top=ay+"px";dot.classList.add("is-active");render();navigator.vibrate?.(8)};
 const close=commit=>{clearTimeout(timer);timer=0;try{if(pid!==null&&document.documentElement.hasPointerCapture?.(pid))document.documentElement.releasePointerCapture(pid)}catch(_){}
-if(active&&commit&&moved&&sel!==start){window.faHoldNavSuppressUntil=performance.now()+900;window.faMGoState?.(src[sel].state)}else if(active)window.faHoldNavSuppressUntil=performance.now()+500;active=false;pid=null;document.body.classList.remove("fa-holdnav-active");veil.classList.remove("is-active");nav.classList.remove("is-active");dot.classList.remove("is-active")};
+if(active&&commit&&moved&&sel!==start){window.faHoldNavSuppressUntil=performance.now()+900;window.faMGoState?.(src[sel].state)}else if(active)window.faHoldNavSuppressUntil=performance.now()+500;active=false;pid=null;activeTouchId=null;document.body.classList.remove("fa-holdnav-active");veil.classList.remove("is-active");nav.classList.remove("is-active");dot.classList.remove("is-active")};
 
 document.addEventListener("contextmenu",e=>{if(mobile()){e.preventDefault();e.stopImmediatePropagation()}},{capture:true});
 document.addEventListener("selectstart",e=>{if(mobile()&&!e.target.closest?.('input,textarea,[contenteditable="true"]'))e.preventDefault()},{capture:true});
@@ -6423,19 +6423,41 @@ document.addEventListener("pointerdown",e=>{
 
 document.addEventListener("pointermove",e=>{
   if(e.pointerId!==pid)return;
-  if(!active){
-    if(Math.hypot(e.clientX-ax,e.clientY-ay)>DEAD){clearTimeout(timer);timer=0;pid=null}
-    return;
+  if(!active && Math.hypot(e.clientX-ax,e.clientY-ay)>DEAD){
+    clearTimeout(timer);timer=0;pid=null;activeTouchId=null;
   }
-  // Only after activation do we consume movement for the hold-nav scrub.
+},{capture:true,passive:true});
+
+
+// Active-menu scrub uses the raw Touch Events stream.
+// It is completely dormant before the hold menu opens, so normal site navigation is unchanged.
+document.addEventListener("touchstart",e=>{
+  if(!mobile()||e.touches.length!==1)return;
+  const t=e.changedTouches[0];
+  activeTouchId=t.identifier;
+},{capture:true,passive:true});
+
+document.addEventListener("touchmove",e=>{
+  if(!active||activeTouchId===null)return;
+  const t=[...e.touches].find(x=>x.identifier===activeTouchId) ||
+          [...e.changedTouches].find(x=>x.identifier===activeTouchId);
+  if(!t)return;
   e.preventDefault();
-  const next=Math.max(0,Math.min(src.length-1,start-Math.round((e.clientY-startY)/SCRUB)));
+  const next=Math.max(0,Math.min(src.length-1,start-Math.round((t.clientY-startY)/SCRUB)));
   if(next!==sel){sel=next;moved=true;render();navigator.vibrate?.(4)}
 },{capture:true,passive:false});
 
-document.addEventListener("pointerup",e=>{if(e.pointerId===pid)close(true)},{capture:true,passive:true});
+document.addEventListener("touchend",e=>{
+  if(!active)return;
+  if(activeTouchId===null || [...e.changedTouches].some(x=>x.identifier===activeTouchId)){
+    activeTouchId=null;
+    close(true);
+  }
+},{capture:true,passive:true});
+
+document.addEventListener("pointerup",e=>{if(e.pointerId===pid&&activeTouchId===null)close(true)},{capture:true,passive:true});
 document.addEventListener("pointercancel",e=>{if(e.pointerId===pid&&!active){clearTimeout(timer);timer=0;pid=null}},{capture:true,passive:true});
-document.addEventListener("touchend",()=>{if(active)close(true)},{capture:true,passive:true});
+
 })();
 </script>
 </body>
