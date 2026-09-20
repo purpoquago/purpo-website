@@ -3597,22 +3597,175 @@ body.fa-m-p13s2.fa-m-reveal .page13-header{opacity:1!important}
  body.fa-m-p16s3 .p16-mobile-copy .page16-caption-zone{display:none!important}
 }</style>
 
-<style id="fa-mobile-v41-5-p16-shared">
+
+<style id="fa-mobile-v41-6-p16-clean-reader">
 @media (max-width:800px), (hover:none) and (pointer:coarse){
- body.fa-m-p16s2 .p16-below-prefix{display:none!important}
- body.fa-m-page16 .page16-content{display:none!important}
- body.fa-m-p16s3 .page16-layer{overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior:contain!important;touch-action:pan-y!important;scrollbar-width:none!important}
- body.fa-m-p16s3 .page16-layer::-webkit-scrollbar{display:none!important}
- body.fa-m-p16s3 .page16-content,body.fa-m-p16s3 .page17-content{display:block!important;position:relative!important;inset:auto!important;width:auto!important;height:auto!important;max-width:none!important;transform:none!important;filter:none!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important;box-sizing:border-box!important;color:#f4f1ea!important;font-size:16px!important;line-height:1.42!important}
- body.fa-m-p16s3 .page16-content{z-index:30!important;padding:12dvh 7vw 0!important}
- body.fa-m-p16s3 .page17-content{z-index:31!important;padding:0 7vw 18dvh!important}
- body.fa-m-p16s3 .page16-header{display:block!important;position:static!important;width:min(86vw,560px)!important;height:auto!important;margin:0 0 26px!important;transform:none!important;opacity:1!important}
- body.fa-m-p16s3 .page16-caption-zone{display:none!important}
- body.fa-m-p16s3 .page17-columns{display:block!important;position:static!important;width:auto!important;height:auto!important;transform:none!important}
- body.fa-m-p16s3 .journal-entry{margin:0 0 28px!important}
- body.fa-m-p16s3 .page16-content h3,body.fa-m-p16s3 .page17-content h3{font-size:18px!important;line-height:1.2!important;margin:28px 0 12px!important}
- body.fa-m-p16s3 .page16-content p,body.fa-m-p16s3 .page17-content p{margin:0 0 14px!important}
-}</style>
+  body.fa-m-p16s2 .p16-below-prefix{display:none!important}
+
+  .p16-mobile-reader{display:none!important}
+
+  body.fa-m-p16s3 .page16-layer{
+    overflow:hidden!important;
+    touch-action:none!important;
+  }
+  body.fa-m-p16s3 .page16-bg{
+    position:absolute!important;
+    inset:0!important;
+    width:100%!important;
+    height:100%!important;
+    object-fit:cover!important;
+    object-position:82% center!important;
+    transform:none!important;
+  }
+
+  body.fa-m-p16s3 #p16MobileReader{
+    display:block!important;
+    position:fixed!important;
+    z-index:40!important;
+    left:0!important;top:0!important;
+    width:100vw!important;height:100dvh!important;
+    padding:12dvh 7vw 18dvh!important;
+    box-sizing:border-box!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    -webkit-overflow-scrolling:touch!important;
+    overscroll-behavior:contain!important;
+    touch-action:pan-y!important;
+    pointer-events:auto!important;
+    scrollbar-width:none!important;
+    color:#f4f1ea!important;
+    font-family:"EB Garamond",Georgia,serif!important;
+    font-size:16px!important;
+    line-height:1.42!important;
+    opacity:0!important;
+    transition:opacity .55s ease!important;
+  }
+  body.fa-m-p16s3 #p16MobileReader::-webkit-scrollbar{display:none!important}
+  body.fa-m-p16s3.fa-m-reveal #p16MobileReader{opacity:1!important}
+
+  /* Flatten ALL desktop editorial geometry/columns inside the reader. */
+  body.fa-m-p16s3 #p16MobileReader .page16-header{
+    display:block!important;
+    position:static!important;
+    inset:auto!important;
+    width:min(86vw,820px)!important;
+    max-width:100%!important;
+    height:auto!important;
+    margin:0 0 28px!important;
+    padding:0!important;
+    transform:none!important;
+    filter:none!important;
+    opacity:1!important;
+  }
+
+  body.fa-m-p16s3 #p16MobileReader .page16-intro,
+  body.fa-m-p16s3 #p16MobileReader .page16-journal-flow,
+  body.fa-m-p16s3 #p16MobileReader .page17-columns{
+    display:block!important;
+    position:static!important;
+    inset:auto!important;
+    width:100%!important;
+    height:auto!important;
+    min-width:0!important;
+    max-width:none!important;
+    margin:0!important;
+    padding:0!important;
+    transform:none!important;
+    filter:none!important;
+    opacity:1!important;
+    overflow:visible!important;
+    columns:auto!important;
+    column-count:1!important;
+    column-width:auto!important;
+    column-gap:0!important;
+    column-fill:auto!important;
+  }
+  body.fa-m-p16s3 #p16MobileReader .page16-journal-flow::before{
+    content:none!important;
+    display:none!important;
+    height:0!important;
+  }
+
+  body.fa-m-p16s3 #p16MobileReader .journal-entry{
+    display:block!important;
+    position:static!important;
+    inset:auto!important;
+    left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
+    width:100%!important;
+    height:auto!important;
+    min-width:0!important;
+    max-width:none!important;
+    margin:0 0 30px!important;
+    padding:0!important;
+    transform:none!important;
+    filter:none!important;
+    opacity:1!important;
+    break-inside:auto!important;
+    float:none!important;
+  }
+  body.fa-m-p16s3 #p16MobileReader .journal-entry h3{
+    display:block!important;
+    position:static!important;
+    width:auto!important;
+    margin:30px 0 12px!important;
+    padding:0!important;
+    font-family:"Alfa Slab One",Impact,serif!important;
+    font-size:18px!important;
+    line-height:1.2!important;
+    font-weight:400!important;
+  }
+  body.fa-m-p16s3 #p16MobileReader p{
+    display:block!important;
+    position:static!important;
+    width:auto!important;
+    margin:0 0 15px!important;
+    padding:0!important;
+    font-size:16px!important;
+    line-height:1.42!important;
+  }
+
+  body.fa-m-p16s3 #p16MobileReader .page17-note{
+    display:block!important;
+    position:static!important;
+    inset:auto!important;
+    width:100%!important;
+    height:auto!important;
+    margin:36px 0 0!important;
+    padding:18px 18px 14px!important;
+    box-sizing:border-box!important;
+    background:rgba(238,238,238,.90)!important;
+    color:#111!important;
+    font-size:14px!important;
+    line-height:1.35!important;
+    font-style:italic!important;
+    transform:none!important;
+    filter:none!important;
+    opacity:1!important;
+    break-inside:auto!important;
+  }
+  body.fa-m-p16s3 #p16MobileReader .page17-note h4{
+    position:static!important;
+    margin:0 0 10px!important;
+    padding:0!important;
+    font-size:15px!important;
+    line-height:1.2!important;
+    font-style:normal!important;
+  }
+  body.fa-m-p16s3 #p16MobileReader .page17-note p{
+    color:#111!important;
+    font-size:14px!important;
+    line-height:1.35!important;
+    margin:0 0 10px!important;
+  }
+
+  /* Desktop parent frames stay out of the mobile visual tree. */
+  body.fa-m-p16s3 .page16-content,
+  body.fa-m-p16s3 .page17-content{
+    pointer-events:none!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
@@ -4019,6 +4172,7 @@ body.fa-m-p13s2.fa-m-reveal .page13-header{opacity:1!important}
     <section class="page16-layer" id="page16" aria-label="Record of an Explorer, Year Five">
       <div class="p16-mobile-photo-caption"><span class="p16-below-prefix">Below: </span>An explorer relaxes beneath the rooftop signage of the Fade Away Hotel. The rooftop is a favored observation point for viewing the singularities across the city. Observers note that the closer one approaches them, the less visible they become.</div>
       <img class="page16-bg" src="assets/page16-bg.webp" alt="">
+      <div id="p16MobileReader" class="p16-mobile-reader" aria-label="Record of an Explorer, Year Five"></div>
       <div class="editorial-master page16-content" id="page16Content">
         <img class="page16-header" src="assets/page16-header.png" alt="Record of an Explorer, Year Five">
         <div class="page16-caption-zone"><div class="page16-caption"><span class="p16-below-prefix">Below: </span>An explorer relaxes beneath the rooftop signage of the Fade Away Hotel. The rooftop is a favored observation point for viewing the singularities across the city. Observers note that the closer one approaches them, the less visible they become.</div></div>
@@ -5749,13 +5903,41 @@ updateSideRailState();
 <div id="faMobileWhite" aria-hidden="true"></div>
 <div id="faMobileBlack" aria-hidden="true"></div>
 <div id="p12LegacyShim" hidden aria-hidden="true"><div class="page12-header"></div><div class="page12-copy"></div></div>
-<script id="fa-mobile-v41-5-p16-reparent">
-(()=>{const p16=document.querySelector('.page16-layer'),p17=document.querySelector('.page17-layer'),c=document.querySelector('.page17-content');if(!p16||!p17||!c)return;
-const home=document.createComment('page17-content-home');p17.insertBefore(home,c);
-const sync=()=>{const mobile=matchMedia('(max-width:800px), (hover:none) and (pointer:coarse)').matches,s3=document.body.classList.contains('fa-m-p16s3');
-if(mobile&&s3){if(c.parentNode!==p16)p16.appendChild(c)}else if(c.parentNode!==p17){p17.insertBefore(c,home.nextSibling)}};
-new MutationObserver(sync).observe(document.body,{attributes:true,attributeFilter:['class']});addEventListener('resize',sync,{passive:true});sync()})();
+
+<script id="fa-mobile-v41-6-p16-reader">
+(()=>{
+  const reader=document.getElementById('p16MobileReader');
+  if(!reader)return;
+  const selectors=['.page16-header','.page16-intro','.page16-journal-flow','.page17-columns'];
+  const items=selectors.map(sel=>{
+    const node=document.querySelector(sel);
+    if(!node)return null;
+    const anchor=document.createComment('p16-mobile-home:'+sel);
+    node.parentNode.insertBefore(anchor,node);
+    return {node,anchor};
+  }).filter(Boolean);
+
+  const isMobile=()=>matchMedia('(max-width:800px), (hover:none) and (pointer:coarse)').matches;
+  const mount=()=>{
+    if(!isMobile() || !document.body.classList.contains('fa-m-p16s3'))return;
+    items.forEach(({node})=>{ if(node.parentNode!==reader) reader.appendChild(node); });
+  };
+  const restore=()=>{
+    items.forEach(({node,anchor})=>{
+      if(node.parentNode===reader && anchor.parentNode) anchor.parentNode.insertBefore(node,anchor.nextSibling);
+    });
+  };
+  const sync=()=>{
+    if(isMobile() && document.body.classList.contains('fa-m-p16s3')) mount();
+    else restore();
+  };
+
+  new MutationObserver(sync).observe(document.body,{attributes:true,attributeFilter:['class']});
+  addEventListener('resize',sync,{passive:true});
+  sync();
+})();
 </script>
+
 </body>
 </html>
 
@@ -5915,7 +6097,7 @@ clearTimeout(t);clear();const n=states[i];
 if(n==='p9s1')requestAnimationFrame(()=>startP9MobileZoom());else{stopP9MobileZoom();b.classList.remove('fa-p9-bg-phase')}b.classList.add('fa-m-'+n);const pm=n.match(/^p(\d+)s/),pg=pm?+pm[1]:0;if(pg>=2)b.classList.add('fa-m-page'+pg);
 if(n==='p11s2')b.classList.add('fa-m-page11');
 if(n==='p12s1'||n==='p12s2')b.classList.add('fa-m-page12');
-if(n==='p13s1'||n==='p13s2')b.classList.add('fa-m-page13');if(p2&&n!=='p2s2')p2.scrollTop=0;if(p3&&n!=='p3s1')p3.scrollTop=0;if(p4&&n!=='p4s1')p4.scrollTop=0;const p10scroll=document.querySelector('.page10-layer');if(p10scroll&&n!=='p10s1')p10scroll.scrollTop=0;const p16scroll=document.querySelector('.page16-layer');if(p16scroll&&n!=='p16s3')p16scroll.scrollTop=0;syncP8Media();
+if(n==='p13s1'||n==='p13s2')b.classList.add('fa-m-page13');if(p2&&n!=='p2s2')p2.scrollTop=0;if(p3&&n!=='p3s1')p3.scrollTop=0;if(p4&&n!=='p4s1')p4.scrollTop=0;const p10scroll=document.querySelector('.page10-layer');if(p10scroll&&n!=='p10s1')p10scroll.scrollTop=0;const p16scroll=document.querySelector('#p16MobileReader');if(p16scroll&&n!=='p16s3')p16scroll.scrollTop=0;syncP8Media();
    if(faMCurrentState==='p8s1' && faMWasState==='p8s2'){
      requestAnimationFrame(()=>enterP8Reverse());
    }else if(faMCurrentState==='p8s1' && faMWasState!=='p8s1'){
@@ -6009,7 +6191,7 @@ if(n==='p1s2'||n==='p2s2'||n==='p3s1'||n==='p3s2'||n==='p4s1'||n==='p5s2'||n==='
  states[i]==='p9s2'?document.querySelector('.page9-editorial'):
  states[i]==='p10s1'?document.querySelector('.page10-layer'):
  states[i]==='p12s2'?document.querySelector('.p12-article'):
- states[i]==='p16s3'?document.querySelector('.page16-layer'):null;
+ states[i]==='p16s3'?document.querySelector('#p16MobileReader'):null;
  const black=document.getElementById('faMobileBlack');
  const white=document.getElementById('faMobileWhite');
  const pageOf=n=>n.slice(0,2);
