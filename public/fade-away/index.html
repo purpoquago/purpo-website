@@ -4070,18 +4070,16 @@ body.fa-holdnav-active{-webkit-user-select:none!important;user-select:none!impor
 }
 </style>
 
-<style id="fa-mobile-v43-1-native-hold-suppression">
+
+<style id="fa-mobile-v43-2-hold-fix">
 @media (max-width:800px), (hover:none) and (pointer:coarse){
-  html,body,
-  body *:not(input):not(textarea):not(select):not(option):not(iframe){
+  html,body{overscroll-behavior-y:none}
+  html,body,body *{
     -webkit-touch-callout:none!important;
-    -webkit-user-select:none!important;
-    user-select:none!important;
-    -webkit-tap-highlight-color:transparent;
+    -webkit-tap-highlight-color:transparent!important;
   }
-  input,textarea,select,option{
-    -webkit-user-select:text!important;
-    user-select:text!important;
+  body.fa-holdnav-active,body.fa-holdnav-active *{
+    -webkit-user-select:none!important;user-select:none!important;
   }
 }
 </style>
@@ -6279,26 +6277,68 @@ updateSideRailState();
 })();
 </script>
 
-<script id="fa-mobile-v43-hold-nav-script">
+
+<script id="fa-mobile-v43-2-hold-nav-script">
 (()=>{
-const mobile=()=>matchMedia("(max-width:800px), (hover:none) and (pointer:coarse)").matches,rail=document.getElementById("sideRail");if(!rail)return;
+const mobile=()=>matchMedia("(max-width:800px), (hover:none) and (pointer:coarse)").matches;
+const rail=document.getElementById("sideRail"); if(!rail)return;
 const map={"#page2":"p2s1","#page3":"p3s2","#page5":"p5s1","#page6":"p6s1","#page8":"p8s1","#page9":"p9s1","#page11":"p11s1","#page12":"p12s1","#page13":"p13s1","#page14":"p14s1","#page15":"p15s1","#page16":"p16s1","#page18":"p18s1","#page19":"p19s1"};
 const src=[...rail.querySelectorAll("a")].map(a=>({label:(a.querySelector(".rail-label")?.textContent||"").trim(),state:map[a.getAttribute("href")],song:a.classList.contains("rail-song")})).filter(x=>x.state);
-const nav=document.createElement("div");nav.className="fa-holdnav";nav.innerHTML='<div class="fa-holdnav-list">'+src.map((x,i)=>'<div class="fa-holdnav-item '+(x.song?'is-song':'is-article')+'" data-index="'+i+'"><span class="fa-holdnav-mark"></span><span class="fa-holdnav-label">'+x.label+'</span></div>').join("")+"</div>";document.body.appendChild(nav);
-const dot=document.createElement("div");dot.className="fa-holdnav-anchor-dot";document.body.appendChild(dot);
-const list=nav.firstElementChild,items=[...list.children],ROW=48,HOLD=480,DEAD=14;let timer=0,pid=null,ax=0,ay=0,startY=0,active=false,sel=0,start=0,moved=false;
-const blocked=el=>!!el.closest('iframe,a,button,input,textarea,select,[contenteditable="true"],.page5-player,.page8-player,.page11-player,.page13-player,.page15-player,.page18-player,.page19-player,#p16MobileReader,.page2-layer,.page3-layer,.page4-layer,.page6-editorial,.page7-layer,.page9-editorial,.page10-layer,.p12-article,.page19-master');
+
+const nav=document.querySelector(".fa-holdnav")||document.body.appendChild(Object.assign(document.createElement("div"),{className:"fa-holdnav"}));
+nav.innerHTML='<div class="fa-holdnav-list">'+src.map((x,i)=>'<div class="fa-holdnav-item '+(x.song?'is-song':'is-article')+'" data-index="'+i+'"><span class="fa-holdnav-mark"></span><span class="fa-holdnav-label">'+x.label+'</span></div>').join("")+"</div>";
+let dot=document.querySelector(".fa-holdnav-anchor-dot"); if(!dot){dot=document.createElement("div");dot.className="fa-holdnav-anchor-dot";document.body.appendChild(dot)}
+const list=nav.firstElementChild,items=[...list.children],ROW=48,HOLD=430,DEAD=16;
+let timer=0,touchId=null,ax=0,ay=0,startY=0,lastY=0,active=false,sel=0,start=0,moved=false,eligible=false;
+
+const blocked=el=>!!el.closest('iframe,a,button,input,textarea,select,[contenteditable="true"],.page5-player,.page8-player,.page11-player,.page13-player,.page15-player,.page18-player,.page19-player,#p16MobileReader,.page2-layer .page2-copy,.page3-copy,.page4-mobile-article,.page6-editorial,.page7-copy,.page9-editorial,.page10-canvas,.p12-article,.page19-master');
 const idxFor=s=>{const p=String(s||"").match(/^p(\d+)/);if(!p)return 0;let bi=0,bd=999;src.forEach((x,n)=>{const q=x.state.match(/^p(\d+)/),d=Math.abs(+q[1]-+p[1]);if(d<bd){bd=d;bi=n}});return bi};
 const render=()=>{sel=Math.max(0,Math.min(src.length-1,sel));items.forEach((e,n)=>e.classList.toggle("is-selected",n===sel));list.style.transform='translate3d(0,'+(ay-(sel*ROW+ROW/2))+'px,0)'};
-const open=()=>{active=true;moved=false;window.faHoldNavNativeBlock=true;start=idxFor(window.faMGetState?.());sel=start;document.body.classList.add("fa-holdnav-active");nav.classList.add("is-active");nav.style.setProperty("--anchor-y",ay+"px");const w=Math.min(innerWidth*.58,238),left=ax>innerWidth/2?Math.max(8,ax-w-24):Math.min(innerWidth-w-8,ax+24);nav.style.left=left+"px";dot.style.left=ax+"px";dot.style.top=ay+"px";dot.classList.add("is-active");render();navigator.vibrate?.(8)};
-const close=commit=>{window.faHoldNavNativeBlock=false;clearTimeout(timer);if(active&&commit&&moved&&sel!==start){window.faHoldNavSuppressUntil=performance.now()+900;window.faMGoState?.(src[sel].state)}else if(active)window.faHoldNavSuppressUntil=performance.now()+500;active=false;pid=null;document.body.classList.remove("fa-holdnav-active");nav.classList.remove("is-active");dot.classList.remove("is-active")};
+const open=()=>{if(!eligible)return;active=true;moved=false;start=idxFor(window.faMGetState?.());sel=start;document.body.classList.add("fa-holdnav-active");nav.classList.add("is-active");nav.style.setProperty("--anchor-y",ay+"px");const w=Math.min(innerWidth*.58,238),left=ax>innerWidth/2?Math.max(8,ax-w-24):Math.min(innerWidth-w-8,ax+24);nav.style.left=left+"px";dot.style.left=ax+"px";dot.style.top=ay+"px";dot.classList.add("is-active");render();navigator.vibrate?.(8)};
+const close=commit=>{clearTimeout(timer);timer=0;if(active&&commit&&moved&&sel!==start){window.faHoldNavSuppressUntil=performance.now()+900;window.faMGoState?.(src[sel].state)}else if(active)window.faHoldNavSuppressUntil=performance.now()+500;active=false;eligible=false;touchId=null;document.body.classList.remove("fa-holdnav-active");nav.classList.remove("is-active");dot.classList.remove("is-active")};
 
-document.addEventListener("contextmenu",e=>{if(mobile()&&!blocked(e.target))e.preventDefault()},{capture:true});
-document.addEventListener("dragstart",e=>{if(mobile()&&!blocked(e.target))e.preventDefault()},{capture:true});
-document.addEventListener("selectstart",e=>{if(mobile()&&!blocked(e.target))e.preventDefault()},{capture:true});
-document.addEventListener("pointerdown",e=>{if(!mobile()||pid!==null||e.pointerType==="mouse"||blocked(e.target))return;pid=e.pointerId;ax=e.clientX;ay=startY=e.clientY;timer=setTimeout(()=>{if(pid===e.pointerId)open()},HOLD)},{passive:true,capture:true});
-document.addEventListener("pointermove",e=>{if(e.pointerId!==pid)return;if(!active){if(Math.hypot(e.clientX-ax,e.clientY-ay)>DEAD){clearTimeout(timer);pid=null}return}e.preventDefault();const next=Math.max(0,Math.min(src.length-1,start-Math.round((e.clientY-startY)/ROW)));if(next!==sel){sel=next;moved=true;render();navigator.vibrate?.(4)}},{passive:false,capture:true});
-document.addEventListener("pointerup",e=>{if(e.pointerId===pid)close(true)},{passive:true,capture:true});document.addEventListener("pointercancel",e=>{if(e.pointerId===pid)close(false)},{passive:true,capture:true});
+document.addEventListener("contextmenu",e=>{if(mobile())e.preventDefault()},{capture:true});
+document.addEventListener("selectstart",e=>{if(mobile()&&active)e.preventDefault()},{capture:true});
+document.addEventListener("dragstart",e=>{if(mobile())e.preventDefault()},{capture:true});
+
+document.addEventListener("touchstart",e=>{
+  if(!mobile()||e.touches.length!==1||touchId!==null)return;
+  const t=e.changedTouches[0]; eligible=!blocked(e.target); if(!eligible)return;
+  touchId=t.identifier;ax=t.clientX;ay=startY=lastY=t.clientY;
+  // Own eligible visual-area touches from the start so Chrome cannot turn them
+  // into its long-press context gesture. Existing page swipe is handled below.
+  e.preventDefault();
+  timer=setTimeout(open,HOLD);
+},{passive:false,capture:true});
+
+document.addEventListener("touchmove",e=>{
+  if(touchId===null||!eligible)return;
+  const t=[...e.changedTouches].find(x=>x.identifier===touchId);if(!t)return;
+  e.preventDefault();lastY=t.clientY;
+  if(!active){
+    // Before activation: meaningful movement means user intended ordinary page swipe.
+    if(Math.hypot(t.clientX-ax,t.clientY-ay)>DEAD){
+      clearTimeout(timer);timer=0;
+      const dy=t.clientY-startY;
+      eligible=false;touchId=null;
+      // Replay one normal mobile state step without allowing the native page to scroll.
+      if(Math.abs(dy)>12){
+        window.faHoldNavSuppressUntil=performance.now()+450;
+        const state=window.faMGetState?.();
+        const states=['p1s1','p1s2','p2s1','p2s2','p3s1','p3s2','p4s1','p5s1','p5s2','p6s1','p6s2','p6s3','p7s1','p8s1','p8s2','p9s1','p9s2','p10s1','p11s1','p11s2','p12s1','p12s2','p13s1','p13s2','p14s1','p14s2','p14s3','p15s1','p15s2','p16s1','p16s2','p16s3','p18s1','p18s2','p19s1','p19s2'];
+        const i=states.indexOf(state),n=Math.max(0,Math.min(states.length-1,i+(dy<0?1:-1)));
+        if(i>=0&&n!==i)window.faMGoState?.(states[n]);
+      }
+    }
+    return;
+  }
+  // Once open, movement NEVER cancels the controller: it only scrubs the rail.
+  const next=Math.max(0,Math.min(src.length-1,start-Math.round((t.clientY-startY)/ROW)));
+  if(next!==sel){sel=next;moved=true;render();navigator.vibrate?.(4)}
+},{passive:false,capture:true});
+
+document.addEventListener("touchend",e=>{if(touchId===null)return;const t=[...e.changedTouches].find(x=>x.identifier===touchId);if(t)close(true)},{passive:false,capture:true});
+document.addEventListener("touchcancel",e=>{if(touchId!==null)close(false)},{passive:false,capture:true});
 })();
 </script>
 </body>
