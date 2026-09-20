@@ -4069,6 +4069,50 @@ body.fa-holdnav-active{-webkit-user-select:none!important;user-select:none!impor
 .fa-holdnav-anchor-dot{position:fixed!important;z-index:2147483001!important;width:8px;height:8px;margin:-4px 0 0 -4px;border-radius:50%;background:#f4f1ea;box-shadow:0 0 0 5px rgba(244,241,234,.14);pointer-events:none!important;display:none!important}.fa-holdnav-anchor-dot.is-active{display:block!important}
 }
 </style>
+
+
+<style id="fa-mobile-v43-2-hold-fix">
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+  html,body{overscroll-behavior-y:none}
+  html,body,body *{
+    -webkit-touch-callout:none!important;
+    -webkit-tap-highlight-color:transparent!important;
+  }
+  body.fa-holdnav-active,body.fa-holdnav-active *{
+    -webkit-user-select:none!important;user-select:none!important;
+  }
+}
+</style>
+
+<style id="fa-mobile-v43-6-nav-visuals">
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+.fa-holdnav-veil{position:fixed!important;inset:0!important;z-index:2147482990!important;background:rgba(0,0,0,.40)!important;display:none!important;pointer-events:none!important}
+.fa-holdnav-veil.is-active{display:block!important}
+.fa-holdnav::before,.fa-holdnav::after{display:none!important;content:none!important}
+.fa-holdnav-item{height:32px!important;padding-top:0!important;padding-bottom:0!important}
+}
+</style>
+
+<style id="fa-mobile-v43-7-native-longpress">
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+  html,body,body *{
+    -webkit-touch-callout:none!important;
+    -webkit-tap-highlight-color:transparent!important;
+  }
+  body img, body a{
+    -webkit-user-drag:none!important;
+  }
+  body.fa-holdnav-active, body.fa-holdnav-active *{
+    -webkit-user-select:none!important;
+    user-select:none!important;
+  }
+  input,textarea,[contenteditable="true"]{
+    -webkit-user-select:text!important;
+    user-select:text!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
@@ -6262,22 +6306,60 @@ updateSideRailState();
 })();
 </script>
 
-<script id="fa-mobile-v43-hold-nav-script">
+
+<script id="fa-mobile-v43-2-hold-nav-script">
 (()=>{
-const mobile=()=>matchMedia("(max-width:800px), (hover:none) and (pointer:coarse)").matches,rail=document.getElementById("sideRail");if(!rail)return;
+const mobile=()=>matchMedia("(max-width:800px), (hover:none) and (pointer:coarse)").matches;
+const rail=document.getElementById("sideRail"); if(!rail)return;
 const map={"#page2":"p2s1","#page3":"p3s2","#page5":"p5s1","#page6":"p6s1","#page8":"p8s1","#page9":"p9s1","#page11":"p11s1","#page12":"p12s1","#page13":"p13s1","#page14":"p14s1","#page15":"p15s1","#page16":"p16s1","#page18":"p18s1","#page19":"p19s1"};
 const src=[...rail.querySelectorAll("a")].map(a=>({label:(a.querySelector(".rail-label")?.textContent||"").trim(),state:map[a.getAttribute("href")],song:a.classList.contains("rail-song")})).filter(x=>x.state);
-const nav=document.createElement("div");nav.className="fa-holdnav";nav.innerHTML='<div class="fa-holdnav-list">'+src.map((x,i)=>'<div class="fa-holdnav-item '+(x.song?'is-song':'is-article')+'" data-index="'+i+'"><span class="fa-holdnav-mark"></span><span class="fa-holdnav-label">'+x.label+'</span></div>').join("")+"</div>";document.body.appendChild(nav);
-const dot=document.createElement("div");dot.className="fa-holdnav-anchor-dot";document.body.appendChild(dot);
-const list=nav.firstElementChild,items=[...list.children],ROW=48,HOLD=480,DEAD=14;let timer=0,pid=null,ax=0,ay=0,startY=0,active=false,sel=0,start=0,moved=false;
-const blocked=el=>!!el.closest('iframe,a,button,input,textarea,select,[contenteditable="true"],.page5-player,.page8-player,.page11-player,.page13-player,.page15-player,.page18-player,.page19-player,#p16MobileReader,.page2-layer,.page3-layer,.page4-layer,.page6-editorial,.page7-layer,.page9-editorial,.page10-layer,.p12-article,.page19-master');
+
+let veil=document.querySelector(".fa-holdnav-veil");if(!veil){veil=document.createElement("div");veil.className="fa-holdnav-veil";document.body.appendChild(veil)}
+const nav=document.querySelector(".fa-holdnav")||document.body.appendChild(Object.assign(document.createElement("div"),{className:"fa-holdnav"}));
+nav.innerHTML='<div class="fa-holdnav-list">'+src.map((x,i)=>'<div class="fa-holdnav-item '+(x.song?'is-song':'is-article')+'" data-index="'+i+'"><span class="fa-holdnav-mark"></span><span class="fa-holdnav-label">'+x.label+'</span></div>').join("")+"</div>";
+let dot=document.querySelector(".fa-holdnav-anchor-dot"); if(!dot){dot=document.createElement("div");dot.className="fa-holdnav-anchor-dot";document.body.appendChild(dot)}
+const list=nav.firstElementChild,items=[...list.children],ROW=48,SCRUB=24,HOLD=430,DEAD=16;
+let timer=0,touchId=null,ax=0,ay=0,startY=0,lastY=0,active=false,sel=0,start=0,moved=false,eligible=false;
+
+const blocked=el=>!!el.closest('iframe,button,input,textarea,select,option,[contenteditable="true"],audio,video,.page5-player,.page8-player,.page11-player,.page13-player,.page15-player,.page18-player,.page19-player');
 const idxFor=s=>{const p=String(s||"").match(/^p(\d+)/);if(!p)return 0;let bi=0,bd=999;src.forEach((x,n)=>{const q=x.state.match(/^p(\d+)/),d=Math.abs(+q[1]-+p[1]);if(d<bd){bd=d;bi=n}});return bi};
-const render=()=>{sel=Math.max(0,Math.min(src.length-1,sel));items.forEach((e,n)=>e.classList.toggle("is-selected",n===sel));list.style.transform='translate3d(0,'+(ay-(sel*ROW+ROW/2))+'px,0)'};
-const open=()=>{active=true;moved=false;start=idxFor(window.faMGetState?.());sel=start;document.body.classList.add("fa-holdnav-active");nav.classList.add("is-active");nav.style.setProperty("--anchor-y",ay+"px");const w=Math.min(innerWidth*.58,238),left=ax>innerWidth/2?Math.max(8,ax-w-24):Math.min(innerWidth-w-8,ax+24);nav.style.left=left+"px";dot.style.left=ax+"px";dot.style.top=ay+"px";dot.classList.add("is-active");render();navigator.vibrate?.(8)};
-const close=commit=>{clearTimeout(timer);if(active&&commit&&moved&&sel!==start){window.faHoldNavSuppressUntil=performance.now()+900;window.faMGoState?.(src[sel].state)}else if(active)window.faHoldNavSuppressUntil=performance.now()+500;active=false;pid=null;document.body.classList.remove("fa-holdnav-active");nav.classList.remove("is-active");dot.classList.remove("is-active")};
-document.addEventListener("pointerdown",e=>{if(!mobile()||pid!==null||e.pointerType==="mouse"||blocked(e.target))return;pid=e.pointerId;ax=e.clientX;ay=startY=e.clientY;timer=setTimeout(()=>{if(pid===e.pointerId)open()},HOLD)},{passive:true,capture:true});
-document.addEventListener("pointermove",e=>{if(e.pointerId!==pid)return;if(!active){if(Math.hypot(e.clientX-ax,e.clientY-ay)>DEAD){clearTimeout(timer);pid=null}return}e.preventDefault();const next=Math.max(0,Math.min(src.length-1,start-Math.round((e.clientY-startY)/ROW)));if(next!==sel){sel=next;moved=true;render();navigator.vibrate?.(4)}},{passive:false,capture:true});
-document.addEventListener("pointerup",e=>{if(e.pointerId===pid)close(true)},{passive:true,capture:true});document.addEventListener("pointercancel",e=>{if(e.pointerId===pid)close(false)},{passive:true,capture:true});
+const VISUAL=32;const render=()=>{sel=Math.max(0,Math.min(src.length-1,sel));items.forEach((e,n)=>e.classList.toggle("is-selected",n===sel));list.style.transform='translate3d(0,'+(ay-(sel*VISUAL+VISUAL/2))+'px,0)'};
+const open=()=>{if(!eligible)return;active=true;moved=false;start=idxFor(window.faMGetState?.());sel=start;document.body.classList.add("fa-holdnav-active");veil.classList.add("is-active");nav.classList.add("is-active");nav.style.setProperty("--anchor-y",ay+"px");const w=Math.min(innerWidth*.58,238),left=ax>innerWidth/2?Math.max(8,ax-w-24):Math.min(innerWidth-w-8,ax+24);nav.style.left=left+"px";dot.style.left=ax+"px";dot.style.top=ay+"px";dot.classList.add("is-active");render();navigator.vibrate?.(8)};
+const close=commit=>{clearTimeout(timer);timer=0;if(active&&commit&&moved&&sel!==start){window.faHoldNavSuppressUntil=performance.now()+900;window.faMGoState?.(src[sel].state)}else if(active)window.faHoldNavSuppressUntil=performance.now()+500;active=false;eligible=false;touchId=null;document.body.classList.remove("fa-holdnav-active");veil.classList.remove("is-active");nav.classList.remove("is-active");dot.classList.remove("is-active")};
+
+document.addEventListener("contextmenu",e=>{if(mobile()){e.preventDefault();e.stopImmediatePropagation()}},{capture:true});
+document.addEventListener("auxclick",e=>{if(mobile()&&e.button===2){e.preventDefault();e.stopImmediatePropagation()}},{capture:true});
+document.addEventListener("selectstart",e=>{if(mobile()&&!e.target.closest('input,textarea,[contenteditable="true"]'))e.preventDefault()},{capture:true});
+document.addEventListener("dragstart",e=>{if(mobile())e.preventDefault()},{capture:true});
+
+document.addEventListener("touchstart",e=>{
+  if(!mobile()||e.touches.length!==1||touchId!==null)return;
+  const t=e.changedTouches[0]; eligible=!blocked(e.target); if(!eligible)return;
+  touchId=t.identifier;ax=t.clientX;ay=startY=lastY=t.clientY;
+  // Do not consume the touch before the hold activates.
+  // The site's original swipe/inner-scroll system remains authoritative.
+  timer=setTimeout(open,HOLD);
+},{passive:false,capture:true});
+
+document.addEventListener("touchmove",e=>{
+  if(touchId===null||!eligible)return;
+  const t=[...e.changedTouches].find(x=>x.identifier===touchId);if(!t)return;
+  e.preventDefault();lastY=t.clientY;
+  if(!active){
+    // Ordinary movement belongs entirely to the existing page/article scrolling.
+    // We only cancel the pending hold; we never navigate from this controller.
+    if(Math.hypot(t.clientX-ax,t.clientY-ay)>DEAD){
+      clearTimeout(timer);timer=0;eligible=false;touchId=null;
+    }
+    return;
+  }
+  // Once open, movement NEVER cancels the controller: it only scrubs the rail.
+  const next=Math.max(0,Math.min(src.length-1,start-Math.round((t.clientY-startY)/SCRUB)));
+  if(next!==sel){sel=next;moved=true;render();navigator.vibrate?.(4)}
+},{passive:false,capture:true});
+
+document.addEventListener("touchend",e=>{if(touchId===null)return;const t=[...e.changedTouches].find(x=>x.identifier===touchId);if(t)close(true)},{passive:false,capture:true});
+document.addEventListener("touchcancel",e=>{if(touchId!==null)close(false)},{passive:false,capture:true});
 })();
 </script>
 </body>
