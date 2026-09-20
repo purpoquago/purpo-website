@@ -4114,14 +4114,17 @@ body.fa-holdnav-active{-webkit-user-select:none!important;user-select:none!impor
 </style>
 
 
-<style id="fa-mobile-v43-8-viewport-hold">
+<style id="fa-mobile-v43-9-native-hold-lock">
 @media (max-width:800px), (hover:none) and (pointer:coarse){
-  /* Decorative image/background layers should not become the gesture owner. */
-  .page1-bg,.page2-bg,.page3-bg,.page5-bg,.page6-bg,.page8-bg,.page9-bg,
-  .page11-bg,.page12-bg,.page13-bg,.page14-bg,.page15-bg,.page16-bg,
-  .page18-bg,.page19-bg,
-  .p18-mobile-dim,.p19-mobile-dim{
+  html,body,body *{
     -webkit-touch-callout:none!important;
+    -webkit-user-select:none!important;
+    user-select:none!important;
+    -webkit-tap-highlight-color:transparent!important;
+  }
+  input,textarea,[contenteditable="true"]{
+    -webkit-user-select:text!important;
+    user-select:text!important;
   }
 }
 </style>
@@ -6342,17 +6345,15 @@ const close=commit=>{clearTimeout(timer);timer=0;if(active&&commit&&moved&&sel!=
 
 document.addEventListener("contextmenu",e=>{if(mobile()){e.preventDefault();e.stopImmediatePropagation()}},{capture:true});
 document.addEventListener("auxclick",e=>{if(mobile()&&e.button===2){e.preventDefault();e.stopImmediatePropagation()}},{capture:true});
-document.addEventListener("selectstart",e=>{if(mobile()&&!e.target.closest('input,textarea,[contenteditable="true"]'))e.preventDefault()},{capture:true});
+document.addEventListener("selectstart",e=>{if(mobile()&&!e.target.closest('input,textarea,[contenteditable="true"]')){e.preventDefault();e.stopImmediatePropagation()}},{capture:true});
 document.addEventListener("dragstart",e=>{if(mobile())e.preventDefault()},{capture:true});
 
 document.addEventListener("touchstart",e=>{
   if(!mobile()||e.touches.length!==1||touchId!==null)return;
   const t=e.changedTouches[0];
-  // Eligibility is viewport-based, not text-node/foreground based.
-  // Inspect the complete hit stack at the finger coordinates and block only when
-  // an actual interactive/media control is under the touch.
-  const hitStack=document.elementsFromPoint(t.clientX,t.clientY);
-  eligible=!hitStack.some(el=>blocked(el));
+  // Whole viewport is a hold surface. Only genuine controls/media are excluded.
+  const control=e.target.closest?.('iframe,button,input,textarea,select,option,[contenteditable="true"],audio,video,.page5-player,.page8-player,.page11-player,.page13-player,.page15-player,.page18-player,.page19-player');
+  eligible=!control;
   if(!eligible)return;
   touchId=t.identifier;ax=t.clientX;ay=startY=lastY=t.clientY;
   // Do not consume the touch before the hold activates.
