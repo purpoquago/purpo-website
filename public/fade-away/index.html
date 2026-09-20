@@ -3766,6 +3766,111 @@ body.fa-m-p13s2.fa-m-reveal .page13-header{opacity:1!important}
 }
 </style>
 
+
+<style id="fa-mobile-v41-7-minor-revs">
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+  body.fa-m-p11s2 .page11-player,
+  body.fa-m-p11s2 .page11-player iframe,
+  body.fa-m-p15s2 .page15-player,
+  body.fa-m-p15s2 .page15-player iframe{
+    filter:none!important;
+    -webkit-filter:none!important;
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+  }
+
+  /* Current header is an image, so +8pt is applied as an equivalent width increase. */
+  body.fa-m-p16s3 #p16MobileReader .page16-header{
+    width:min(calc(86vw + 10.67px), 100%)!important;
+  }
+}
+</style>
+
+
+<style id="fa-mobile-v42-p18-p19">
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+  /* P18: fixed panoramic background; S1 begins already centered on hugging characters. */
+  body.fa-m-page18 .page18-layer{
+    display:block!important;position:fixed!important;inset:0!important;z-index:26!important;
+    opacity:1!important;visibility:visible!important;overflow:hidden!important;pointer-events:auto!important;
+  }
+  body.fa-m-page18 .page18-bg{
+    position:absolute!important;top:0!important;left:0!important;
+    width:190vw!important;height:100dvh!important;max-width:none!important;
+    object-fit:cover!important;object-position:center!important;
+    transform:translate3d(var(--fa-p18-x,0px),0,0)!important;
+    transition:transform 1.05s ease!important;will-change:transform!important;
+  }
+  body.fa-m-p18s1 .page18-bg{--fa-p18-x:-10vw}
+  body.fa-m-p18s2 .page18-bg{--fa-p18-x:-78vw}
+
+  .p18-mobile-dim,.p19-mobile-dim{
+    position:absolute!important;inset:0!important;z-index:2!important;
+    background:rgba(0,0,0,.30)!important;opacity:0!important;pointer-events:none!important;
+    transition:opacity .65s ease!important;
+  }
+  body.fa-m-p18s2.fa-m-reveal .p18-mobile-dim,
+  body.fa-m-p19s2.fa-m-reveal .p19-mobile-dim{opacity:1!important}
+
+  body.fa-m-page18 .page18-overlay{
+    position:absolute!important;z-index:3!important;left:5vw!important;top:50%!important;
+    width:90vw!important;height:auto!important;max-width:none!important;
+    object-fit:contain!important;transform:translateY(-50%)!important;
+    filter:none!important;opacity:0!important;transition:opacity .55s ease!important;pointer-events:none!important;
+  }
+  body.fa-m-p18s2.fa-m-reveal .page18-overlay{opacity:1!important;filter:none!important}
+  body.fa-m-page18 .page18-player{
+    position:absolute!important;z-index:30!important;left:5vw!important;right:5vw!important;
+    bottom:max(18px,env(safe-area-inset-bottom))!important;width:auto!important;height:80px!important;
+    opacity:0!important;transform:none!important;filter:none!important;-webkit-filter:none!important;
+    transition:opacity .55s ease!important;pointer-events:none!important;
+  }
+  body.fa-m-page18 .page18-player iframe{width:100%!important;height:80px!important;border:0!important;border-radius:12px!important;filter:none!important;-webkit-filter:none!important}
+  body.fa-m-p18s2.fa-m-reveal .page18-player{opacity:1!important;pointer-events:auto!important}
+
+  /* P19: fixed neon-sign background. Only foreground content scrolls in S2. */
+  body.fa-m-page19 .page19-layer{
+    display:block!important;position:fixed!important;inset:0!important;z-index:27!important;
+    opacity:1!important;visibility:visible!important;overflow:hidden!important;pointer-events:auto!important;
+  }
+  body.fa-m-page19 .page19-bg{
+    position:absolute!important;inset:0!important;width:100%!important;height:100%!important;
+    object-fit:cover!important;object-position:50% center!important;transform:none!important;
+  }
+  body.fa-m-page19 .page19-master{
+    display:none!important;
+  }
+  body.fa-m-p19s2 .page19-master{
+    display:block!important;position:fixed!important;z-index:4!important;inset:0!important;
+    width:100vw!important;height:100dvh!important;max-width:none!important;
+    margin:0!important;padding:10dvh 6vw 12dvh!important;box-sizing:border-box!important;
+    overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;
+    overscroll-behavior:contain!important;touch-action:pan-y!important;scrollbar-width:none!important;
+    opacity:0!important;transition:opacity .55s ease!important;
+  }
+  body.fa-m-p19s2 .page19-master::-webkit-scrollbar{display:none!important}
+  body.fa-m-p19s2.fa-m-reveal .page19-master{opacity:1!important}
+
+  body.fa-m-p19s2 .page19-grid{
+    display:flex!important;flex-direction:column!important;width:100%!important;height:auto!important;
+    margin:0!important;padding:0!important;gap:34px!important;transform:none!important;
+  }
+  body.fa-m-p19s2 .page19-player{
+    order:1!important;display:block!important;position:static!important;width:100%!important;height:152px!important;
+    margin:0!important;padding:0!important;opacity:1!important;transform:none!important;filter:none!important;
+    -webkit-filter:none!important;pointer-events:auto!important;
+  }
+  body.fa-m-p19s2 .page19-player iframe{display:block!important;width:100%!important;height:152px!important;border:0!important;border-radius:12px!important;filter:none!important;-webkit-filter:none!important}
+  body.fa-m-p19s2 .page19-credits{
+    order:2!important;display:block!important;position:static!important;inset:auto!important;width:100%!important;
+    height:auto!important;max-width:none!important;margin:0!important;padding:0!important;transform:none!important;
+    filter:none!important;opacity:1!important;color:#fff!important;font-size:15px!important;line-height:1.4!important;
+    columns:auto!important;column-count:1!important;column-width:auto!important;
+  }
+  body.fa-m-p19s2 .page19-credits p{margin:0 0 22px!important}
+}
+</style>
+
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
@@ -4189,6 +4294,7 @@ body.fa-m-p13s2.fa-m-reveal .page13-header{opacity:1!important}
     </section>
     <section class="page18-layer" id="page18" aria-label="Epilogue song page">
       <img class="page18-bg" src="assets/page18-bg.webp" alt="">
+      <div class="p18-mobile-dim" aria-hidden="true"></div>
       <img class="page18-overlay" id="page18Overlay" src="assets/page18-overlay.png" alt="Epilogue lyrics">
       <div class="page18-player" id="page18Player"></div>
     </section>
@@ -4196,6 +4302,7 @@ body.fa-m-p13s2.fa-m-reveal .page13-header{opacity:1!important}
 
     <section class="page19-layer" id="page19" aria-label="Credits">
       <img class="page19-bg" src="assets/page19-bg.jpg" alt="">
+      <div class="p19-mobile-dim" aria-hidden="true"></div>
       <div class="editorial-master page19-master" id="page19Master">
         <div class="page19-grid">
         <div class="page19-credits" id="page19Credits">
@@ -5938,6 +6045,28 @@ updateSideRailState();
 })();
 </script>
 
+
+<script id="fa-mobile-v41-7-spotify-unblur">
+(()=>{
+  const clearSpotifyBlur=()=>{
+    if(document.body.classList.contains('fa-m-p11s2')){
+      document.querySelectorAll('.page11-player,.page11-player iframe').forEach(el=>{
+        el.style.setProperty('filter','none','important');
+        el.style.setProperty('-webkit-filter','none','important');
+      });
+    }
+    if(document.body.classList.contains('fa-m-p15s2')){
+      document.querySelectorAll('.page15-player,.page15-player iframe').forEach(el=>{
+        el.style.setProperty('filter','none','important');
+        el.style.setProperty('-webkit-filter','none','important');
+      });
+    }
+  };
+  new MutationObserver(clearSpotifyBlur).observe(document.body,{attributes:true,attributeFilter:['class']});
+  clearSpotifyBlur();
+})();
+</script>
+
 </body>
 </html>
 
@@ -6041,7 +6170,7 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
 (()=>{
  if(!matchMedia('(max-width:800px)').matches)return;
  const b=document.body,p2=document.querySelector('.page2-panel'),p3=document.querySelector('.page3-article'),p4=document.querySelector('.page4-mobile-article');
- const states=['p1s1','p1s2','p2s1','p2s2','p3s1','p3s2','p4s1','p5s1','p5s2','p6s1','p6s2','p6s3','p7s1','p8s1','p8s2','p9s1','p9s2','p10s1','p11s1','p11s2','p12s1','p12s2','p13s1','p13s2','p14s1','p14s2','p14s3','p15s1','p15s2','p16s1','p16s2','p16s3'];
+ const states=['p1s1','p1s2','p2s1','p2s2','p3s1','p3s2','p4s1','p5s1','p5s2','p6s1','p6s2','p6s3','p7s1','p8s1','p8s2','p9s1','p9s2','p10s1','p11s1','p11s2','p12s1','p12s2','p13s1','p13s2','p14s1','p14s2','p14s3','p15s1','p15s2','p16s1','p16s2','p16s3','p18s1','p18s2','p19s1','p19s2'];
  let i=0,sy=0,sx=0,lock=false,t=0;
  const p5bg=document.querySelector('.page5-bg');
 const p12bg=document.querySelector('.page12-bg');let p12raf=0,p12start=0;
@@ -6070,7 +6199,7 @@ const p12bg=document.querySelector('.page12-bg');let p12raf=0,p12start=0;
  };
  const ensureP5Pan=()=>{if(!p5raf){p5start=0;p5raf=requestAnimationFrame(p5pan)}};
  const clear=()=>[...b.classList].forEach(c=>{
-   if((c.startsWith('fa-m-p')&&c!=='fa-m-page-transition')||/^fa-m-page(?:[2-9]|1[0-6])$/.test(c)||c==='fa-m-reveal')b.classList.remove(c)
+   if((c.startsWith('fa-m-p')&&c!=='fa-m-page-transition')||/^fa-m-page(?:[2-9]|1[0-9])$/.test(c)||c==='fa-m-reveal')b.classList.remove(c)
  });
  const clearHolds=()=>[...b.classList].forEach(c=>{if(c.startsWith('fa-m-hold-'))b.classList.remove(c)});
  let faMPrevState=null;
@@ -6079,6 +6208,20 @@ const p12bg=document.querySelector('.page12-bg');let p12raf=0,p12start=0;
    const faMWasState=faMPrevState;
    faMPrevState=faMCurrentState;
 clearTimeout(t);clear();const n=states[i];
+ const p18bg=document.querySelector('.page18-bg');
+ if(p18bg){
+   if(n==='p18s1'){p18bg.style.setProperty('transition','none','important');p18bg.style.setProperty('--fa-p18-x','-10vw');}
+   if(n==='p18s2'){
+     p18bg.style.setProperty('transition','transform 1.05s ease','important');
+     requestAnimationFrame(()=>requestAnimationFrame(()=>p18bg.style.setProperty('--fa-p18-x','-78vw')));
+   }
+ }
+ const p19bg=document.querySelector('.page19-bg');
+ if(p19bg && (n==='p19s1'||n==='p19s2')){
+   p19bg.style.setProperty('transition','none','important');
+   p19bg.style.setProperty('object-position','50% center','important');
+ }
+
  const p13bg=document.querySelector('.page13-bg');
  if(n==='p13s1'&&p13bg){
    if(faMWasState==='p13s2'){
@@ -6092,18 +6235,18 @@ clearTimeout(t);clear();const n=states[i];
  }
  if(n==='p13s2'&&p13bg){p13bg.style.setProperty('transition','object-position 1.05s ease','important');p13bg.style.setProperty('object-position','82% center','important');}
 
- if(typeof requestSpotifyTrack==='function') requestSpotifyTrack(n==='p5s2'?'page5':n==='p8s2'?'page8':n==='p11s2'?'page11':n==='p13s2'?'page13':n==='p15s2'?'page15':null);
+ if(typeof requestSpotifyTrack==='function') requestSpotifyTrack(n==='p5s2'?'page5':n==='p8s2'?'page8':n==='p11s2'?'page11':n==='p13s2'?'page13':n==='p15s2'?'page15':n==='p18s2'?'page18':n==='p19s2'?'page19':null);
  if(n==='p5s1'||n==='p5s2') ensureP5Pan();if(n==='p12s1'||n==='p12s2')ensureP12Pan();if(/^p14s[123]$/.test(n))ensureP14Pan();if(n==='p15s1'||n==='p15s2')ensureP15Pan();
 if(n==='p9s1')requestAnimationFrame(()=>startP9MobileZoom());else{stopP9MobileZoom();b.classList.remove('fa-p9-bg-phase')}b.classList.add('fa-m-'+n);const pm=n.match(/^p(\d+)s/),pg=pm?+pm[1]:0;if(pg>=2)b.classList.add('fa-m-page'+pg);
 if(n==='p11s2')b.classList.add('fa-m-page11');
 if(n==='p12s1'||n==='p12s2')b.classList.add('fa-m-page12');
-if(n==='p13s1'||n==='p13s2')b.classList.add('fa-m-page13');if(p2&&n!=='p2s2')p2.scrollTop=0;if(p3&&n!=='p3s1')p3.scrollTop=0;if(p4&&n!=='p4s1')p4.scrollTop=0;const p10scroll=document.querySelector('.page10-layer');if(p10scroll&&n!=='p10s1')p10scroll.scrollTop=0;const p16scroll=document.querySelector('#p16MobileReader');if(p16scroll&&n!=='p16s3')p16scroll.scrollTop=0;syncP8Media();
+if(n==='p13s1'||n==='p13s2')b.classList.add('fa-m-page13');if(p2&&n!=='p2s2')p2.scrollTop=0;if(p3&&n!=='p3s1')p3.scrollTop=0;if(p4&&n!=='p4s1')p4.scrollTop=0;const p10scroll=document.querySelector('.page10-layer');if(p10scroll&&n!=='p10s1')p10scroll.scrollTop=0;const p16scroll=document.querySelector('#p16MobileReader');if(p16scroll&&n!=='p16s3')p16scroll.scrollTop=0;const p19scroll=document.querySelector('.page19-master');if(p19scroll&&n!=='p19s2')p19scroll.scrollTop=0;syncP8Media();
    if(faMCurrentState==='p8s1' && faMWasState==='p8s2'){
      requestAnimationFrame(()=>enterP8Reverse());
    }else if(faMCurrentState==='p8s1' && faMWasState!=='p8s1'){
      requestAnimationFrame(()=>enterP8Forward());
    }
-if(n==='p1s2'||n==='p2s2'||n==='p3s1'||n==='p3s2'||n==='p4s1'||n==='p5s2'||n==='p6s2'||n==='p6s3'||n==='p7s1'||n==='p8s2'||n==='p9s2'||n==='p11s2'||n==='p12s2'||n==='p13s2'||n==='p14s2'||n==='p14s3'||n==='p15s2'||n==='p16s2'||n==='p16s3')t=setTimeout(()=>b.classList.add('fa-m-reveal'),n==='p3s2'?450:700)};
+if(n==='p1s2'||n==='p2s2'||n==='p3s1'||n==='p3s2'||n==='p4s1'||n==='p5s2'||n==='p6s2'||n==='p6s3'||n==='p7s1'||n==='p8s2'||n==='p9s2'||n==='p11s2'||n==='p12s2'||n==='p13s2'||n==='p14s2'||n==='p14s3'||n==='p15s2'||n==='p16s2'||n==='p16s3'||n==='p18s2'||n==='p19s2')t=setTimeout(()=>b.classList.add('fa-m-reveal'),n==='p3s2'?450:700)};
  
  let p8MobileRackRaf=0,p8MobileRackStart=0,p8MobileRackDir=1;
  const stopP8MobileRack=()=>{
@@ -6191,11 +6334,12 @@ if(n==='p1s2'||n==='p2s2'||n==='p3s1'||n==='p3s2'||n==='p4s1'||n==='p5s2'||n==='
  states[i]==='p9s2'?document.querySelector('.page9-editorial'):
  states[i]==='p10s1'?document.querySelector('.page10-layer'):
  states[i]==='p12s2'?document.querySelector('.p12-article'):
- states[i]==='p16s3'?document.querySelector('#p16MobileReader'):null;
+ states[i]==='p16s3'?document.querySelector('#p16MobileReader'):
+ states[i]==='p19s2'?document.querySelector('.page19-master'):null;
  const black=document.getElementById('faMobileBlack');
  const white=document.getElementById('faMobileWhite');
  const pageOf=n=>n.slice(0,2);
- const curtainFor=(a,bx)=>{const A0=states[a],B0=states[bx],later=new Set(['p8s2|p9s1','p9s2|p10s1','p10s1|p11s1','p11s2|p12s1','p12s2|p13s1','p13s2|p14s1','p14s3|p15s1','p15s2|p16s1']);
+ const curtainFor=(a,bx)=>{const A0=states[a],B0=states[bx],later=new Set(['p8s2|p9s1','p9s2|p10s1','p10s1|p11s1','p11s2|p12s1','p12s2|p13s1','p13s2|p14s1','p14s3|p15s1','p15s2|p16s1','p16s3|p18s1','p18s2|p19s1']);
    if(later.has(A0+'|'+B0)||later.has(B0+'|'+A0))return black;
    
    const A=pageOf(states[a]),B=pageOf(states[bx]);
