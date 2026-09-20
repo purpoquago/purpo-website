@@ -6294,7 +6294,7 @@ const p12bg=document.querySelector('.page12-bg');let p12raf=0,p12start=0;
 clearTimeout(t);clear();const n=states[i];
  const p18bg=document.querySelector('.page18-bg');
  if(p18bg){
-   const prevState=states[prev];
+   const prevState=faMWasState;
    if(n==='p18s1'){
      /* New-page arrival from P16/P17: start already on the hug. Back from S2: animate to the hug. */
      if(prevState==='p18s2'){
@@ -6317,7 +6317,7 @@ clearTimeout(t);clear();const n=states[i];
  }
  const p16bg=document.querySelector('.page16-bg');
  if(p16bg){
-   const prevState=states[prev];
+   const prevState=faMWasState;
    if(n==='p16s2' && prevState==='p16s3'){
      p16bg.style.setProperty('transition','object-position 1.05s ease','important');
      requestAnimationFrame(()=>requestAnimationFrame(()=>p16bg.style.setProperty('object-position','12% center','important')));
