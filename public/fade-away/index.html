@@ -4114,18 +4114,15 @@ body.fa-holdnav-active{-webkit-user-select:none!important;user-select:none!impor
 </style>
 
 
-<style id="fa-mobile-v43-9-native-hold-lock">
+<style id="fa-mobile-v43-12-nav-visuals">
 @media (max-width:800px), (hover:none) and (pointer:coarse){
-  html,body,body *{
-    -webkit-touch-callout:none!important;
-    -webkit-user-select:none!important;
-    user-select:none!important;
-    -webkit-tap-highlight-color:transparent!important;
-  }
-  input,textarea,[contenteditable="true"]{
-    -webkit-user-select:text!important;
-    user-select:text!important;
-  }
+  html,body,body *{-webkit-touch-callout:none!important;-webkit-tap-highlight-color:transparent!important}
+  body:not(.fa-holdnav-active) *{-webkit-user-select:none!important;user-select:none!important}
+  input,textarea,[contenteditable="true"]{-webkit-user-select:text!important;user-select:text!important}
+  .fa-holdnav-veil{position:fixed!important;inset:0!important;z-index:2147482990!important;background:rgba(0,0,0,.40)!important;display:none!important;pointer-events:none!important}
+  .fa-holdnav-veil.is-active{display:block!important}
+  .fa-holdnav::before,.fa-holdnav::after{display:none!important;content:none!important}
+  .fa-holdnav-item{height:32px!important;padding-top:0!important;padding-bottom:0!important}
 }
 </style>
 
@@ -6323,128 +6320,53 @@ updateSideRailState();
 </script>
 
 
-
-<script id="fa-v43-11-global-hold-latch">
-(()=>{
-  const M=()=>matchMedia("(max-width:800px), (hover:none) and (pointer:coarse)").matches;
-  window.faGlobalHold={down:false,id:null,x:0,y:0,moved:false,target:null};
-  document.addEventListener("touchstart",e=>{
-    if(!M()||e.touches.length!==1)return;
-    const t=e.changedTouches[0],g=window.faGlobalHold;
-    g.down=true;g.id=t.identifier;g.x=t.clientX;g.y=t.clientY;g.moved=false;g.target=e.target;
-  },{capture:true,passive:true});
-  document.addEventListener("touchmove",e=>{
-    const g=window.faGlobalHold;if(!g.down)return;
-    const t=[...e.changedTouches].find(x=>x.identifier===g.id);if(!t)return;
-    if(Math.hypot(t.clientX-g.x,t.clientY-g.y)>32)g.moved=true;
-  },{capture:true,passive:true});
-  document.addEventListener("touchend",e=>{
-    const g=window.faGlobalHold;
-    if(g.down&&[...e.changedTouches].some(x=>x.identifier===g.id)){g.down=false;g.id=null}
-  },{capture:true,passive:true});
-  document.addEventListener("touchcancel",e=>{
-    // Do not treat page-generated touchcancel as finger-up. A real touchend or a new
-    // touchstart will resolve the latch. This is the key test for state-specific surfaces.
-  },{capture:true,passive:true});
-})();
-</script>
-
-<script id="fa-mobile-v43-2-hold-nav-script">
+<script id="fa-mobile-v43-12-hold-nav-script">
 (()=>{
 const mobile=()=>matchMedia("(max-width:800px), (hover:none) and (pointer:coarse)").matches;
 const rail=document.getElementById("sideRail"); if(!rail)return;
 const map={"#page2":"p2s1","#page3":"p3s2","#page5":"p5s1","#page6":"p6s1","#page8":"p8s1","#page9":"p9s1","#page11":"p11s1","#page12":"p12s1","#page13":"p13s1","#page14":"p14s1","#page15":"p15s1","#page16":"p16s1","#page18":"p18s1","#page19":"p19s1"};
 const src=[...rail.querySelectorAll("a")].map(a=>({label:(a.querySelector(".rail-label")?.textContent||"").trim(),state:map[a.getAttribute("href")],song:a.classList.contains("rail-song")})).filter(x=>x.state);
 
-let veil=document.querySelector(".fa-holdnav-veil");if(!veil){veil=document.createElement("div");veil.className="fa-holdnav-veil";document.body.appendChild(veil)}
+let veil=document.querySelector(".fa-holdnav-veil");
+if(!veil){veil=document.createElement("div");veil.className="fa-holdnav-veil";document.body.appendChild(veil)}
 const nav=document.querySelector(".fa-holdnav")||document.body.appendChild(Object.assign(document.createElement("div"),{className:"fa-holdnav"}));
 nav.innerHTML='<div class="fa-holdnav-list">'+src.map((x,i)=>'<div class="fa-holdnav-item '+(x.song?'is-song':'is-article')+'" data-index="'+i+'"><span class="fa-holdnav-mark"></span><span class="fa-holdnav-label">'+x.label+'</span></div>').join("")+"</div>";
-let dot=document.querySelector(".fa-holdnav-anchor-dot"); if(!dot){dot=document.createElement("div");dot.className="fa-holdnav-anchor-dot";document.body.appendChild(dot)}
-const list=nav.firstElementChild,items=[...list.children],ROW=48,SCRUB=24,HOLD=430,DEAD=32;
-let timer=0,touchId=null,ax=0,ay=0,startY=0,lastY=0,active=false,sel=0,start=0,moved=false,eligible=false;
+let dot=document.querySelector(".fa-holdnav-anchor-dot");if(!dot){dot=document.createElement("div");dot.className="fa-holdnav-anchor-dot";document.body.appendChild(dot)}
+const list=nav.firstElementChild,items=[...list.children];
+const VISUAL=32,SCRUB=24,HOLD=430,DEAD=32;
+let pid=null,timer=0,ax=0,ay=0,startY=0,active=false,start=0,sel=0,moved=false;
 
-const blocked=el=>!!el.closest('iframe,button,input,textarea,select,option,[contenteditable="true"],audio,video,.page5-player,.page8-player,.page11-player,.page13-player,.page15-player,.page18-player,.page19-player');
+const blocked=el=>!!el?.closest?.('iframe,button,input,textarea,select,option,[contenteditable="true"],audio,video,.page5-player,.page8-player,.page11-player,.page13-player,.page15-player,.page18-player,.page19-player');
 const idxFor=s=>{const p=String(s||"").match(/^p(\d+)/);if(!p)return 0;let bi=0,bd=999;src.forEach((x,n)=>{const q=x.state.match(/^p(\d+)/),d=Math.abs(+q[1]-+p[1]);if(d<bd){bd=d;bi=n}});return bi};
-const VISUAL=32;const render=()=>{sel=Math.max(0,Math.min(src.length-1,sel));items.forEach((e,n)=>e.classList.toggle("is-selected",n===sel));list.style.transform='translate3d(0,'+(ay-(sel*VISUAL+VISUAL/2))+'px,0)'};
-const open=()=>{if(!eligible)return;clearTimeout(wdTimer);wdTimer=0;active=true;moved=false;start=idxFor(window.faMGetState?.());sel=start;document.body.classList.add("fa-holdnav-active");veil.classList.add("is-active");nav.classList.add("is-active");nav.style.setProperty("--anchor-y",ay+"px");const w=Math.min(innerWidth*.58,238),left=ax>innerWidth/2?Math.max(8,ax-w-24):Math.min(innerWidth-w-8,ax+24);nav.style.left=left+"px";dot.style.left=ax+"px";dot.style.top=ay+"px";dot.classList.add("is-active");render();navigator.vibrate?.(8)};
-const close=commit=>{clearTimeout(timer);timer=0;if(active&&commit&&moved&&sel!==start){window.faHoldNavSuppressUntil=performance.now()+900;window.faMGoState?.(src[sel].state)}else if(active)window.faHoldNavSuppressUntil=performance.now()+500;active=false;eligible=false;touchId=null;document.body.classList.remove("fa-holdnav-active");veil.classList.remove("is-active");nav.classList.remove("is-active");dot.classList.remove("is-active")};
+const render=()=>{sel=Math.max(0,Math.min(src.length-1,sel));items.forEach((e,n)=>e.classList.toggle("is-selected",n===sel));list.style.transform='translate3d(0,'+(ay-(sel*VISUAL+VISUAL/2))+'px,0)'};
+const open=()=>{if(pid===null)return;active=true;moved=false;start=idxFor(window.faMGetState?.());sel=start;document.body.classList.add("fa-holdnav-active");veil.classList.add("is-active");nav.classList.add("is-active");const w=Math.min(innerWidth*.58,238),left=ax>innerWidth/2?Math.max(8,ax-w-24):Math.min(innerWidth-w-8,ax+24);nav.style.left=left+"px";dot.style.left=ax+"px";dot.style.top=ay+"px";dot.classList.add("is-active");render();navigator.vibrate?.(8)};
+const close=commit=>{clearTimeout(timer);timer=0;if(active&&commit&&moved&&sel!==start){window.faHoldNavSuppressUntil=performance.now()+900;window.faMGoState?.(src[sel].state)}else if(active)window.faHoldNavSuppressUntil=performance.now()+500;active=false;pid=null;document.body.classList.remove("fa-holdnav-active");veil.classList.remove("is-active");nav.classList.remove("is-active");dot.classList.remove("is-active")};
 
 document.addEventListener("contextmenu",e=>{if(mobile()){e.preventDefault();e.stopImmediatePropagation()}},{capture:true});
-document.addEventListener("auxclick",e=>{if(mobile()&&e.button===2){e.preventDefault();e.stopImmediatePropagation()}},{capture:true});
-document.addEventListener("selectstart",e=>{if(mobile()&&!e.target.closest('input,textarea,[contenteditable="true"]')){e.preventDefault();e.stopImmediatePropagation()}},{capture:true});
+document.addEventListener("selectstart",e=>{if(mobile()&&!e.target.closest?.('input,textarea,[contenteditable="true"]'))e.preventDefault()},{capture:true});
 document.addEventListener("dragstart",e=>{if(mobile())e.preventDefault()},{capture:true});
 
-document.addEventListener("touchstart",e=>{
-  if(!mobile()||e.touches.length!==1||touchId!==null)return;
-  const t=e.changedTouches[0];
-  // Whole viewport is a hold surface. Only genuine controls/media are excluded.
-  const control=e.target.closest?.('iframe,button,input,textarea,select,option,[contenteditable="true"],audio,video,.page5-player,.page8-player,.page11-player,.page13-player,.page15-player,.page18-player,.page19-player');
-  eligible=!control;
-  if(!eligible)return;
-  touchId=t.identifier;ax=t.clientX;ay=startY=lastY=t.clientY;
-  // Do not consume the touch before the hold activates.
-  // The site's original swipe/inner-scroll system remains authoritative.
-  timer=setTimeout(open,HOLD);
-},{passive:false,capture:true});
+document.addEventListener("pointerdown",e=>{
+  if(!mobile()||pid!==null||e.pointerType==="mouse"||blocked(e.target))return;
+  pid=e.pointerId;ax=e.clientX;ay=startY=e.clientY;
+  clearTimeout(timer);timer=setTimeout(open,HOLD);
+},{capture:true,passive:true});
 
-document.addEventListener("touchmove",e=>{
-  if(touchId===null||!eligible)return;
-  const t=[...e.changedTouches].find(x=>x.identifier===touchId);if(!t)return;
-  e.preventDefault();lastY=t.clientY;
+document.addEventListener("pointermove",e=>{
+  if(e.pointerId!==pid)return;
   if(!active){
-    // Ordinary movement belongs entirely to the existing page/article scrolling.
-    // We only cancel the pending hold; we never navigate from this controller.
-    if(Math.hypot(t.clientX-ax,t.clientY-ay)>DEAD){
-      clearTimeout(timer);timer=0;eligible=false;touchId=null;
-    }
+    if(Math.hypot(e.clientX-ax,e.clientY-ay)>DEAD){clearTimeout(timer);timer=0;pid=null}
     return;
   }
-  // Once open, movement NEVER cancels the controller: it only scrubs the rail.
-  const next=Math.max(0,Math.min(src.length-1,start-Math.round((t.clientY-startY)/SCRUB)));
+  // Only after activation do we consume movement for the hold-nav scrub.
+  e.preventDefault();
+  const next=Math.max(0,Math.min(src.length-1,start-Math.round((e.clientY-startY)/SCRUB)));
   if(next!==sel){sel=next;moved=true;render();navigator.vibrate?.(4)}
-},{passive:false,capture:true});
+},{capture:true,passive:false});
 
-document.addEventListener("touchend",e=>{if(touchId===null)return;const t=[...e.changedTouches].find(x=>x.identifier===touchId);if(t)close(true)},{passive:false,capture:true});
-document.addEventListener("touchcancel",e=>{
-  const g=window.faGlobalHold;
-  if(touchId!==null && (!g||!g.down)) close(false);
-},{passive:false,capture:true});
-
-// V43.11 global-latch watchdog: independent of page-specific touchcancel/retargeting.
-let wdTimer=0,wdId=null,wdX=0,wdY=0;
-document.addEventListener("touchstart",e=>{
-  if(!mobile()||e.touches.length!==1||active)return;
-  const t=e.changedTouches[0];
-  if(t.target.closest?.('iframe,button,input,textarea,select,option,[contenteditable="true"],audio,video,.page5-player,.page8-player,.page11-player,.page13-player,.page15-player,.page18-player,.page19-player'))return;
-  wdId=t.identifier;wdX=t.clientX;wdY=t.clientY;
-  clearTimeout(wdTimer);
-  wdTimer=setTimeout(()=>{
-    const g=window.faGlobalHold;
-    if(active||!g||!g.down||g.id!==wdId||g.moved)return;
-    touchId=wdId;ax=wdX;ay=startY=lastY=wdY;eligible=true;
-    open();
-  },HOLD);
-},{passive:true,capture:true});
-document.addEventListener("touchmove",e=>{
-  if(wdId===null||active)return;
-  const g=window.faGlobalHold;
-  if(g?.moved){clearTimeout(wdTimer);wdTimer=0;wdId=null}
-},{passive:true,capture:true});
-document.addEventListener("touchend",e=>{
-  if(wdId!==null&&[...e.changedTouches].some(x=>x.identifier===wdId)){clearTimeout(wdTimer);wdTimer=0;wdId=null}
-},{passive:true,capture:true});
-// Deliberately do not cancel the watchdog on touchcancel: several visual states
-// generate cancellation from their own gesture/canvas layers while the finger is still down.
-
-document.addEventListener("touchend",e=>{
-  if(!active)return;
-  const g=window.faGlobalHold;
-  if(!g||!g.down){
-    close(true);
-  }
-},{passive:true,capture:false});
+document.addEventListener("pointerup",e=>{if(e.pointerId===pid)close(true)},{capture:true,passive:true});
+document.addEventListener("pointercancel",e=>{if(e.pointerId===pid){if(active)close(false);else{clearTimeout(timer);timer=0;pid=null}}},{capture:true,passive:true});
 })();
-
 </script>
 </body>
 </html>
