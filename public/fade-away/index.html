@@ -4167,6 +4167,32 @@ body.fa-holdnav-active{-webkit-user-select:none!important;user-select:none!impor
 }
 </style>
 
+
+<style id="fa-mobile-v43-14-active-scrub-video-fix">
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+  /* Only while the custom menu is OPEN do we take over finger movement. */
+  html:has(body.fa-holdnav-active),
+  body.fa-holdnav-active{
+    touch-action:none!important;
+    overscroll-behavior:none!important;
+  }
+
+  /* Video/canvas/media visuals never own the gesture; their page layer does. */
+  body.fa-m-page8 video,
+  body.fa-m-page8 canvas,
+  body.fa-m-page9 video,
+  body.fa-m-page9 canvas,
+  body.fa-m-p11s1 video, body.fa-m-p11s2 video,
+  body.fa-m-p13s1 video, body.fa-m-p13s2 video,
+  body.fa-m-p14s1 video, body.fa-m-p14s2 video, body.fa-m-p14s3 video,
+  body.fa-m-p15s1 video, body.fa-m-p15s2 video,
+  body.fa-m-p16s1 video, body.fa-m-p16s2 video{
+    pointer-events:none!important;
+    -webkit-touch-callout:none!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
@@ -6380,8 +6406,10 @@ let pid=null,timer=0,ax=0,ay=0,startY=0,active=false,start=0,sel=0,moved=false;
 const blocked=el=>!!el?.closest?.('iframe,button,input,textarea,select,option,[contenteditable="true"],audio,video,.page5-player,.page8-player,.page11-player,.page13-player,.page15-player,.page18-player,.page19-player');
 const idxFor=s=>{const p=String(s||"").match(/^p(\d+)/);if(!p)return 0;let bi=0,bd=999;src.forEach((x,n)=>{const q=x.state.match(/^p(\d+)/),d=Math.abs(+q[1]-+p[1]);if(d<bd){bd=d;bi=n}});return bi};
 const render=()=>{sel=Math.max(0,Math.min(src.length-1,sel));items.forEach((e,n)=>e.classList.toggle("is-selected",n===sel));list.style.transform='translate3d(0,'+(ay-(sel*VISUAL+VISUAL/2))+'px,0)'};
-const open=()=>{if(pid===null)return;active=true;moved=false;start=idxFor(window.faMGetState?.());sel=start;document.body.classList.add("fa-holdnav-active");veil.classList.add("is-active");nav.classList.add("is-active");const w=Math.min(innerWidth*.58,238),left=ax>innerWidth/2?Math.max(8,ax-w-24):Math.min(innerWidth-w-8,ax+24);nav.style.left=left+"px";dot.style.left=ax+"px";dot.style.top=ay+"px";dot.classList.add("is-active");render();navigator.vibrate?.(8)};
-const close=commit=>{clearTimeout(timer);timer=0;if(active&&commit&&moved&&sel!==start){window.faHoldNavSuppressUntil=performance.now()+900;window.faMGoState?.(src[sel].state)}else if(active)window.faHoldNavSuppressUntil=performance.now()+500;active=false;pid=null;document.body.classList.remove("fa-holdnav-active");veil.classList.remove("is-active");nav.classList.remove("is-active");dot.classList.remove("is-active")};
+const open=()=>{if(pid===null)return;active=true;moved=false;try{document.documentElement.setPointerCapture?.(pid)}catch(_){}
+start=idxFor(window.faMGetState?.());sel=start;document.body.classList.add("fa-holdnav-active");veil.classList.add("is-active");nav.classList.add("is-active");const w=Math.min(innerWidth*.58,238),left=ax>innerWidth/2?Math.max(8,ax-w-24):Math.min(innerWidth-w-8,ax+24);nav.style.left=left+"px";dot.style.left=ax+"px";dot.style.top=ay+"px";dot.classList.add("is-active");render();navigator.vibrate?.(8)};
+const close=commit=>{clearTimeout(timer);timer=0;try{if(pid!==null&&document.documentElement.hasPointerCapture?.(pid))document.documentElement.releasePointerCapture(pid)}catch(_){}
+if(active&&commit&&moved&&sel!==start){window.faHoldNavSuppressUntil=performance.now()+900;window.faMGoState?.(src[sel].state)}else if(active)window.faHoldNavSuppressUntil=performance.now()+500;active=false;pid=null;document.body.classList.remove("fa-holdnav-active");veil.classList.remove("is-active");nav.classList.remove("is-active");dot.classList.remove("is-active")};
 
 document.addEventListener("contextmenu",e=>{if(mobile()){e.preventDefault();e.stopImmediatePropagation()}},{capture:true});
 document.addEventListener("selectstart",e=>{if(mobile()&&!e.target.closest?.('input,textarea,[contenteditable="true"]'))e.preventDefault()},{capture:true});
@@ -6406,7 +6434,8 @@ document.addEventListener("pointermove",e=>{
 },{capture:true,passive:false});
 
 document.addEventListener("pointerup",e=>{if(e.pointerId===pid)close(true)},{capture:true,passive:true});
-document.addEventListener("pointercancel",e=>{if(e.pointerId===pid){if(active)close(false);else{clearTimeout(timer);timer=0;pid=null}}},{capture:true,passive:true});
+document.addEventListener("pointercancel",e=>{if(e.pointerId===pid&&!active){clearTimeout(timer);timer=0;pid=null}},{capture:true,passive:true});
+document.addEventListener("touchend",()=>{if(active)close(true)},{capture:true,passive:true});
 })();
 </script>
 </body>
