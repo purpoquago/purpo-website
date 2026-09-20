@@ -6334,13 +6334,13 @@ let veil=document.querySelector(".fa-holdnav-veil");if(!veil){veil=document.crea
 const nav=document.querySelector(".fa-holdnav")||document.body.appendChild(Object.assign(document.createElement("div"),{className:"fa-holdnav"}));
 nav.innerHTML='<div class="fa-holdnav-list">'+src.map((x,i)=>'<div class="fa-holdnav-item '+(x.song?'is-song':'is-article')+'" data-index="'+i+'"><span class="fa-holdnav-mark"></span><span class="fa-holdnav-label">'+x.label+'</span></div>').join("")+"</div>";
 let dot=document.querySelector(".fa-holdnav-anchor-dot"); if(!dot){dot=document.createElement("div");dot.className="fa-holdnav-anchor-dot";document.body.appendChild(dot)}
-const list=nav.firstElementChild,items=[...list.children],ROW=48,SCRUB=24,HOLD=430,DEAD=16;
+const list=nav.firstElementChild,items=[...list.children],ROW=48,SCRUB=24,HOLD=430,DEAD=32;
 let timer=0,touchId=null,ax=0,ay=0,startY=0,lastY=0,active=false,sel=0,start=0,moved=false,eligible=false;
 
 const blocked=el=>!!el.closest('iframe,button,input,textarea,select,option,[contenteditable="true"],audio,video,.page5-player,.page8-player,.page11-player,.page13-player,.page15-player,.page18-player,.page19-player');
 const idxFor=s=>{const p=String(s||"").match(/^p(\d+)/);if(!p)return 0;let bi=0,bd=999;src.forEach((x,n)=>{const q=x.state.match(/^p(\d+)/),d=Math.abs(+q[1]-+p[1]);if(d<bd){bd=d;bi=n}});return bi};
 const VISUAL=32;const render=()=>{sel=Math.max(0,Math.min(src.length-1,sel));items.forEach((e,n)=>e.classList.toggle("is-selected",n===sel));list.style.transform='translate3d(0,'+(ay-(sel*VISUAL+VISUAL/2))+'px,0)'};
-const open=()=>{if(!eligible)return;active=true;moved=false;start=idxFor(window.faMGetState?.());sel=start;document.body.classList.add("fa-holdnav-active");veil.classList.add("is-active");nav.classList.add("is-active");nav.style.setProperty("--anchor-y",ay+"px");const w=Math.min(innerWidth*.58,238),left=ax>innerWidth/2?Math.max(8,ax-w-24):Math.min(innerWidth-w-8,ax+24);nav.style.left=left+"px";dot.style.left=ax+"px";dot.style.top=ay+"px";dot.classList.add("is-active");render();navigator.vibrate?.(8)};
+const open=()=>{if(!eligible)return;clearTimeout(wdTimer);wdTimer=0;active=true;moved=false;start=idxFor(window.faMGetState?.());sel=start;document.body.classList.add("fa-holdnav-active");veil.classList.add("is-active");nav.classList.add("is-active");nav.style.setProperty("--anchor-y",ay+"px");const w=Math.min(innerWidth*.58,238),left=ax>innerWidth/2?Math.max(8,ax-w-24):Math.min(innerWidth-w-8,ax+24);nav.style.left=left+"px";dot.style.left=ax+"px";dot.style.top=ay+"px";dot.classList.add("is-active");render();navigator.vibrate?.(8)};
 const close=commit=>{clearTimeout(timer);timer=0;if(active&&commit&&moved&&sel!==start){window.faHoldNavSuppressUntil=performance.now()+900;window.faMGoState?.(src[sel].state)}else if(active)window.faHoldNavSuppressUntil=performance.now()+500;active=false;eligible=false;touchId=null;document.body.classList.remove("fa-holdnav-active");veil.classList.remove("is-active");nav.classList.remove("is-active");dot.classList.remove("is-active")};
 
 document.addEventListener("contextmenu",e=>{if(mobile()){e.preventDefault();e.stopImmediatePropagation()}},{capture:true});
@@ -6380,7 +6380,34 @@ document.addEventListener("touchmove",e=>{
 
 document.addEventListener("touchend",e=>{if(touchId===null)return;const t=[...e.changedTouches].find(x=>x.identifier===touchId);if(t)close(true)},{passive:false,capture:true});
 document.addEventListener("touchcancel",e=>{if(touchId!==null)close(false)},{passive:false,capture:true});
+
+// V43.10 hold watchdog: page-state-independent activation.
+// Does not preventDefault, navigate, or alter ordinary scrolling.
+let wdTimer=0,wdId=null,wdX=0,wdY=0;
+document.addEventListener("touchstart",e=>{
+  if(!mobile()||e.touches.length!==1||active)return;
+  const t=e.changedTouches[0];
+  if(t.target.closest?.('iframe,button,input,textarea,select,option,[contenteditable="true"],audio,video,.page5-player,.page8-player,.page11-player,.page13-player,.page15-player,.page18-player,.page19-player'))return;
+  wdId=t.identifier;wdX=t.clientX;wdY=t.clientY;
+  clearTimeout(wdTimer);
+  wdTimer=setTimeout(()=>{
+    if(active||wdId===null)return;
+    // Re-seed the existing controller candidate if a page-specific handler lost it.
+    touchId=wdId;ax=wdX;ay=startY=lastY=wdY;eligible=true;
+    open();
+  },HOLD);
+},{passive:true,capture:true});
+document.addEventListener("touchmove",e=>{
+  if(wdId===null||active)return;
+  const t=[...e.changedTouches].find(x=>x.identifier===wdId);if(!t)return;
+  if(Math.hypot(t.clientX-wdX,t.clientY-wdY)>DEAD){clearTimeout(wdTimer);wdTimer=0;wdId=null}
+},{passive:true,capture:true});
+document.addEventListener("touchend",e=>{
+  if(wdId!==null&&[...e.changedTouches].some(x=>x.identifier===wdId)){clearTimeout(wdTimer);wdTimer=0;wdId=null}
+},{passive:true,capture:true});
+document.addEventListener("touchcancel",()=>{clearTimeout(wdTimer);wdTimer=0;wdId=null},{passive:true,capture:true});
 })();
+
 </script>
 </body>
 </html>
