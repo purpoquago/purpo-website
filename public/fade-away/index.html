@@ -4126,6 +4126,47 @@ body.fa-holdnav-active{-webkit-user-select:none!important;user-select:none!impor
 }
 </style>
 
+
+<style id="fa-mobile-v43-13-active-hit-surfaces">
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+  /* Give the CURRENT visual page a real full-screen hit surface.
+     This does not add navigation logic or consume touch events; it only lets
+     the browser target the visible page instead of falling through it. */
+  body.fa-m-p1s1 .hero,
+  body.fa-m-p1s2 .hero,
+  body.fa-m-p6s1 .page6-layer,
+  body.fa-m-p6s2 .page6-layer,
+  body.fa-m-p6s3 .page6-layer,
+  body.fa-m-page8 .page8-layer,
+  body.fa-m-page9 .page9-layer,
+  body.fa-m-p11s1 .page11-layer,
+  body.fa-m-p11s2 .page11-layer,
+  body.fa-m-p12s1 .page12-layer,
+  body.fa-m-p12s2 .page12-layer,
+  body.fa-m-p13s1 .page13-layer,
+  body.fa-m-p13s2 .page13-layer,
+  body.fa-m-p14s1 .page14-layer,
+  body.fa-m-p14s2 .page14-layer,
+  body.fa-m-p14s3 .page14-layer,
+  body.fa-m-p15s1 .page15-layer,
+  body.fa-m-p15s2 .page15-layer,
+  body.fa-m-p16s1 .page16-layer,
+  body.fa-m-p16s2 .page16-layer{
+    pointer-events:auto!important;
+  }
+
+  /* Keep decorative media non-interactive; the parent page layer is the hit target. */
+  body.fa-m-p1s1 .hero-video,
+  body.fa-m-p1s2 .hero-video,
+  body.fa-m-page8 #page8RackingCanvas,
+  body.fa-m-page8 #page8Loop,
+  body.fa-m-page9 .page9-zoom,
+  body.fa-m-page9 .page9-bg{
+    pointer-events:none!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
