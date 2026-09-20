@@ -3568,6 +3568,21 @@ body.fa-m-p13s2.fa-m-reveal .page13-header{opacity:1!important}
 }
 </style>
 
+<style id="fa-mobile-v41-1-polish">
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+ body.fa-m-page14 .page14-layer,body.fa-m-page15 .page15-layer,body.fa-m-page16 .page16-layer{transition:opacity .55s ease!important}
+ body.fa-m-bg-enter .page14-layer,body.fa-m-bg-enter .page15-layer,body.fa-m-bg-enter .page16-layer{opacity:0!important}
+ body.fa-m-page14 .page14-layer::after,body.fa-m-page15 .page15-layer::after,body.fa-m-page16 .page16-layer::after{opacity:0!important;transition:opacity .55s ease!important}
+ body.fa-m-reveal.fa-m-p14s2 .page14-layer::after,body.fa-m-reveal.fa-m-p14s3 .page14-layer::after,body.fa-m-reveal.fa-m-p15s2 .page15-layer::after,body.fa-m-reveal.fa-m-p16s3 .page16-layer::after{opacity:1!important}
+ body.fa-m-p14s2 .page14-header{top:24dvh!important}
+ body.fa-m-p14s2 .page14-copy{top:33dvh!important;bottom:13dvh!important}
+ body.fa-m-p14s3 .page14-caption{bottom:max(18px,env(safe-area-inset-bottom))!important}
+ body.fa-m-p15s2 .page15-overlay{left:5vw!important;top:50dvh!important;width:90vw!important;transform:translateY(-50%)!important}
+ body.fa-m-p16s1 .page16-bg,body.fa-m-p16s2 .page16-bg{object-position:12% center!important;transition:none!important}
+ body.fa-m-p16s2 .page16-caption{display:block!important;z-index:20!important;bottom:max(18px,env(safe-area-inset-bottom))!important;opacity:0!important;visibility:visible!important}
+ body.fa-m-p16s2.fa-m-reveal .page16-caption{opacity:1!important}
+ body.fa-m-p16s3 .p16-mobile-article{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;padding:12dvh 7vw 18dvh!important;box-sizing:border-box!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important;touch-action:pan-y!important;pointer-events:auto!important}
+}</style>
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
@@ -5844,6 +5859,11 @@ const p12bg=document.querySelector('.page12-bg');let p12raf=0,p12start=0;
    const faMCurrentState=states[i];
    const faMWasState=faMPrevState;
    faMPrevState=faMCurrentState;
+   const faMPage=(faMCurrentState.match(/^p(\d+)/)||[])[1]||'';
+   const faMPrevPage=((faMWasState||'').match(/^p(\d+)/)||[])[1]||'';
+   const faMNewPhotoBg=/^(14|15|16)$/.test(faMPage)&&faMPrevPage&&faMPrevPage!==faMPage;
+   b.classList.toggle('fa-m-bg-enter',!!faMNewPhotoBg);
+   if(faMNewPhotoBg)requestAnimationFrame(()=>requestAnimationFrame(()=>b.classList.remove('fa-m-bg-enter')));
 clearTimeout(t);clear();const n=states[i];
  const p13bg=document.querySelector('.page13-bg');
  if(n==='p13s1'&&p13bg){
@@ -5956,11 +5976,12 @@ if(n==='p1s2'||n==='p2s2'||n==='p3s1'||n==='p3s2'||n==='p4s1'||n==='p5s2'||n==='
  const sc=()=>states[i]==='p2s2'?p2:states[i]==='p3s1'?p3:states[i]==='p4s1'?p4:states[i]==='p6s2'?document.querySelector('.page6-editorial'):states[i]==='p7s1'?document.querySelector('.page7-layer'):
  states[i]==='p9s2'?document.querySelector('.page9-editorial'):
  states[i]==='p10s1'?document.querySelector('.page10-layer'):
- states[i]==='p12s2'?document.querySelector('.p12-article'):null;
+ states[i]==='p12s2'?document.querySelector('.p12-article'):
+ states[i]==='p16s3'?document.querySelector('.p16-mobile-article'):null;
  const black=document.getElementById('faMobileBlack');
  const white=document.getElementById('faMobileWhite');
  const pageOf=n=>n.slice(0,2);
- const curtainFor=(a,bx)=>{const A0=states[a],B0=states[bx],later=new Set(['p8s2|p9s1','p9s2|p10s1','p10s1|p11s1','p11s2|p12s1','p12s2|p13s1']);
+ const curtainFor=(a,bx)=>{const A0=states[a],B0=states[bx],later=new Set(['p8s2|p9s1','p9s2|p10s1','p10s1|p11s1','p11s2|p12s1','p12s2|p13s1','p13s2|p14s1','p14s3|p15s1','p15s2|p16s1']);
    if(later.has(A0+'|'+B0)||later.has(B0+'|'+A0))return black;
    
    const A=pageOf(states[a]),B=pageOf(states[bx]);
