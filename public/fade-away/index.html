@@ -3955,6 +3955,43 @@ body.fa-m-p13s2.fa-m-reveal .page13-header{opacity:1!important}
 }
 </style>
 
+
+<style id="fa-mobile-v42-3-revs">
+/* This helper is mobile-only and must never appear after desktop credits. */
+.fa-mobile-grabquote{display:none}
+
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+  /* Restore live title. The previous intended live type was 30px; +8pt = +10.67px. */
+  body.fa-m-p16s3 #p16MobileReader .p16-mobile-live-title{
+    display:block!important;
+    position:static!important;
+    width:100%!important;
+    margin:0 0 28px!important;
+    padding:0!important;
+    font-family:"Alfa Slab One",Impact,serif!important;
+    font-size:40.67px!important;
+    line-height:1.02!important;
+    font-weight:400!important;
+    text-transform:uppercase!important;
+    color:#f4f1ea!important;
+    letter-spacing:0!important;
+  }
+  body.fa-m-p16s3 #p16MobileReader .page16-header{display:none!important}
+
+  /* Epilogue lyric overlay: 20% smaller than the previous 90vw mobile treatment. */
+  body.fa-m-page18 .page18-overlay{
+    left:14vw!important;
+    width:72vw!important;
+  }
+
+  /* Credits: clean mobile typography; wrapping is natural, not desktop-forced. */
+  body.fa-m-p19s2 .page19-credits,
+  body.fa-m-p19s2 .page19-credits p{
+    font-size:14px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
@@ -4361,7 +4398,7 @@ body.fa-m-p13s2.fa-m-reveal .page13-header{opacity:1!important}
     <section class="page16-layer" id="page16" aria-label="Record of an Explorer, Year Five">
       <div class="p16-mobile-photo-caption"><span class="p16-below-prefix">Below: </span>An explorer relaxes beneath the rooftop signage of the Fade Away Hotel. The rooftop is a favored observation point for viewing the singularities across the city. Observers note that the closer one approaches them, the less visible they become.</div>
       <img class="page16-bg" src="assets/page16-bg.webp" alt="">
-      <div id="p16MobileReader" class="p16-mobile-reader" aria-label="Record of an Explorer, Year Five"></div>
+      <div id="p16MobileReader" class="p16-mobile-reader" aria-label="Record of an Explorer, Year Five"><h2 class="p16-mobile-live-title">RECORD OF AN EXPLORER, YEAR FIVE</h2></div>
       <div class="editorial-master page16-content" id="page16Content">
         <img class="page16-header" src="assets/page16-header.png" alt="Record of an Explorer, Year Five">
         <div class="page16-caption-zone"><div class="page16-caption"><span class="p16-below-prefix">Below: </span>An explorer relaxes beneath the rooftop signage of the Fade Away Hotel. The rooftop is a favored observation point for viewing the singularities across the city. Observers note that the closer one approaches them, the less visible they become.</div></div>
@@ -4393,10 +4430,7 @@ body.fa-m-p13s2.fa-m-reveal .page13-header{opacity:1!important}
           <p class="page19-edition"><strong>WAYPOINT - The Explorer’s Magazine - Fade Away Hotel Special Edition</strong><br>
           Written, illustrated, and animated by Purpo</p>
 
-          <p>This publication is purely fictional. All characters, names, groups,<br>
-          and events depicted are fictional and are not intended to represent<br>
-          real individuals or organizations. Any resemblance to actual persons,<br>
-          living or dead, is coincidental.</p>
+          <p>This publication is purely fictional. All characters, names, groups, and events depicted are fictional and are not intended to represent real individuals or organizations. Any resemblance to actual persons, living or dead, is coincidental.</p>
 
           <p class="page19-ep"><strong>FADE AWAY EP by Purpo</strong></p>
 
@@ -6306,8 +6340,13 @@ clearTimeout(t);clear();const n=states[i];
      }
    }
    if(n==='p18s2'){
-     p18bg.style.setProperty('transition','transform 1.05s ease','important');
-     requestAnimationFrame(()=>requestAnimationFrame(()=>p18bg.style.setProperty('--fa-p18-x','-78vw')));
+     if(prevState==='p19s1'||prevState==='p19s2'){
+       p18bg.style.setProperty('transition','none','important');
+       p18bg.style.setProperty('--fa-p18-x','-78vw');
+     }else{
+       p18bg.style.setProperty('transition','transform 1.05s ease','important');
+       requestAnimationFrame(()=>requestAnimationFrame(()=>p18bg.style.setProperty('--fa-p18-x','-78vw')));
+     }
    }
  }
  const p19bg=document.querySelector('.page19-bg');
