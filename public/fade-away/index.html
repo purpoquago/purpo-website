@@ -4113,6 +4113,19 @@ body.fa-holdnav-active{-webkit-user-select:none!important;user-select:none!impor
 }
 </style>
 
+
+<style id="fa-mobile-v43-8-viewport-hold">
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+  /* Decorative image/background layers should not become the gesture owner. */
+  .page1-bg,.page2-bg,.page3-bg,.page5-bg,.page6-bg,.page8-bg,.page9-bg,
+  .page11-bg,.page12-bg,.page13-bg,.page14-bg,.page15-bg,.page16-bg,
+  .page18-bg,.page19-bg,
+  .p18-mobile-dim,.p19-mobile-dim{
+    -webkit-touch-callout:none!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
@@ -6334,7 +6347,13 @@ document.addEventListener("dragstart",e=>{if(mobile())e.preventDefault()},{captu
 
 document.addEventListener("touchstart",e=>{
   if(!mobile()||e.touches.length!==1||touchId!==null)return;
-  const t=e.changedTouches[0]; eligible=!blocked(e.target); if(!eligible)return;
+  const t=e.changedTouches[0];
+  // Eligibility is viewport-based, not text-node/foreground based.
+  // Inspect the complete hit stack at the finger coordinates and block only when
+  // an actual interactive/media control is under the touch.
+  const hitStack=document.elementsFromPoint(t.clientX,t.clientY);
+  eligible=!hitStack.some(el=>blocked(el));
+  if(!eligible)return;
   touchId=t.identifier;ax=t.clientX;ay=startY=lastY=t.clientY;
   // Do not consume the touch before the hold activates.
   // The site's original swipe/inner-scroll system remains authoritative.
