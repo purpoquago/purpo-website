@@ -6288,7 +6288,7 @@ const src=[...rail.querySelectorAll("a")].map(a=>({label:(a.querySelector(".rail
 const nav=document.querySelector(".fa-holdnav")||document.body.appendChild(Object.assign(document.createElement("div"),{className:"fa-holdnav"}));
 nav.innerHTML='<div class="fa-holdnav-list">'+src.map((x,i)=>'<div class="fa-holdnav-item '+(x.song?'is-song':'is-article')+'" data-index="'+i+'"><span class="fa-holdnav-mark"></span><span class="fa-holdnav-label">'+x.label+'</span></div>').join("")+"</div>";
 let dot=document.querySelector(".fa-holdnav-anchor-dot"); if(!dot){dot=document.createElement("div");dot.className="fa-holdnav-anchor-dot";document.body.appendChild(dot)}
-const list=nav.firstElementChild,items=[...list.children],ROW=48,HOLD=430,DEAD=16;
+const list=nav.firstElementChild,items=[...list.children],ROW=48,SCRUB=30,HOLD=430,DEAD=16;
 let timer=0,touchId=null,ax=0,ay=0,startY=0,lastY=0,active=false,sel=0,start=0,moved=false,eligible=false;
 
 const blocked=el=>!!el.closest('iframe,a,button,input,textarea,select,[contenteditable="true"],.page5-player,.page8-player,.page11-player,.page13-player,.page15-player,.page18-player,.page19-player,#p16MobileReader,.page2-layer .page2-copy,.page3-copy,.page4-mobile-article,.page6-editorial,.page7-copy,.page9-editorial,.page10-canvas,.p12-article,.page19-master');
@@ -6333,7 +6333,7 @@ document.addEventListener("touchmove",e=>{
     return;
   }
   // Once open, movement NEVER cancels the controller: it only scrubs the rail.
-  const next=Math.max(0,Math.min(src.length-1,start-Math.round((t.clientY-startY)/ROW)));
+  const next=Math.max(0,Math.min(src.length-1,start-Math.round((t.clientY-startY)/SCRUB)));
   if(next!==sel){sel=next;moved=true;render();navigator.vibrate?.(4)}
 },{passive:false,capture:true});
 
