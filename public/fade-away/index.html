@@ -6323,6 +6323,32 @@ updateSideRailState();
 </script>
 
 
+
+<script id="fa-v43-11-global-hold-latch">
+(()=>{
+  const M=()=>matchMedia("(max-width:800px), (hover:none) and (pointer:coarse)").matches;
+  window.faGlobalHold={down:false,id:null,x:0,y:0,moved:false,target:null};
+  document.addEventListener("touchstart",e=>{
+    if(!M()||e.touches.length!==1)return;
+    const t=e.changedTouches[0],g=window.faGlobalHold;
+    g.down=true;g.id=t.identifier;g.x=t.clientX;g.y=t.clientY;g.moved=false;g.target=e.target;
+  },{capture:true,passive:true});
+  document.addEventListener("touchmove",e=>{
+    const g=window.faGlobalHold;if(!g.down)return;
+    const t=[...e.changedTouches].find(x=>x.identifier===g.id);if(!t)return;
+    if(Math.hypot(t.clientX-g.x,t.clientY-g.y)>32)g.moved=true;
+  },{capture:true,passive:true});
+  document.addEventListener("touchend",e=>{
+    const g=window.faGlobalHold;
+    if(g.down&&[...e.changedTouches].some(x=>x.identifier===g.id)){g.down=false;g.id=null}
+  },{capture:true,passive:true});
+  document.addEventListener("touchcancel",e=>{
+    // Do not treat page-generated touchcancel as finger-up. A real touchend or a new
+    // touchstart will resolve the latch. This is the key test for state-specific surfaces.
+  },{capture:true,passive:true});
+})();
+</script>
+
 <script id="fa-mobile-v43-2-hold-nav-script">
 (()=>{
 const mobile=()=>matchMedia("(max-width:800px), (hover:none) and (pointer:coarse)").matches;
@@ -6379,10 +6405,12 @@ document.addEventListener("touchmove",e=>{
 },{passive:false,capture:true});
 
 document.addEventListener("touchend",e=>{if(touchId===null)return;const t=[...e.changedTouches].find(x=>x.identifier===touchId);if(t)close(true)},{passive:false,capture:true});
-document.addEventListener("touchcancel",e=>{if(touchId!==null)close(false)},{passive:false,capture:true});
+document.addEventListener("touchcancel",e=>{
+  const g=window.faGlobalHold;
+  if(touchId!==null && (!g||!g.down)) close(false);
+},{passive:false,capture:true});
 
-// V43.10 hold watchdog: page-state-independent activation.
-// Does not preventDefault, navigate, or alter ordinary scrolling.
+// V43.11 global-latch watchdog: independent of page-specific touchcancel/retargeting.
 let wdTimer=0,wdId=null,wdX=0,wdY=0;
 document.addEventListener("touchstart",e=>{
   if(!mobile()||e.touches.length!==1||active)return;
@@ -6391,21 +6419,30 @@ document.addEventListener("touchstart",e=>{
   wdId=t.identifier;wdX=t.clientX;wdY=t.clientY;
   clearTimeout(wdTimer);
   wdTimer=setTimeout(()=>{
-    if(active||wdId===null)return;
-    // Re-seed the existing controller candidate if a page-specific handler lost it.
+    const g=window.faGlobalHold;
+    if(active||!g||!g.down||g.id!==wdId||g.moved)return;
     touchId=wdId;ax=wdX;ay=startY=lastY=wdY;eligible=true;
     open();
   },HOLD);
 },{passive:true,capture:true});
 document.addEventListener("touchmove",e=>{
   if(wdId===null||active)return;
-  const t=[...e.changedTouches].find(x=>x.identifier===wdId);if(!t)return;
-  if(Math.hypot(t.clientX-wdX,t.clientY-wdY)>DEAD){clearTimeout(wdTimer);wdTimer=0;wdId=null}
+  const g=window.faGlobalHold;
+  if(g?.moved){clearTimeout(wdTimer);wdTimer=0;wdId=null}
 },{passive:true,capture:true});
 document.addEventListener("touchend",e=>{
   if(wdId!==null&&[...e.changedTouches].some(x=>x.identifier===wdId)){clearTimeout(wdTimer);wdTimer=0;wdId=null}
 },{passive:true,capture:true});
-document.addEventListener("touchcancel",()=>{clearTimeout(wdTimer);wdTimer=0;wdId=null},{passive:true,capture:true});
+// Deliberately do not cancel the watchdog on touchcancel: several visual states
+// generate cancellation from their own gesture/canvas layers while the finger is still down.
+
+document.addEventListener("touchend",e=>{
+  if(!active)return;
+  const g=window.faGlobalHold;
+  if(!g||!g.down){
+    close(true);
+  }
+},{passive:true,capture:false});
 })();
 
 </script>
