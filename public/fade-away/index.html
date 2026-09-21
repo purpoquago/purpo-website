@@ -4234,6 +4234,37 @@ body.fa-holdnav-active{-webkit-user-select:none!important;user-select:none!impor
 }
 </style>
 
+
+<style id="fa-mobile-v43-17-holdnav-refinement">
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+  .fa-holdnav-veil{background:rgba(0,0,0,.75)!important;}
+  .fa-holdnav-item{opacity:.42!important;}
+  .fa-holdnav-item.is-song{opacity:.57!important;}
+  .fa-holdnav-item.is-selected{opacity:1!important;transform:scale(1.10)!important;}
+
+  .fa-holdnav-mark{
+    display:inline-block!important;
+    width:8px!important;
+    min-width:8px!important;
+    height:1px!important;
+    border:0!important;
+    border-radius:0!important;
+    background:currentColor!important;
+    vertical-align:middle!important;
+    transform:none!important;
+    transition:width .11s ease,opacity .11s ease!important;
+  }
+  .fa-holdnav-item.is-selected .fa-holdnav-mark{
+    width:18px!important;
+    min-width:18px!important;
+    height:1px!important;
+    border:0!important;
+    border-radius:0!important;
+    background:#dcbe18!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
@@ -6441,7 +6472,7 @@ const nav=document.querySelector(".fa-holdnav")||document.body.appendChild(Objec
 nav.innerHTML='<div class="fa-holdnav-list">'+src.map((x,i)=>'<div class="fa-holdnav-item '+(x.song?'is-song':'is-article')+'" data-index="'+i+'"><span class="fa-holdnav-mark"></span><span class="fa-holdnav-label">'+x.label+'</span></div>').join("")+"</div>";
 let dot=document.querySelector(".fa-holdnav-anchor-dot");if(!dot){dot=document.createElement("div");dot.className="fa-holdnav-anchor-dot";document.body.appendChild(dot)}
 const list=nav.firstElementChild,items=[...list.children];
-const VISUAL=24,SCRUB=20,HOLD=430,DEAD=32;
+const VISUAL=24,SCRUB=18,HOLD=430,DEAD=32;
 let pid=null,activeTouchId=null,timer=0,ax=0,ay=0,startY=0,active=false,start=0,sel=0,moved=false;
 
 const blocked=el=>!!el?.closest?.('iframe,button,input,textarea,select,option,[contenteditable="true"],audio,video,.page5-player,.page8-player,.page11-player,.page13-player,.page15-player,.page18-player,.page19-player');
