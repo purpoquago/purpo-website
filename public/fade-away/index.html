@@ -6472,7 +6472,7 @@ const nav=document.querySelector(".fa-holdnav")||document.body.appendChild(Objec
 nav.innerHTML='<div class="fa-holdnav-list">'+src.map((x,i)=>'<div class="fa-holdnav-item '+(x.song?'is-song':'is-article')+'" data-index="'+i+'"><span class="fa-holdnav-mark"></span><span class="fa-holdnav-label">'+x.label+'</span></div>').join("")+"</div>";
 let dot=document.querySelector(".fa-holdnav-anchor-dot");if(!dot){dot=document.createElement("div");dot.className="fa-holdnav-anchor-dot";document.body.appendChild(dot)}
 const list=nav.firstElementChild,items=[...list.children];
-const VISUAL=24,SCRUB=18,HOLD=430,DEAD=32;
+const VISUAL=24,SCRUB=12,HOLD=430,DEAD=32;
 let pid=null,activeTouchId=null,timer=0,ax=0,ay=0,startY=0,active=false,start=0,sel=0,moved=false;
 
 const blocked=el=>!!el?.closest?.('iframe,button,input,textarea,select,option,[contenteditable="true"],audio,video,.page5-player,.page8-player,.page11-player,.page13-player,.page15-player,.page18-player,.page19-player');
