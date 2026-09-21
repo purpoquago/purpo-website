@@ -4105,6 +4105,28 @@ body.fa-holdnav-active{-webkit-user-select:none!important;user-select:none!impor
 }
 </style>
 
+
+<style id="fa-v43-28-holdnav-final-page-containment">
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+  .fa-holdnav:not(.is-active),
+  .fa-holdnav-veil:not(.is-active),
+  .fa-holdnav-anchor-dot:not(.is-active){
+    opacity:0 !important;
+    visibility:hidden !important;
+    pointer-events:none !important;
+  }
+}
+@media (min-width:801px) and (hover:hover) and (pointer:fine){
+  .fa-holdnav,
+  .fa-holdnav-veil,
+  .fa-holdnav-anchor-dot{
+    display:none !important;
+    visibility:hidden !important;
+    pointer-events:none !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
