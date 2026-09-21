@@ -4193,6 +4193,47 @@ body.fa-holdnav-active{-webkit-user-select:none!important;user-select:none!impor
 }
 </style>
 
+
+<style id="fa-mobile-v43-16-holdnav-refinement">
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+  .fa-holdnav-veil{
+    background:rgba(0,0,0,.67)!important;
+  }
+  .fa-holdnav-item{
+    height:24px!important;
+    min-height:24px!important;
+    font-family:"EB Garamond",Georgia,serif!important;
+    opacity:.20!important;
+    transform:scale(1)!important;
+  }
+  .fa-holdnav-item .fa-holdnav-label{
+    font-family:"EB Garamond",Georgia,serif!important;
+  }
+  .fa-holdnav-item.is-article .fa-holdnav-label{
+    font-style:italic!important;
+  }
+  .fa-holdnav-item.is-song{
+    opacity:.32!important;
+  }
+  .fa-holdnav-item.is-song .fa-holdnav-label{
+    font-style:normal!important;
+  }
+  .fa-holdnav-item.is-selected{
+    opacity:1!important;
+    transform:scale(1.06)!important;
+    color:#dcbe18!important;
+  }
+  .fa-holdnav-item.is-selected .fa-holdnav-label,
+  .fa-holdnav-item.is-selected .fa-holdnav-mark{
+    color:#dcbe18!important;
+  }
+  .fa-holdnav-item.is-selected .fa-holdnav-mark{
+    background:#dcbe18!important;
+    border-color:#dcbe18!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
@@ -6392,7 +6433,7 @@ updateSideRailState();
 const mobile=()=>matchMedia("(max-width:800px), (hover:none) and (pointer:coarse)").matches;
 const rail=document.getElementById("sideRail"); if(!rail)return;
 const map={"#page2":"p2s1","#page3":"p3s2","#page5":"p5s1","#page6":"p6s1","#page8":"p8s1","#page9":"p9s1","#page11":"p11s1","#page12":"p12s1","#page13":"p13s1","#page14":"p14s1","#page15":"p15s1","#page16":"p16s1","#page18":"p18s1","#page19":"p19s1"};
-const src=[...rail.querySelectorAll("a")].map(a=>({label:(a.querySelector(".rail-label")?.textContent||"").trim(),state:map[a.getAttribute("href")],song:a.classList.contains("rail-song")})).filter(x=>x.state);
+const src=[{label:"TRACKLIST",state:"p1s2",song:false},...[...rail.querySelectorAll("a")].map(a=>({label:(a.querySelector(".rail-label")?.textContent||"").trim(),state:map[a.getAttribute("href")],song:a.classList.contains("rail-song")})).filter(x=>x.state)];
 
 let veil=document.querySelector(".fa-holdnav-veil");
 if(!veil){veil=document.createElement("div");veil.className="fa-holdnav-veil";document.body.appendChild(veil)}
@@ -6400,7 +6441,7 @@ const nav=document.querySelector(".fa-holdnav")||document.body.appendChild(Objec
 nav.innerHTML='<div class="fa-holdnav-list">'+src.map((x,i)=>'<div class="fa-holdnav-item '+(x.song?'is-song':'is-article')+'" data-index="'+i+'"><span class="fa-holdnav-mark"></span><span class="fa-holdnav-label">'+x.label+'</span></div>').join("")+"</div>";
 let dot=document.querySelector(".fa-holdnav-anchor-dot");if(!dot){dot=document.createElement("div");dot.className="fa-holdnav-anchor-dot";document.body.appendChild(dot)}
 const list=nav.firstElementChild,items=[...list.children];
-const VISUAL=32,SCRUB=24,HOLD=430,DEAD=32;
+const VISUAL=24,SCRUB=20,HOLD=430,DEAD=32;
 let pid=null,activeTouchId=null,timer=0,ax=0,ay=0,startY=0,active=false,start=0,sel=0,moved=false;
 
 const blocked=el=>!!el?.closest?.('iframe,button,input,textarea,select,option,[contenteditable="true"],audio,video,.page5-player,.page8-player,.page11-player,.page13-player,.page15-player,.page18-player,.page19-player');
