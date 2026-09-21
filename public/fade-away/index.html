@@ -4273,6 +4273,40 @@ body.fa-holdnav-active{-webkit-user-select:none!important;user-select:none!impor
  .fa-holdnav.is-right .fa-holdnav-item{flex-direction:row!important;text-align:left!important;}
 }
 </style>
+
+<style id="fa-mobile-v43-21-holdnav-desktop-containment">
+/* Hard desktop containment for every touch-nav component. */
+@media (min-width:801px) and (hover:hover) and (pointer:fine){
+  .fa-holdnav,
+  .fa-holdnav-veil,
+  .fa-holdnav-anchor-dot{
+    display:none!important;
+    visibility:hidden!important;
+    opacity:0!important;
+    pointer-events:none!important;
+  }
+}
+</style>
+
+
+<style id="fa-mobile-v43-21-p19-scroll-tail">
+.page19-mobile-scroll-tail{display:none;}
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+  body.fa-m-p19s2 #page19Master .page19-mobile-scroll-tail{
+    display:block!important;
+    position:relative!important;
+    width:1px!important;
+    height:calc(24dvh + env(safe-area-inset-bottom))!important;
+    min-height:calc(24dvh + env(safe-area-inset-bottom))!important;
+    margin:0!important;
+    padding:0!important;
+    clear:both!important;
+    flex:none!important;
+    pointer-events:none!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
@@ -4727,7 +4761,8 @@ body.fa-holdnav-active{-webkit-user-select:none!important;user-select:none!impor
 
         <div class="page19-player" id="page19Player"></div>
         </div>
-      </div>
+      <div class="page19-mobile-scroll-tail" aria-hidden="true"></div>
+</div>
     </section>
 
     <div class="fade-to-white" id="fadeToWhite"></div>
