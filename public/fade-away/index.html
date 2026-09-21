@@ -5026,7 +5026,13 @@ function updateHandwrittenSafeZones(){
 const editorialMasters = [...document.querySelectorAll(".editorial-master")];
 function updateEditorialScales(){
   const s=Math.min(window.innerWidth/1920,window.innerHeight/1080);
-  editorialMasters.forEach(el=>el.style.setProperty("--editorial-scale",s));
+  editorialMasters.forEach(el=>{
+      if(el===page19Master && matchMedia("(max-width:800px), (hover:none) and (pointer:coarse)").matches){
+        el.style.setProperty("--editorial-scale","1");
+      }else{
+        el.style.setProperty("--editorial-scale",s);
+      }
+    });
 }
 updateEditorialScales();
 updateHandwrittenSafeZones();
@@ -5925,12 +5931,12 @@ function updateScrollReveal(){
   const page19Content = smoothstep((siteRunProgress-.9990)/(1.0000-.9990));
   const page19PlayerIn = smoothstep((siteRunProgress-.99935)/(1.0000-.99935));
 
-  if (page19Credits) {
+  if (page19Credits && !matchMedia("(max-width:800px), (hover:none) and (pointer:coarse)").matches) {
     page19Credits.style.opacity = page19Content;
     page19Credits.style.translate = `0 ${10*(1-page19Content)}px`;
     page19Credits.style.filter = `blur(${.7*(1-page19Content)}px)`;
   }
-  if (page19Player) {
+  if (page19Player && !matchMedia("(max-width:800px), (hover:none) and (pointer:coarse)").matches) {
     page19Player.style.opacity = page19PlayerIn;
     page19Player.style.translate = `0 ${12*(1-page19PlayerIn)}px`;
     page19Player.style.filter = `blur(${.8*(1-page19PlayerIn)}px)`;
@@ -6861,7 +6867,17 @@ clearTimeout(t);clear();const n=states[i];
      }
    }
  }
- const p19bg=document.querySelector('.page19-bg');
+ if((n==='p19s1'||n==='p19s2') && matchMedia("(max-width:800px), (hover:none) and (pointer:coarse)").matches){
+      [page19Credits,page19Player].forEach(el=>{
+        if(!el)return;
+        el.style.removeProperty('translate');
+        el.style.removeProperty('filter');
+        el.style.removeProperty('opacity');
+        el.style.removeProperty('pointer-events');
+      });
+      if(page19Master) page19Master.style.setProperty('--editorial-scale','1');
+    }
+    const p19bg=document.querySelector('.page19-bg');
  if(p19bg && (n==='p19s1'||n==='p19s2')){
    p19bg.style.setProperty('transition','none','important');
    p19bg.style.setProperty('object-position','68% center','important');
