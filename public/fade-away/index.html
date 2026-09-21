@@ -4274,34 +4274,147 @@ body.fa-holdnav-active{-webkit-user-select:none!important;user-select:none!impor
 }
 </style>
 
-<style id="fa-mobile-v43-21-holdnav-desktop-containment">
-/* Hard desktop containment for every touch-nav component. */
-@media (min-width:801px) and (hover:hover) and (pointer:fine){
-  .fa-holdnav,
-  .fa-holdnav-veil,
-  .fa-holdnav-anchor-dot{
+<style id="fa-mobile-v43-22-p19-authoritative">
+@media (max-width:800px), (hover:none) and (pointer:coarse){
+  body.fa-m-page19 .page19-layer{
+    display:block!important;
+    position:fixed!important;
+    inset:0!important;
+    width:100vw!important;
+    height:100dvh!important;
+    overflow:hidden!important;
+    opacity:1!important;
+    visibility:visible!important;
+    pointer-events:auto!important;
+  }
+
+  body.fa-m-page19 .page19-bg{
+    position:absolute!important;
+    inset:0!important;
+    width:100%!important;
+    height:100%!important;
+    transform:none!important;
+  }
+
+  body.fa-m-page19 #page19Master{
     display:none!important;
-    visibility:hidden!important;
+  }
+
+  body.fa-m-p19s2 #page19Master{
+    display:block!important;
+    position:fixed!important;
+    z-index:42!important;
+    inset:0!important;
+    width:100vw!important;
+    height:100dvh!important;
+    min-height:0!important;
+    max-height:none!important;
+    box-sizing:border-box!important;
+    margin:0!important;
+    padding:11dvh 6vw calc(20dvh + env(safe-area-inset-bottom))!important;
+    transform:none!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    -webkit-overflow-scrolling:touch!important;
+    overscroll-behavior-y:contain!important;
+    touch-action:pan-y!important;
+    columns:auto!important;
+    column-count:1!important;
     opacity:0!important;
-    pointer-events:none!important;
+    visibility:visible!important;
+    pointer-events:auto!important;
+    scrollbar-width:none!important;
+  }
+  body.fa-m-p19s2 #page19Master::-webkit-scrollbar{display:none!important;}
+  body.fa-m-p19s2.fa-m-reveal #page19Master{opacity:1!important;}
+
+  body.fa-m-p19s2 #page19Master .page19-grid{
+    display:flex!important;
+    position:static!important;
+    inset:auto!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    margin:0!important;
+    padding:0!important;
+    transform:none!important;
+    flex-direction:column!important;
+    flex-wrap:nowrap!important;
+    align-items:stretch!important;
+    justify-content:flex-start!important;
+    gap:28px!important;
+    columns:auto!important;
+    column-count:1!important;
+    overflow:visible!important;
+    pointer-events:auto!important;
+  }
+
+  body.fa-m-p19s2 #page19Master .page19-player{
+    display:block!important;
+    position:static!important;
+    inset:auto!important;
+    width:100%!important;
+    height:152px!important;
+    min-height:152px!important;
+    margin:0!important;
+    padding:0!important;
+    transform:none!important;
+    flex:0 0 152px!important;
+    order:1!important;
+    opacity:1!important;
+    visibility:visible!important;
+    pointer-events:auto!important;
+  }
+  body.fa-m-p19s2 #page19Master .page19-player iframe{
+    display:block!important;
+    position:static!important;
+    width:100%!important;
+    height:152px!important;
+    margin:0!important;
+    padding:0!important;
+    transform:none!important;
+  }
+
+  body.fa-m-p19s2 #page19Master .page19-credits{
+    display:block!important;
+    position:static!important;
+    inset:auto!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    margin:0!important;
+    padding:0!important;
+    transform:none!important;
+    flex:0 0 auto!important;
+    order:2!important;
+    columns:auto!important;
+    column-count:1!important;
+    column-width:auto!important;
+    column-gap:0!important;
+    overflow:visible!important;
+    opacity:1!important;
+    visibility:visible!important;
+    text-align:center!important;
+  }
+  body.fa-m-p19s2 #page19Master .page19-credits p{
+    display:block!important;
+    position:static!important;
+    width:100%!important;
+    height:auto!important;
+    margin:0 0 22px!important;
+    padding:0!important;
+    transform:none!important;
+    break-inside:avoid!important;
   }
 }
 </style>
 
-
-<style id="fa-mobile-v43-21-p19-scroll-tail">
-.page19-mobile-scroll-tail{display:none;}
-@media (max-width:800px), (hover:none) and (pointer:coarse){
-  body.fa-m-p19s2 #page19Master .page19-mobile-scroll-tail{
-    display:block!important;
-    position:relative!important;
-    width:1px!important;
-    height:calc(24dvh + env(safe-area-inset-bottom))!important;
-    min-height:calc(24dvh + env(safe-area-inset-bottom))!important;
-    margin:0!important;
-    padding:0!important;
-    clear:both!important;
-    flex:none!important;
+<style id="fa-mobile-v43-22-desktop-holdnav-containment">
+@media (min-width:801px){
+  .fa-holdnav,.fa-holdnav-veil,.fa-holdnav-anchor-dot{
+    display:none!important;
+    visibility:hidden!important;
+    opacity:0!important;
     pointer-events:none!important;
   }
 }
@@ -4761,8 +4874,7 @@ body.fa-holdnav-active{-webkit-user-select:none!important;user-select:none!impor
 
         <div class="page19-player" id="page19Player"></div>
         </div>
-      <div class="page19-mobile-scroll-tail" aria-hidden="true"></div>
-</div>
+      </div>
     </section>
 
     <div class="fade-to-white" id="fadeToWhite"></div>
