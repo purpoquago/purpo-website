@@ -1777,59 +1777,7 @@ html.snap-mode{
   position:absolute;inset:0;width:100%;height:100%;
   object-fit:cover;object-position:center;
 }
-.page19-master{
-  pointer-events:none;
-}
-.page19-credits{
-  position:absolute;
-  left:245px;
-  top:177px;
-  width:540px;
-  color:#f7f3e9;
-  font-family:"EB Garamond",Georgia,serif;
-  font-size:15.5px;
-  line-height:1.08;
-  text-align:center;
-  font-weight:400;
-  text-shadow:0 1px 2px rgba(0,0,0,.36);
-  opacity:0;
-  transform:translateY(10px);
-  filter:blur(.7px);
-  will-change:opacity,transform,filter;
-}
-.page19-credits p{margin:0 0 26px}
-.page19-credits .page19-edition{margin-bottom:27px}
-.page19-credits .page19-ep{margin-top:4px;margin-bottom:25px}
-.page19-credits strong{font-weight:700}
-.page19-player{
-  position:absolute;
-  left:1268px;
-  top:370px;
-  width:340px;
-  height:352px;
-  z-index:4;
-  opacity:0;
-  transform:translateY(12px);
-  filter:blur(.8px);
-  will-change:opacity,transform,filter;
-  pointer-events:none;
-}
-.page19-player iframe{
-  display:block;
-  width:100%;
-  height:352px;
-  border:0;
-  border-radius:12px;
-}
 @media(max-width:800px){
-  .page19-credits{
-    left:6vw;top:10vh;width:88vw;
-    font-size:14px;
-  }
-  .page19-player{
-    left:6vw;right:6vw;top:auto;bottom:5vh;
-    width:auto;height:352px;
-  }
 }
 
 /* There is intentionally no content after the final sticky scene. */
@@ -1862,15 +1810,6 @@ html,body{overscroll-behavior-y:none}
   height:auto!important;
   object-fit:contain!important;
   object-position:center!important;
-}
-
-.page19-credits{
-  top:50%!important;
-  transform:translateY(-50%)!important;
-}
-.page19-player{
-  top:50%!important;
-  transform:translateY(-50%)!important;
 }
 </style>
 
@@ -2129,41 +2068,6 @@ html,body{overscroll-behavior-y:none}
   right:auto!important;
   transform:translate(-50%,-50%) scale(var(--editorial-scale,1))!important;
   transform-origin:center center!important;
-}
-
-/* CREDITS — one centered two-column container. */
-.page19-grid{
-  position:absolute;
-  left:50%;
-  top:50%;
-  width:1020px;
-  display:grid;
-  grid-template-columns:540px 340px;
-  column-gap:140px;
-  align-items:center;
-  transform:translate(-50%,-50%);
-  pointer-events:none;
-}
-.page19-grid .page19-credits{
-  position:static!important;
-  left:auto!important;
-  top:auto!important;
-  width:540px!important;
-  transform:none!important;
-  justify-self:center;
-  align-self:center;
-}
-.page19-grid .page19-player{
-  position:static!important;
-  left:auto!important;
-  right:auto!important;
-  top:auto!important;
-  bottom:auto!important;
-  width:340px!important;
-  height:352px!important;
-  transform:none!important;
-  justify-self:center;
-  align-self:center;
 }
 </style>
 
@@ -3837,37 +3741,6 @@ body.fa-m-p13s2.fa-m-reveal .page13-header{opacity:1!important}
     position:absolute!important;inset:0!important;width:100%!important;height:100%!important;
     object-fit:cover!important;object-position:50% center!important;transform:none!important;
   }
-  body.fa-m-page19 .page19-master{
-    display:none!important;
-  }
-  body.fa-m-p19s2 .page19-master{
-    display:block!important;position:fixed!important;z-index:4!important;inset:0!important;
-    width:100vw!important;height:100dvh!important;max-width:none!important;
-    margin:0!important;padding:10dvh 6vw 12dvh!important;box-sizing:border-box!important;
-    overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;
-    overscroll-behavior:contain!important;touch-action:pan-y!important;scrollbar-width:none!important;
-    opacity:0!important;transition:opacity .55s ease!important;
-  }
-  body.fa-m-p19s2 .page19-master::-webkit-scrollbar{display:none!important}
-  body.fa-m-p19s2.fa-m-reveal .page19-master{opacity:1!important}
-
-  body.fa-m-p19s2 .page19-grid{
-    display:flex!important;flex-direction:column!important;width:100%!important;height:auto!important;
-    margin:0!important;padding:0!important;gap:34px!important;transform:none!important;
-  }
-  body.fa-m-p19s2 .page19-player{
-    order:1!important;display:block!important;position:static!important;width:100%!important;height:152px!important;
-    margin:0!important;padding:0!important;opacity:1!important;transform:none!important;filter:none!important;
-    -webkit-filter:none!important;pointer-events:auto!important;
-  }
-  body.fa-m-p19s2 .page19-player iframe{display:block!important;width:100%!important;height:152px!important;border:0!important;border-radius:12px!important;filter:none!important;-webkit-filter:none!important}
-  body.fa-m-p19s2 .page19-credits{
-    order:2!important;display:block!important;position:static!important;inset:auto!important;width:100%!important;
-    height:auto!important;max-width:none!important;margin:0!important;padding:0!important;transform:none!important;
-    filter:none!important;opacity:1!important;color:#fff!important;font-size:15px!important;line-height:1.4!important;
-    columns:auto!important;column-count:1!important;column-width:auto!important;
-  }
-  body.fa-m-p19s2 .page19-credits p{margin:0 0 22px!important}
 }
 </style>
 
@@ -3898,59 +3771,6 @@ body.fa-m-p13s2.fa-m-reveal .page13-header{opacity:1!important}
   body.fa-m-p16s3 #p16MobileReader .page17-note p,
   body.fa-m-p16s3 #p16MobileReader .page17-publisher-note p{
     color:#f4f1ea!important;font-size:14px!important;line-height:1.35!important;margin:0 0 10px!important;
-  }
-
-  /* P19 clean mobile foreground: neutralize desktop master/grid geometry completely. */
-  body.fa-m-p19s2 .page19-master{
-    display:block!important;
-    position:fixed!important;
-    z-index:40!important;
-    inset:0!important;
-    left:0!important;right:auto!important;top:0!important;bottom:auto!important;
-    width:100vw!important;height:100dvh!important;
-    min-width:0!important;max-width:none!important;min-height:0!important;max-height:none!important;
-    margin:0!important;padding:11dvh 6vw 14dvh!important;
-    box-sizing:border-box!important;
-    overflow-y:auto!important;overflow-x:hidden!important;
-    -webkit-overflow-scrolling:touch!important;overscroll-behavior:contain!important;touch-action:pan-y!important;
-    transform:none!important;scale:1!important;zoom:1!important;filter:none!important;
-    opacity:0!important;visibility:visible!important;pointer-events:auto!important;
-    font-size:16px!important;line-height:1.4!important;
-    columns:auto!important;column-count:1!important;column-width:auto!important;
-  }
-  body.fa-m-p19s2.fa-m-reveal .page19-master{opacity:1!important}
-  body.fa-m-p19s2 .page19-grid{
-    display:flex!important;position:static!important;inset:auto!important;
-    flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;
-    width:100%!important;height:auto!important;min-width:0!important;max-width:none!important;
-    margin:0!important;padding:0!important;gap:34px!important;
-    grid-template-columns:none!important;grid-template-rows:none!important;
-    transform:none!important;scale:1!important;zoom:1!important;filter:none!important;
-  }
-  body.fa-m-p19s2 .page19-player{
-    order:1!important;display:block!important;position:static!important;inset:auto!important;
-    width:100%!important;height:152px!important;min-width:0!important;max-width:none!important;
-    margin:0!important;padding:0!important;transform:none!important;scale:1!important;zoom:1!important;
-    opacity:1!important;visibility:visible!important;filter:none!important;pointer-events:auto!important;
-  }
-  body.fa-m-p19s2 .page19-player iframe{
-    display:block!important;position:static!important;width:100%!important;height:152px!important;
-    min-width:0!important;max-width:none!important;margin:0!important;padding:0!important;
-    transform:none!important;scale:1!important;zoom:1!important;filter:none!important;
-  }
-  body.fa-m-p19s2 .page19-credits{
-    order:2!important;display:block!important;position:static!important;inset:auto!important;
-    width:100%!important;height:auto!important;min-width:0!important;max-width:none!important;
-    margin:0!important;padding:0!important;transform:none!important;scale:1!important;zoom:1!important;
-    opacity:1!important;visibility:visible!important;filter:none!important;
-    color:#fff!important;font-size:15px!important;line-height:1.4!important;
-    columns:auto!important;column-count:1!important;column-width:auto!important;column-gap:0!important;
-    text-align:left!important;
-  }
-  body.fa-m-p19s2 .page19-credits p{
-    display:block!important;position:static!important;width:auto!important;height:auto!important;
-    margin:0 0 22px!important;padding:0!important;transform:none!important;
-    color:#fff!important;font-size:15px!important;line-height:1.4!important;text-align:left!important;
   }
 }
 </style>
@@ -3983,12 +3803,6 @@ body.fa-m-p13s2.fa-m-reveal .page13-header{opacity:1!important}
     left:14vw!important;
     width:72vw!important;
   }
-
-  /* Credits: clean mobile typography; wrapping is natural, not desktop-forced. */
-  body.fa-m-p19s2 .page19-credits,
-  body.fa-m-p19s2 .page19-credits p{
-    font-size:14px!important;
-  }
 }
 </style>
 
@@ -3998,48 +3812,6 @@ body.fa-m-p13s2.fa-m-reveal .page13-header{opacity:1!important}
   /* Record of an Explorer: -4pt from V42.3 (40.67px -> 35.34px). */
   body.fa-m-p16s3 #p16MobileReader .p16-mobile-live-title{
     font-size:35.34px!important;
-  }
-
-  /* P19: one single text column only, centered, 2pt smaller than 14px. */
-  body.fa-m-p19s2 .page19-master,
-  body.fa-m-p19s2 .page19-grid,
-  body.fa-m-p19s2 .page19-credits{
-    columns:auto!important;
-    column-count:1!important;
-    column-width:auto!important;
-    column-gap:0!important;
-  }
-  body.fa-m-p19s2 .page19-grid{
-    display:flex!important;
-    flex-direction:column!important;
-    grid-template-columns:none!important;
-    grid-template-rows:none!important;
-  }
-  body.fa-m-p19s2 .page19-player{
-    order:1!important;
-    flex:0 0 auto!important;
-    width:100%!important;
-  }
-  body.fa-m-p19s2 .page19-credits{
-    order:2!important;
-    flex:0 0 auto!important;
-    width:100%!important;
-    overflow:visible!important;
-    font-size:11.33px!important;
-    line-height:1.45!important;
-    text-align:center!important;
-  }
-  body.fa-m-p19s2 .page19-credits p,
-  body.fa-m-p19s2 .page19-credits strong{
-    width:100%!important;
-    max-width:none!important;
-    float:none!important;
-    clear:both!important;
-    columns:auto!important;
-    column-count:1!important;
-    font-size:11.33px!important;
-    line-height:1.45!important;
-    text-align:center!important;
   }
 }
 </style>
@@ -4273,151 +4045,24 @@ body.fa-holdnav-active{-webkit-user-select:none!important;user-select:none!impor
  .fa-holdnav.is-right .fa-holdnav-item{flex-direction:row!important;text-align:left!important;}
 }
 </style>
-
-<style id="fa-mobile-v43-22-p19-authoritative">
+<style id="fa-v43-25-p19-clean-rebuild">
+.page19-master{position:absolute;z-index:12;inset:0;box-sizing:border-box;pointer-events:none}
+.page19-player{position:absolute;left:66vw;top:50%;width:340px;height:352px;transform:translateY(-50%);opacity:0;pointer-events:none}
+.page19-player iframe{display:block;width:100%;height:352px;border:0}
+.page19-credits{position:absolute;left:6vw;top:50%;width:540px;transform:translateY(-50%);color:#f4f1ea;font-family:"EB Garamond",Georgia,serif;font-size:14px;line-height:1.35;text-align:center;opacity:0}
+.page19-credits p{margin:0 0 26px}.page19-credits p:last-child{margin-bottom:0}
 @media (max-width:800px), (hover:none) and (pointer:coarse){
-  body.fa-m-page19 .page19-layer{
-    display:block!important;
-    position:fixed!important;
-    inset:0!important;
-    width:100vw!important;
-    height:100dvh!important;
-    overflow:hidden!important;
-    opacity:1!important;
-    visibility:visible!important;
-    pointer-events:auto!important;
-  }
-
-  body.fa-m-page19 .page19-bg{
-    position:absolute!important;
-    inset:0!important;
-    width:100%!important;
-    height:100%!important;
-    transform:none!important;
-  }
-
-  body.fa-m-page19 #page19Master{
-    display:none!important;
-  }
-
-  body.fa-m-p19s2 #page19Master{
-    display:block!important;
-    position:fixed!important;
-    z-index:42!important;
-    inset:0!important;
-    width:100vw!important;
-    height:100dvh!important;
-    min-height:0!important;
-    max-height:none!important;
-    box-sizing:border-box!important;
-    margin:0!important;
-    padding:11dvh 6vw calc(20dvh + env(safe-area-inset-bottom))!important;
-    transform:none!important;
-    overflow-x:hidden!important;
-    overflow-y:auto!important;
-    -webkit-overflow-scrolling:touch!important;
-    overscroll-behavior-y:contain!important;
-    touch-action:pan-y!important;
-    columns:auto!important;
-    column-count:1!important;
-    opacity:0!important;
-    visibility:visible!important;
-    pointer-events:auto!important;
-    scrollbar-width:none!important;
-  }
-  body.fa-m-p19s2 #page19Master::-webkit-scrollbar{display:none!important;}
-  body.fa-m-p19s2.fa-m-reveal #page19Master{opacity:1!important;}
-
-  body.fa-m-p19s2 #page19Master .page19-grid{
-    display:flex!important;
-    position:static!important;
-    inset:auto!important;
-    width:100%!important;
-    height:auto!important;
-    min-height:0!important;
-    margin:0!important;
-    padding:0!important;
-    transform:none!important;
-    flex-direction:column!important;
-    flex-wrap:nowrap!important;
-    align-items:stretch!important;
-    justify-content:flex-start!important;
-    gap:28px!important;
-    columns:auto!important;
-    column-count:1!important;
-    overflow:visible!important;
-    pointer-events:auto!important;
-  }
-
-  body.fa-m-p19s2 #page19Master .page19-player{
-    display:block!important;
-    position:static!important;
-    inset:auto!important;
-    width:100%!important;
-    height:152px!important;
-    min-height:152px!important;
-    margin:0!important;
-    padding:0!important;
-    transform:none!important;
-    flex:0 0 152px!important;
-    opacity:1!important;
-    visibility:visible!important;
-    pointer-events:auto!important;
-  }
-  body.fa-m-p19s2 #page19Master .page19-player iframe{
-    display:block!important;
-    position:static!important;
-    width:100%!important;
-    height:152px!important;
-    margin:0!important;
-    padding:0!important;
-    transform:none!important;
-  }
-
-  body.fa-m-p19s2 #page19Master .page19-credits{
-    display:block!important;
-    position:static!important;
-    inset:auto!important;
-    width:100%!important;
-    height:auto!important;
-    min-height:0!important;
-    margin:0!important;
-    padding:0!important;
-    transform:none!important;
-    flex:0 0 auto!important;
-    columns:auto!important;
-    column-count:1!important;
-    column-width:auto!important;
-    column-gap:0!important;
-    overflow:visible!important;
-    opacity:1!important;
-    visibility:visible!important;
-    text-align:center!important;
-  }
-  body.fa-m-p19s2 #page19Master .page19-credits p{
-    display:block!important;
-    position:static!important;
-    width:100%!important;
-    height:auto!important;
-    margin:0 0 22px!important;
-    padding:0!important;
-    transform:none!important;
-    break-inside:avoid!important;
-  }
+ body.fa-m-page19 .page19-master{display:none}
+ body.fa-m-p19s2 .page19-master{display:block;position:fixed;z-index:42;inset:0;width:100vw;height:100dvh;box-sizing:border-box;padding:11dvh 6vw calc(20dvh + env(safe-area-inset-bottom));overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;touch-action:pan-y;pointer-events:auto;opacity:0;transition:opacity .55s ease;scrollbar-width:none}
+ body.fa-m-p19s2 .page19-master::-webkit-scrollbar{display:none}
+ body.fa-m-p19s2.fa-m-reveal .page19-master{opacity:1}
+ body.fa-m-p19s2 .page19-player{position:relative;left:auto;top:auto;width:100%;height:152px;transform:none;opacity:1;pointer-events:auto;margin:0 0 28px}
+ body.fa-m-p19s2 .page19-player iframe{width:100%;height:152px}
+ body.fa-m-p19s2 .page19-credits{position:relative;left:auto;top:auto;width:100%;height:auto;transform:none;opacity:1;color:#f4f1ea;font-family:"EB Garamond",Georgia,serif;font-size:11.33px;line-height:1.35;text-align:center;overflow:visible}
+ body.fa-m-p19s2 .page19-credits p{display:block;margin:0 0 22px}
+ body.fa-m-p19s2 .page19-credits p:last-child{margin-bottom:0}
 }
 </style>
-
-<style id="fa-mobile-v43-22-desktop-holdnav-containment">
-@media (min-width:801px){
-  .fa-holdnav,.fa-holdnav-veil,.fa-holdnav-anchor-dot{
-    display:none!important;
-    visibility:hidden!important;
-    opacity:0!important;
-    pointer-events:none!important;
-  }
-}
-</style>
-
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
@@ -4850,28 +4495,15 @@ body.fa-holdnav-active{-webkit-user-select:none!important;user-select:none!impor
     <section class="page19-layer" id="page19" aria-label="Credits">
       <img class="page19-bg" src="assets/page19-bg.jpg" alt="">
       <div class="p19-mobile-dim" aria-hidden="true"></div>
-      <div class="editorial-master page19-master" id="page19Master">
-        <div class="page19-grid">
+      <div class="page19-master" id="page19Master">
         <div class="page19-player" id="page19Player"></div>
         <div class="page19-credits" id="page19Credits">
-          <p class="page19-edition"><strong>WAYPOINT - The Explorer’s Magazine - Fade Away Hotel Special Edition</strong><br>
-          Written, illustrated, and animated by Purpo</p>
-
+          <p class="page19-edition"><strong>WAYPOINT - The Explorer’s Magazine - Fade Away Hotel Special Edition</strong><br>Written, illustrated, and animated by Purpo</p>
           <p>This publication is purely fictional. All characters, names, groups, and events depicted are fictional and are not intended to represent real individuals or organizations. Any resemblance to actual persons, living or dead, is coincidental.</p>
-
           <p class="page19-ep"><strong>FADE AWAY EP by Purpo</strong></p>
-
-          <p><strong>Music and Lyrics</strong><br>
-          Purpo</p>
-
-          <p><strong>Featured Musicians</strong><br>
-          Purpo, Jem Blanco, Pablo Pacis, Ren Gamboa, Bong Abantao</p>
-
-          <p><strong>Edited by</strong><br>
-          Gari Custodio</p>
-        </div>
-
-        
+          <p><strong>Music and Lyrics</strong><br>Purpo</p>
+          <p><strong>Featured Musicians</strong><br>Purpo, Jem Blanco, Pablo Pacis, Ren Gamboa, Bong Abantao</p>
+          <p><strong>Edited by</strong><br>Gari Custodio</p>
         </div>
       </div>
     </section>
@@ -5026,13 +4658,7 @@ function updateHandwrittenSafeZones(){
 const editorialMasters = [...document.querySelectorAll(".editorial-master")];
 function updateEditorialScales(){
   const s=Math.min(window.innerWidth/1920,window.innerHeight/1080);
-  editorialMasters.forEach(el=>{
-      if(el===page19Master && matchMedia("(max-width:800px), (hover:none) and (pointer:coarse)").matches){
-        el.style.setProperty("--editorial-scale","1");
-      }else{
-        el.style.setProperty("--editorial-scale",s);
-      }
-    });
+  editorialMasters.forEach(el=>el.style.setProperty("--editorial-scale",s));
 }
 updateEditorialScales();
 updateHandwrittenSafeZones();
@@ -6868,16 +6494,9 @@ clearTimeout(t);clear();const n=states[i];
    }
  }
  if((n==='p19s1'||n==='p19s2') && matchMedia("(max-width:800px), (hover:none) and (pointer:coarse)").matches){
-      [page19Credits,page19Player].forEach(el=>{
-        if(!el)return;
-        el.style.removeProperty('translate');
-        el.style.removeProperty('filter');
-        el.style.removeProperty('opacity');
-        el.style.removeProperty('pointer-events');
-      });
-      if(page19Master) page19Master.style.setProperty('--editorial-scale','1');
-    }
-    const p19bg=document.querySelector('.page19-bg');
+ [page19Credits,page19Player].forEach(el=>{if(!el)return;el.style.removeProperty('translate');el.style.removeProperty('filter');el.style.removeProperty('opacity');el.style.removeProperty('pointer-events')});
+}
+const p19bg=document.querySelector('.page19-bg');
  if(p19bg && (n==='p19s1'||n==='p19s2')){
    p19bg.style.setProperty('transition','none','important');
    p19bg.style.setProperty('object-position','68% center','important');
