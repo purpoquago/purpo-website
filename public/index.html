@@ -53,6 +53,17 @@ html{scroll-snap-type:y mandatory}
 }
 
 .scene3 video.layer{display:block;pointer-events:none}
+
+/* Road scene wide-pan tuning */
+@media(max-width:800px),(hover:none) and (pointer:coarse){
+  .scene3 .layer{
+    width:220vw!important;
+    height:110vh!important;
+    top:-5vh!important;
+    object-position:center center!important;
+  }
+}
+
 </style></head><body>
 <div class="stage" id="stage">
 <section class="scene scene1 active" id="scene1"><img class="layer bg" src="assets/background.jpg" alt=""><img class="layer mid" src="assets/middleground.png" alt=""><img class="layer fg" src="assets/foreground.png" alt=""></section>
@@ -74,10 +85,14 @@ html{scroll-snap-type:y mandatory}
  const scenes=[...document.querySelectorAll('.scene')],nav=document.getElementById('siteNav'),vig=document.getElementById('uiVignette'),black=document.getElementById('blackout'),motionBtn=document.getElementById('motionEnable');
  let index=0,locked=false,tx=0,ty=0,cx=0,cy=0,raf=0,touching=false,startX=0,startY=0,startPan=0,axis=null,gyroX=0,gyroY=0,lastAuto=performance.now(),autoDir=1,manualUntil=0;
  const pans=[0,0,0],clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),mobile=()=>matchMedia('(max-width:800px),(hover:none) and (pointer:coarse)').matches;
- const limits=()=>[innerWidth*.375,innerWidth*.58,innerWidth*.45];
+ const scene3PanLimit=()=>{
+   const planeW=innerWidth*2.20;
+   return Math.max(0,(planeW-innerWidth)/2);
+ };
+ const limits=()=>[innerWidth*.375,innerWidth*.58,scene3PanLimit()];
  function req(){if(!raf)raf=requestAnimationFrame(tick)}
  function tick(now){raf=0;
-   if(mobile()){const dt=Math.min(40,now-lastAuto);lastAuto=now,lim=limits()[index],speed=lim/10000;pans[index]+=autoDir*speed*dt;if(pans[index]>=lim){pans[index]=lim;autoDir=-1}if(pans[index]<=-lim){pans[index]=-lim;autoDir=1}}else lastAuto=now;
+   if(mobile()){const dt=Math.min(40,now-lastAuto);lastAuto=now,lim=limits()[index],speed=index===2?(2*lim/48000):(lim/10000);pans[index]+=autoDir*speed*dt;if(pans[index]>=lim){pans[index]=lim;autoDir=-1}if(pans[index]<=-lim){pans[index]=-lim;autoDir=1}}else lastAuto=now;
    cx+=(tx+gyroX-cx)*.12;cy+=(ty+gyroY-cy)*.12;
    scenes.forEach((s,i)=>{s.style.setProperty('--mx',cx.toFixed(4));s.style.setProperty('--my',cy.toFixed(4));s.style.setProperty('--pan',(pans[i]||0).toFixed(1)+'px')});
    if(mobile()||Math.abs(tx+gyroX-cx)>.001||Math.abs(ty+gyroY-cy)>.001)req()
