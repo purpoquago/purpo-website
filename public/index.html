@@ -51,11 +51,13 @@ html{scroll-snap-type:y mandatory}
     object-position:42% center!important;
   }
 }
+
+.scene3 video.layer{display:block;pointer-events:none}
 </style></head><body>
 <div class="stage" id="stage">
 <section class="scene scene1 active" id="scene1"><img class="layer bg" src="assets/background.jpg" alt=""><img class="layer mid" src="assets/middleground.png" alt=""><img class="layer fg" src="assets/foreground.png" alt=""></section>
 <section class="scene scene2" id="scene2"><img class="layer bg" src="assets/scene2/background.jpg" alt=""><img class="layer mid" id="s2mid" src="assets/scene2/middleground.png" alt=""><img class="layer fg" id="s2fg" src="assets/scene2/foreground.png" alt=""></section>
-<section class="scene scene3" id="scene3"><img class="layer bg" src="assets/scene3/background.jpg" alt=""><img class="layer fg" id="s3fg" src="assets/scene3/foreground.png" alt=""></section><div class="blackout" id="blackout"></div></div><button class="motion-enable" id="motionEnable" type="button">Enable motion</button><div class="scroll-track" aria-hidden="true"><div class="snap-anchor"></div><div class="snap-anchor"></div><div class="snap-anchor"></div></div>
+<section class="scene scene3" id="scene3"><video class="layer bg" src="assets/scene3/road-loop-bg.webm" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video><video class="layer fg" id="s3fg" src="assets/scene3/road-loop-FG.webm" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video></section><div class="blackout" id="blackout"></div></div><button class="motion-enable" id="motionEnable" type="button">Enable motion</button><div class="scroll-track" aria-hidden="true"><div class="snap-anchor"></div><div class="snap-anchor"></div><div class="snap-anchor"></div></div>
 <div class="ui-vignette" id="uiVignette" aria-hidden="true"></div>
 <nav class="site-nav" id="siteNav" aria-label="Primary navigation">
  <div class="nav-left"><a class="logo-link" href="./" aria-label="PURPO home"><img src="assets/ui/purpo-logo-white.png" alt="PURPO"></a></div>
