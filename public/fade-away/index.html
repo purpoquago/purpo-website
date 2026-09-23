@@ -4127,70 +4127,6 @@ body.fa-holdnav-active{-webkit-user-select:none!important;user-select:none!impor
 }
 </style>
 
-
-<style id="fa-v44-mobile-top-ui">
-@media (max-width:800px), (hover:none) and (pointer:coarse){
-  .site-nav{
-    position:fixed !important;
-    z-index:100 !important;
-    top:0 !important;
-    left:0 !important;
-    width:100% !important;
-    display:flex !important;
-    justify-content:space-between !important;
-    align-items:flex-start !important;
-    gap:12px !important;
-    padding:16px 16px 0 !important;
-    opacity:1;
-    transform:none !important;
-    transition:opacity .45s ease !important;
-    pointer-events:none;
-  }
-  .site-nav a,.site-nav button{pointer-events:auto}
-  .site-nav.fa-mobile-ui-dimmed{opacity:.12}
-  .site-nav:focus-within{opacity:1 !important}
-
-  .site-nav .nav-left{display:flex;align-items:flex-start}
-  .site-nav .logo-link{display:block;width:112px !important;flex:0 0 auto}
-  .site-nav .logo-link img{display:block;width:100%;height:auto}
-
-  .site-nav .menu{
-    display:flex !important;
-    flex-direction:column !important;
-    align-items:flex-end !important;
-    gap:4px !important;
-    margin:0 !important;
-  }
-  .site-nav .nav-item{
-    display:block;
-    height:34px !important;
-    margin:0 !important;
-  }
-  .site-nav .nav-item + .nav-item{margin-left:0 !important}
-  .site-nav .nav-item + .nav-item::before{display:none !important}
-  .site-nav .nav-art img{object-position:right center !important}
-
-  .site-nav .nav-sa{width:188px !important}
-  .site-nav .nav-fade{width:122px !important}
-  .site-nav .nav-malilig{width:98px !important}
-  .site-nav .nav-visuals{width:76px !important}
-  .site-nav .nav-about{width:64px !important}
-
-  /* Keep Fade Away's sound control, but make it a compact first row
-     so it belongs to the vertical stack rather than desktop geometry. */
-  .site-nav .sound-toggle{
-    margin:0 0 2px !important;
-    align-self:flex-end !important;
-  }
-  .site-nav .sound-divider{display:none !important}
-
-  /* Fade Away's existing .on-light filter logic remains authoritative.
-     This rule only ensures the yellow active art follows the same inversion
-     when the UI needs to read dark on a light scene. */
-  .site-nav.on-light .nav-art .yellow{filter:none}
-}
-</style>
-
 </head>
 <body>
 <section class="hero-scroll" id="fade-away">
@@ -4203,7 +4139,7 @@ body.fa-holdnav-active{-webkit-user-select:none!important;user-select:none!impor
   <nav class="site-nav" aria-label="Primary navigation">
     <div class="nav-left">
       
-      <a class="logo-link" href="#fade-away" aria-label="PURPO home">
+      <a class="logo-link" href="/" aria-label="PURPO home">
         <img src="assets/purpo-logo-white.png" alt="PURPO">
       </a>
     </div>
@@ -4214,21 +4150,21 @@ body.fa-holdnav-active{-webkit-user-select:none!important;user-select:none!impor
         <img class="sound-on-img" src="assets/sound-on.png" alt="">
       </button>
       <span class="sound-divider" aria-hidden="true"></span>
-      <a class="nav-item nav-sa" href="#sa-gitna" aria-label="Sa Gitna ng Lahat EP">
+      <a class="nav-item nav-sa" href="/sa-gitna-ng-lahat/" aria-label="Sa Gitna ng Lahat EP">
         <span class="nav-art">
           <img class="white" src="assets/sa-gitna-white.png" alt="">
           <img class="yellow" src="assets/sa-gitna-yellow.png" alt="">
         </span>
       </a>
 
-      <a class="nav-item nav-fade active" href="#fade-away" aria-label="Fade Away EP">
+      <a class="nav-item nav-fade active" href="/fade-away/" aria-label="Fade Away EP">
         <span class="nav-art">
           <img class="white" src="assets/fade-away-white.png" alt="">
           <img class="yellow" src="assets/fade-away-yellow.png" alt="">
         </span>
       </a>
 
-      <a class="nav-item nav-malilig" href="#malilig" aria-label="Malilig LP">
+      <a class="nav-item nav-malilig" href="/mallig/" aria-label="Malilig LP">
         <span class="nav-art">
           <img class="white" src="assets/malilig-white.png" alt="">
           <img class="yellow" src="assets/malilig-yellow.png" alt="">
@@ -6457,42 +6393,6 @@ document.addEventListener("pointercancel",e=>{if(e.pointerId===pid&&!active){cle
 
 })();
 </script>
-
-<script id="fa-v44-mobile-top-ui-behavior">
-(()=>{
-  const nav=document.querySelector('.site-nav');
-  if(!nav)return;
-  const mobile=()=>matchMedia('(max-width:800px), (hover:none) and (pointer:coarse)').matches;
-  let timer=0;
-  const clear=()=>{if(timer){clearTimeout(timer);timer=0}};
-  const show=()=>{
-    if(!mobile())return;
-    clear();
-    nav.classList.remove('fa-mobile-ui-dimmed');
-    timer=setTimeout(()=>nav.classList.add('fa-mobile-ui-dimmed'),2400);
-  };
-  const wakeFromTouch=e=>{
-    if(!mobile())return;
-    const t=e.touches&&e.touches[0];
-    if(t && t.clientY<=innerHeight*.24)show();
-  };
-  document.addEventListener('touchstart',wakeFromTouch,{passive:true});
-  nav.addEventListener('touchstart',show,{passive:true});
-  nav.addEventListener('click',show,{passive:true});
-  window.addEventListener('resize',()=>{if(mobile())show();else{clear();nav.classList.remove('fa-mobile-ui-dimmed')}},{passive:true});
-
-  /* The mobile Fade Away controller emits body state classes rather than
-     a custom event. Observe those class changes so each new scene/state
-     briefly restores the top UI before it idles down again. */
-  const obs=new MutationObserver(muts=>{
-    if(!mobile())return;
-    if(muts.some(m=>m.attributeName==='class'))show();
-  });
-  obs.observe(document.body,{attributes:true,attributeFilter:['class']});
-  show();
-})();
-</script>
-
 </body>
 </html>
 
