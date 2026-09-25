@@ -52,7 +52,7 @@ html{scroll-snap-type:y mandatory}
   }
 }
 
-.scene3 video.layer{display:block;pointer-events:none}
+
 
 /* Road scene wide-pan tuning */
 @media(max-width:800px),(hover:none) and (pointer:coarse){
@@ -67,11 +67,17 @@ html{scroll-snap-type:y mandatory}
   }
 }
 
+
+/* TEMPLATE ENGINE V1 */
+.templated-scene .depth-slot{position:absolute;inset:0;transform-style:preserve-3d;pointer-events:none}.templated-scene .depth-slot:empty{display:none}.templated-scene .depth-slot>.layer{position:absolute}.templated-scene .feature-layer{position:absolute;z-index:20;inset:0;display:grid;grid-template-columns:1fr 1fr;pointer-events:none}.templated-scene .feature-column{position:relative;pointer-events:auto}.templated-scene .feature-column:empty{pointer-events:none}
+.scene3 .depth-slot.back>.layer{transform:translate3d(calc(-50% + var(--pan) + var(--mx)*-2px),calc(var(--my)*-1px),-16px) scale(1.018)!important}.scene3 .depth-slot.front>.layer{transform:translate3d(calc(-50% + var(--pan) + var(--mx)*6px),calc(var(--my)*4px),26px) scale(1.008)!important}
+@media(min-width:801px) and (hover:hover) and (pointer:fine){.scene3 .depth-slot.back>.layer{transform:translate3d(calc(var(--mx)*-5px),calc(var(--my)*-3px),-25px) scale(1.03)!important}.scene3 .depth-slot.front>.layer{transform:translate3d(calc(var(--mx)*15px),calc(var(--my)*10px),45px) scale(1.012)!important}}
+@media(max-width:800px),(hover:none) and (pointer:coarse){.scene3 .depth-slot>.layer{left:50%!important;width:auto!important;height:110vh!important;aspect-ratio:16/9!important;max-width:none!important;top:-5vh!important;object-fit:fill!important;object-position:center center!important;transform-origin:center!important}}
 </style></head><body>
 <div class="stage" id="stage">
 <section class="scene scene1 active" id="scene1"><img class="layer bg" src="assets/background.jpg" alt=""><img class="layer mid" src="assets/middleground.png" alt=""><img class="layer fg" src="assets/foreground.png" alt=""></section>
 <section class="scene scene2" id="scene2"><img class="layer bg" src="assets/scene2/background.jpg" alt=""><img class="layer mid" id="s2mid" src="assets/scene2/middleground.png" alt=""><img class="layer fg" id="s2fg" src="assets/scene2/foreground.png" alt=""></section>
-<section class="scene scene3" id="scene3"><video class="layer bg" src="assets/scene3/road-loop-bg.webm" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video><video class="layer fg" id="s3fg" src="assets/scene3/road-loop-FG.webm" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video></section><div class="blackout" id="blackout"></div></div><button class="motion-enable" id="motionEnable" type="button">Enable motion</button><div class="scroll-track" aria-hidden="true"><div class="snap-anchor"></div><div class="snap-anchor"></div><div class="snap-anchor"></div></div>
+<section class="scene scene3 templated-scene" id="scene3" data-template-scene="3"><div class="depth-slot back" data-depth="back"></div><div class="depth-slot mid" data-depth="mid"></div><div class="depth-slot front" data-depth="front"></div><div class="feature-layer" data-feature><div class="feature-column feature-left" data-feature-column="left"></div><div class="feature-column feature-right" data-feature-column="right"></div></div></section><div class="blackout" id="blackout"></div></div><button class="motion-enable" id="motionEnable" type="button">Enable motion</button><div class="scroll-track" aria-hidden="true"><div class="snap-anchor"></div><div class="snap-anchor"></div><div class="snap-anchor"></div></div>
 <div class="ui-vignette" id="uiVignette" aria-hidden="true"></div>
 <nav class="site-nav" id="siteNav" aria-label="Primary navigation">
  <div class="nav-left"><a class="logo-link" href="/" aria-label="PURPO home"><img src="assets/ui/purpo-logo-white.png" alt="PURPO"></a></div>
@@ -83,7 +89,7 @@ html{scroll-snap-type:y mandatory}
   <a class="nav-item nav-about" href="#about" aria-label="About"><span class="nav-art"><img class="base" src="assets/ui/about-white.png" alt=""><img class="pink hover-pink" src="assets/ui/about-white.png" alt=""></span></a>
  </div>
 </nav>
-<script>
+<script id="purpo-home-template-data" type="application/json">{"scene3":{"back":{"type":"video","src":"assets/scene3/road-loop-bg.webm"},"mid":null,"front":{"type":"video","src":"assets/scene3/road-loop-FG.webm"},"feature":{"left":null,"right":null}}}</script><script id="purpo-home-template-engine-v1">(()=>{const d=JSON.parse(document.getElementById('purpo-home-template-data').textContent),s=document.querySelector('[data-template-scene="3"]');if(!s)return;const c=d.scene3;const make=(item,depth)=>{if(!item||!item.src)return null;const v=item.type==='video',e=document.createElement(v?'video':'img');e.className='layer '+depth;e.src=item.src;e.setAttribute('aria-hidden','true');if(v){e.autoplay=true;e.muted=true;e.loop=true;e.playsInline=true;e.preload='auto'}else e.alt='';return e};['back','mid','front'].forEach(depth=>{const slot=s.querySelector('[data-depth="'+depth+'"]'),e=make(c[depth],depth);if(e)slot.appendChild(e)})})();</script><script>
 (()=> {
  const scenes=[...document.querySelectorAll('.scene')],nav=document.getElementById('siteNav'),vig=document.getElementById('uiVignette'),black=document.getElementById('blackout'),motionBtn=document.getElementById('motionEnable');
  let index=0,locked=false,tx=0,ty=0,cx=0,cy=0,raf=0,touching=false,startX=0,startY=0,startPan=0,axis=null,gyroX=0,gyroY=0,lastAuto=performance.now(),autoDir=1,manualUntil=0;
