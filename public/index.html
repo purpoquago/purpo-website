@@ -2,8 +2,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>PURPO</title>
 <style>
-*{box-sizing:border-box}html,body{margin:0;width:100%;min-height:100%;background:#111}html{scroll-behavior:auto}body{overflow-x:hidden;overscroll-behavior-x:none;font-family:system-ui,sans-serif}.scroll-track{height:820vh}.stage{position:fixed;inset:0;overflow:hidden;background:#111;perspective:1200px}.scene{--mx:0;--my:0;position:absolute;inset:0;overflow:hidden;opacity:0;visibility:hidden;will-change:opacity}.scene.active{visibility:visible}.layer{position:absolute;inset:-3%;width:106%;height:106%;object-fit:cover;object-position:center;pointer-events:none;user-select:none;will-change:transform,opacity;transform-origin:center}.scene1 .bg{transform:translate3d(calc(var(--mx)*-7px),calc(var(--my)*-5px),-35px) scale(1.04)}.scene1 .mid{transform:translate3d(calc(var(--mx)*9px),calc(var(--my)*7px),20px) scale(1.025)}.scene1 .fg{transform:translate3d(calc(var(--mx)*19px),calc(var(--my)*14px),55px) scale(1.015)}
-.scene2 .bg{transform:translate3d(calc(var(--mx)*-5px),calc(var(--my)*-3px),-28px) scale(1.035)}.scene2 .mid{transform:translate3d(calc(var(--mx)*8px),calc(var(--my)*6px),18px) scale(1.02);opacity:0}.scene2 .fg{transform:translate3d(calc(var(--mx)*15px),calc(var(--my)*11px),45px) scale(1.012);opacity:1}.scene3 .bg{transform:translate3d(calc(var(--mx)*-5px),calc(var(--my)*-3px),-25px) scale(1.03)}.scene3 .fg{transform:translate3d(calc(var(--mx)*15px),calc(var(--my)*10px),45px) scale(1.012);opacity:1}
+*{box-sizing:border-box}html,body{margin:0;width:100%;min-height:100%;background:#111}html{scroll-behavior:auto}body{overflow-x:hidden;overscroll-behavior-x:none;font-family:system-ui,sans-serif}.scroll-track{height:820vh}.stage{position:fixed;inset:0;overflow:hidden;background:#111;perspective:1200px}.scene{--mx:0;--my:0;position:absolute;inset:0;overflow:hidden;opacity:0;visibility:hidden;will-change:opacity}.scene.active{visibility:visible}.layer{position:absolute;inset:-3%;width:106%;height:106%;object-fit:cover;object-position:center;pointer-events:none;user-select:none;will-change:transform,opacity;transform-origin:center}
 .blackout{position:absolute;inset:0;background:#000;z-index:20;opacity:0;pointer-events:none;will-change:opacity}.ui-vignette{position:fixed;z-index:90;left:0;right:0;top:0;height:180px;pointer-events:none;background:linear-gradient(to bottom,rgba(0,0,0,.5),rgba(0,0,0,.12) 45%,transparent);opacity:1;transition:opacity .45s ease}.site-nav{position:fixed;z-index:100;top:0;left:0;width:100%;display:flex;justify-content:space-between;align-items:flex-start;gap:30px;padding:22px 34px 0;opacity:1;transition:opacity .45s ease,transform .45s ease;pointer-events:none}.site-nav.ui-dimmed{opacity:.10;transform:translateY(-4px)}.site-nav a{pointer-events:auto}.nav-left{display:flex;align-items:flex-start}.logo-link{display:block;width:168px}.logo-link img{display:block;width:100%;height:auto}.menu{display:flex;align-items:center;margin-top:7px}.nav-item{position:relative;display:block;text-decoration:none;height:44px}.nav-item+.nav-item{margin-left:46px}.nav-item+.nav-item:before{content:"";position:absolute;left:-24px;top:4px;width:2px;height:34px;background:rgba(0,0,0,.48);transform:rotate(4deg)}.nav-art{position:relative;display:block;width:100%;height:100%}.nav-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;transition:opacity .18s ease,transform .18s ease,filter .18s ease}.nav-art .base{opacity:1}.nav-art .pink{opacity:0}.nav-item:hover .base,.nav-item:focus-visible .base{opacity:0}.nav-item:hover .pink,.nav-item:focus-visible .pink{opacity:1}.hover-pink{filter:brightness(0) saturate(100%) invert(45%) sepia(94%) saturate(3922%) hue-rotate(310deg) brightness(101%) contrast(101%)}.nav-sa{width:286px}.nav-fade{width:185px}.nav-malilig{width:148px}.nav-visuals{width:116px}.nav-about{width:98px}
 @media(max-width:800px),(hover:none) and (pointer:coarse){.scroll-track{height:760vh}.layer{inset:-8%;width:116%;height:116%;object-position:center}.site-nav{padding:16px 16px 0;gap:12px}.logo-link{width:112px}.menu{flex-direction:column;align-items:flex-end;gap:4px;margin:0}.nav-item{height:34px;margin:0}.nav-item+.nav-item{margin-left:0}.nav-item+.nav-item:before{display:none}.nav-art img{object-position:right center}.nav-sa{width:188px}.nav-fade{width:122px}.nav-malilig{width:98px}.nav-visuals{width:76px}.nav-about{width:64px}.ui-vignette{height:220px;background:linear-gradient(to bottom,rgba(0,0,0,.52),rgba(0,0,0,.14) 52%,transparent)}}
 @media(prefers-reduced-motion:reduce){.layer{transform:none!important}}
@@ -23,60 +22,63 @@ html{scroll-snap-type:y mandatory}
    width:155vw!important;height:110vh!important;
    object-fit:cover!important;transform-origin:center!important
  }
- /* Scene 1 resting crop: character centered, doorway only partly visible. */
- .scene1 .layer{object-position:61% center!important}
- .scene2 .layer,.scene3 .layer{object-position:center!important}
- .scene1 .bg{transform:translate3d(calc(-50% + var(--pan) + var(--mx)*-2px),calc(var(--my)*-1px),-18px) scale(1.02)!important}
- .scene1 .mid{transform:translate3d(calc(-50% + var(--pan) + var(--mx)*3px),calc(var(--my)*2px),10px) scale(1.012)!important}
- .scene1 .fg{transform:translate3d(calc(-50% + var(--pan) + var(--mx)*6px),calc(var(--my)*4px),28px) scale(1.008)!important}
- .scene2 .bg,.scene3 .bg{transform:translate3d(calc(-50% + var(--pan) + var(--mx)*-2px),calc(var(--my)*-1px),-16px) scale(1.018)!important}
- .scene2 .mid{transform:translate3d(calc(-50% + var(--pan) + var(--mx)*3px),calc(var(--my)*2px),10px) scale(1.012)!important}
- .scene2 .fg,.scene3 .fg{transform:translate3d(calc(-50% + var(--pan) + var(--mx)*6px),calc(var(--my)*4px),26px) scale(1.008)!important}
 }
 
 .motion-enable{display:none;position:fixed;z-index:120;left:50%;bottom:22px;transform:translateX(-50%);border:1px solid rgba(255,255,255,.72);border-radius:999px;padding:9px 13px;background:rgba(0,0,0,.42);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);color:#fff;font:600 11px/1 system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase}
 @media(max-width:800px),(hover:none) and (pointer:coarse){
- .scene1 .layer{width:175vw!important;object-position:56% center!important}
- .scene2 .layer{width:180vw!important;object-position:50% center!important}
- .scene3 .layer{width:190vw!important;object-position:45% center!important}
  .motion-enable.show{display:block}
 }
 
 /* V7 mobile tuning */
 @media(max-width:800px),(hover:none) and (pointer:coarse){
-  .scene2 .layer{
-    width:205vw!important;
-    height:118vh!important;
-    top:-9vh!important;
-    object-position:42% center!important;
-  }
 }
 
 
 
 /* Road scene wide-pan tuning */
 @media(max-width:800px),(hover:none) and (pointer:coarse){
-  .scene3 .layer{
-    width:auto!important;
-    height:110vh!important;
-    aspect-ratio:16 / 9!important;
-    max-width:none!important;
-    top:-5vh!important;
-    object-fit:fill!important;
-    object-position:center center!important;
-  }
 }
 
 
 /* TEMPLATE ENGINE V1 */
 .templated-scene .depth-slot{position:absolute;inset:0;transform-style:preserve-3d;pointer-events:none}.templated-scene .depth-slot:empty{display:none}.templated-scene .depth-slot>.layer{position:absolute}.templated-scene .feature-layer{position:absolute;z-index:20;inset:0;display:grid;grid-template-columns:1fr 1fr;pointer-events:none}.templated-scene .feature-column{position:relative;pointer-events:auto}.templated-scene .feature-column:empty{pointer-events:none}
-.scene3 .depth-slot.back>.layer{transform:translate3d(calc(-50% + var(--pan) + var(--mx)*-2px),calc(var(--my)*-1px),-16px) scale(1.018)!important}.scene3 .depth-slot.front>.layer{transform:translate3d(calc(-50% + var(--pan) + var(--mx)*6px),calc(var(--my)*4px),26px) scale(1.008)!important}
-@media(min-width:801px) and (hover:hover) and (pointer:fine){.scene3 .depth-slot.back>.layer{transform:translate3d(calc(var(--mx)*-5px),calc(var(--my)*-3px),-25px) scale(1.03)!important}.scene3 .depth-slot.front>.layer{transform:translate3d(calc(var(--mx)*15px),calc(var(--my)*10px),45px) scale(1.012)!important}}
-@media(max-width:800px),(hover:none) and (pointer:coarse){.scene3 .depth-slot>.layer{left:50%!important;width:auto!important;height:110vh!important;aspect-ratio:16/9!important;max-width:none!important;top:-5vh!important;object-fit:fill!important;object-position:center center!important;transform-origin:center!important}}
+@media(min-width:801px) and (hover:hover) and (pointer:fine){}
+@media(max-width:800px),(hover:none) and (pointer:coarse){}
+@media(max-width:800px),(hover:none) and (pointer:coarse){
+}
+
+/* TEMPLATE ENGINE V3 — UNIVERSAL S3 PHYSICS
+   Scene numbers are content only. BACK / MID / FRONT own all motion behavior. */
+.templated-scene .depth-slot{position:absolute;inset:0;transform-style:preserve-3d;pointer-events:none}
+.templated-scene .depth-slot:empty{display:none}
+.templated-scene .depth-slot>.layer{position:absolute;pointer-events:none;user-select:none;will-change:transform,opacity;transform-origin:center;object-position:center center}
+.templated-scene .feature-layer{position:absolute;z-index:20;inset:0;display:grid;grid-template-columns:1fr 1fr;pointer-events:none}
+.templated-scene .feature-column{position:relative;pointer-events:auto}.templated-scene .feature-column:empty{pointer-events:none}
+
+/* Desktop: exact Scene 3 BACK / FRONT values; MID is the neutral midpoint. */
+@media(min-width:801px) and (hover:hover) and (pointer:fine){
+ .templated-scene .depth-slot>.layer{inset:-3%;width:106%;height:106%;object-fit:cover}
+ .templated-scene .depth-slot.back>.layer{transform:translate3d(calc(var(--mx)*-5px),calc(var(--my)*-3px),-25px) scale(1.03)!important}
+ .templated-scene .depth-slot.mid>.layer{transform:translate3d(calc(var(--mx)*5px),calc(var(--my)*3.5px),10px) scale(1.021)!important}
+ .templated-scene .depth-slot.front>.layer{transform:translate3d(calc(var(--mx)*15px),calc(var(--my)*10px),45px) scale(1.012)!important}
+}
+
+/* Mobile: exact Scene 3 geometry + pan behavior, now universal.
+   Media keeps its intrinsic aspect ratio; one scene pan keeps all layers registered. */
+@media(max-width:800px),(hover:none) and (pointer:coarse){
+ .templated-scene .depth-slot>.layer{
+   inset:auto!important;left:50%!important;top:-5vh!important;
+   width:auto!important;height:110vh!important;max-width:none!important;
+   object-fit:fill!important;object-position:center center!important;transform-origin:center!important
+ }
+ .templated-scene .depth-slot.back>.layer{transform:translate3d(calc(-50% + var(--pan) + var(--mx)*-2px),calc(var(--my)*-1px),-16px) scale(1.018)!important}
+ .templated-scene .depth-slot.mid>.layer{transform:translate3d(calc(-50% + var(--pan) + var(--mx)*2px),calc(var(--my)*1.5px),5px) scale(1.013)!important}
+ .templated-scene .depth-slot.front>.layer{transform:translate3d(calc(-50% + var(--pan) + var(--mx)*6px),calc(var(--my)*4px),26px) scale(1.008)!important}
+}
 </style></head><body>
 <div class="stage" id="stage">
-<section class="scene scene1 active" id="scene1"><img class="layer bg" src="assets/background.jpg" alt=""><img class="layer mid" src="assets/middleground.png" alt=""><img class="layer fg" src="assets/foreground.png" alt=""></section>
-<section class="scene scene2" id="scene2"><img class="layer bg" src="assets/scene2/background.jpg" alt=""><img class="layer mid" id="s2mid" src="assets/scene2/middleground.png" alt=""><img class="layer fg" id="s2fg" src="assets/scene2/foreground.png" alt=""></section>
+<section class="scene scene1 templated-scene active" id="scene1" data-template-scene="1"><div class="depth-slot back" data-depth="back"></div><div class="depth-slot mid" data-depth="mid"></div><div class="depth-slot front" data-depth="front"></div><div class="feature-layer" data-feature><div class="feature-column feature-left" data-feature-column="left"></div><div class="feature-column feature-right" data-feature-column="right"></div></div></section>
+<section class="scene scene2 templated-scene" id="scene2" data-template-scene="2"><div class="depth-slot back" data-depth="back"></div><div class="depth-slot mid" data-depth="mid"></div><div class="depth-slot front" data-depth="front"></div><div class="feature-layer" data-feature><div class="feature-column feature-left" data-feature-column="left"></div><div class="feature-column feature-right" data-feature-column="right"></div></div></section>
 <section class="scene scene3 templated-scene" id="scene3" data-template-scene="3"><div class="depth-slot back" data-depth="back"></div><div class="depth-slot mid" data-depth="mid"></div><div class="depth-slot front" data-depth="front"></div><div class="feature-layer" data-feature><div class="feature-column feature-left" data-feature-column="left"></div><div class="feature-column feature-right" data-feature-column="right"></div></div></section><div class="blackout" id="blackout"></div></div><button class="motion-enable" id="motionEnable" type="button">Enable motion</button><div class="scroll-track" aria-hidden="true"><div class="snap-anchor"></div><div class="snap-anchor"></div><div class="snap-anchor"></div></div>
 <div class="ui-vignette" id="uiVignette" aria-hidden="true"></div>
 <nav class="site-nav" id="siteNav" aria-label="Primary navigation">
@@ -89,21 +91,23 @@ html{scroll-snap-type:y mandatory}
   <a class="nav-item nav-about" href="#about" aria-label="About"><span class="nav-art"><img class="base" src="assets/ui/about-white.png" alt=""><img class="pink hover-pink" src="assets/ui/about-white.png" alt=""></span></a>
  </div>
 </nav>
-<script id="purpo-home-template-data" type="application/json">{"scene3":{"back":{"type":"video","src":"assets/scene3/road-loop-bg.webm"},"mid":null,"front":{"type":"video","src":"assets/scene3/road-loop-FG.webm"},"feature":{"left":null,"right":null}}}</script><script id="purpo-home-template-engine-v1">(()=>{const d=JSON.parse(document.getElementById('purpo-home-template-data').textContent),s=document.querySelector('[data-template-scene="3"]');if(!s)return;const c=d.scene3;const make=(item,depth)=>{if(!item||!item.src)return null;const v=item.type==='video',e=document.createElement(v?'video':'img');e.className='layer '+depth;e.src=item.src;e.setAttribute('aria-hidden','true');if(v){e.autoplay=true;e.muted=true;e.loop=true;e.playsInline=true;e.preload='auto'}else e.alt='';return e};['back','mid','front'].forEach(depth=>{const slot=s.querySelector('[data-depth="'+depth+'"]'),e=make(c[depth],depth);if(e)slot.appendChild(e)})})();</script><script>
+<script id="purpo-home-template-data" type="application/json">{"scene1":{"back":{"type":"image","src":"assets/background.jpg"},"mid":{"type":"image","src":"assets/middleground.png"},"front":{"type":"image","src":"assets/foreground.png"},"feature":{"left":null,"right":null}},"scene2":{"back":{"type":"image","src":"assets/scene2/background.jpg"},"mid":{"type":"image","src":"assets/scene2/middleground.png"},"front":{"type":"image","src":"assets/scene2/foreground.png"},"feature":{"left":null,"right":null}},"scene3":{"back":{"type":"video","src":"assets/scene3/road-loop-bg.webm"},"mid":null,"front":{"type":"video","src":"assets/scene3/road-loop-FG.webm"},"feature":{"left":null,"right":null}}}</script><script id="purpo-home-template-engine-v3">(()=>{const d=JSON.parse(document.getElementById('purpo-home-template-data').textContent);const make=(item,depth)=>{if(!item||!item.src)return null;const v=item.type==='video',e=document.createElement(v?'video':'img');e.className='layer '+depth;e.src=item.src;e.setAttribute('aria-hidden','true');if(v){e.autoplay=true;e.muted=true;e.loop=true;e.playsInline=true;e.preload='auto'}else e.alt='';return e};Object.entries(d).forEach(([key,c])=>{const s=document.querySelector('[data-template-scene="'+key.replace('scene','')+'"]');if(!s)return;['back','mid','front'].forEach(depth=>{const slot=s.querySelector('[data-depth="'+depth+'"]'),e=make(c[depth],depth);if(e)slot.appendChild(e)})})})();</script><script>
 (()=> {
  const scenes=[...document.querySelectorAll('.scene')],nav=document.getElementById('siteNav'),vig=document.getElementById('uiVignette'),black=document.getElementById('blackout'),motionBtn=document.getElementById('motionEnable');
  let index=0,locked=false,tx=0,ty=0,cx=0,cy=0,raf=0,touching=false,startX=0,startY=0,startPan=0,axis=null,gyroX=0,gyroY=0,lastAuto=performance.now(),autoDir=1,manualUntil=0;
- const pans=[0,0,0],clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),mobile=()=>matchMedia('(max-width:800px),(hover:none) and (pointer:coarse)').matches;
- const scene3PanLimit=()=>{
-   /* 1920x1080 source: at 110vh tall, this is the true rendered source width.
-      Pan from one source edge to the other, not merely across a fixed vw box. */
-   const planeW=innerHeight*1.10*(16/9);
-   return Math.max(0,(planeW-innerWidth)/2);
- };
- const limits=()=>[innerWidth*.375,innerWidth*.58,scene3PanLimit()];
+ const pans=[0,0,0],clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),mobile=()=>matchMedia('(max-width:800px),(hover:none) and (pointer:coarse)').matches;  const scenePanLimit=(scene)=>{
+    if(!scene)return 0;
+    const media=[...scene.querySelectorAll('.depth-slot>.layer')];
+    if(!media.length)return 0;
+    /* All layers share one master pan. Use the widest rendered layer so the
+       composition reaches its true horizontal edges without per-scene tuning. */
+    const widest=Math.max(...media.map(el=>el.getBoundingClientRect().width||0));
+    return Math.max(0,(widest-innerWidth)/2);
+  };
+  const limits=()=>scenes.map(scene=>scenePanLimit(scene));
  function req(){if(!raf)raf=requestAnimationFrame(tick)}
  function tick(now){raf=0;
-   if(mobile()){const dt=Math.min(40,now-lastAuto);lastAuto=now,lim=limits()[index],speed=index===2?(2*lim/28000):(lim/10000);pans[index]+=autoDir*speed*dt;if(pans[index]>=lim){pans[index]=lim;autoDir=-1}if(pans[index]<=-lim){pans[index]=-lim;autoDir=1}}else lastAuto=now;
+   if(mobile()){const dt=Math.min(40,now-lastAuto);lastAuto=now,lim=limits()[index],speed=(2*lim/28000);pans[index]+=autoDir*speed*dt;if(pans[index]>=lim){pans[index]=lim;autoDir=-1}if(pans[index]<=-lim){pans[index]=-lim;autoDir=1}}else lastAuto=now;
    cx+=(tx+gyroX-cx)*.12;cy+=(ty+gyroY-cy)*.12;
    scenes.forEach((s,i)=>{s.style.setProperty('--mx',cx.toFixed(4));s.style.setProperty('--my',cy.toFixed(4));s.style.setProperty('--pan',(pans[i]||0).toFixed(1)+'px')});
    if(mobile()||Math.abs(tx+gyroX-cx)>.001||Math.abs(ty+gyroY-cy)>.001)req()
