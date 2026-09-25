@@ -75,6 +75,7 @@ html{scroll-snap-type:y mandatory}
  .templated-scene .depth-slot.mid>.layer{transform:translate3d(calc(-50% + var(--pan) + var(--mx)*2px),calc(var(--my)*1.5px),5px) scale(1.013)!important}
  .templated-scene .depth-slot.front>.layer{transform:translate3d(calc(-50% + var(--pan) + var(--mx)*6px),calc(var(--my)*4px),26px) scale(1.008)!important}
 }
+html.purpo-loading .scene{opacity:0!important;visibility:hidden!important}
 </style></head><body>
 <div class="stage" id="stage">
 <section class="scene scene1 templated-scene active" id="scene1" data-template-scene="1"><div class="depth-slot back" data-depth="back"></div><div class="depth-slot mid" data-depth="mid"></div><div class="depth-slot front" data-depth="front"></div><div class="feature-layer" data-feature><div class="feature-column feature-left" data-feature-column="left"></div><div class="feature-column feature-right" data-feature-column="right"></div></div></section>
@@ -91,7 +92,7 @@ html{scroll-snap-type:y mandatory}
   <a class="nav-item nav-about" href="#about" aria-label="About"><span class="nav-art"><img class="base" src="assets/ui/about-white.png" alt=""><img class="pink hover-pink" src="assets/ui/about-white.png" alt=""></span></a>
  </div>
 </nav>
-<script id="purpo-home-template-data" type="application/json">{"scene1":{"back":{"type":"image","src":"assets/background.jpg"},"mid":{"type":"image","src":"assets/middleground.png"},"front":{"type":"image","src":"assets/foreground.png"},"feature":{"left":null,"right":null}},"scene2":{"back":{"type":"image","src":"assets/scene2/background.jpg"},"mid":{"type":"image","src":"assets/scene2/middleground.png"},"front":{"type":"image","src":"assets/scene2/foreground.png"},"feature":{"left":null,"right":null}},"scene3":{"back":{"type":"video","src":"assets/scene3/road-loop-bg.webm"},"mid":null,"front":{"type":"video","src":"assets/scene3/road-loop-FG.webm"},"feature":{"left":null,"right":null}}}</script><script id="purpo-home-template-engine-v3">(()=>{const d=JSON.parse(document.getElementById('purpo-home-template-data').textContent);const make=(item,depth)=>{if(!item||!item.src)return null;const v=item.type==='video',e=document.createElement(v?'video':'img');e.className='layer '+depth;e.src=item.src;e.setAttribute('aria-hidden','true');if(v){e.autoplay=true;e.muted=true;e.loop=true;e.playsInline=true;e.preload='auto'}else e.alt='';return e};Object.entries(d).forEach(([key,c])=>{const s=document.querySelector('[data-template-scene="'+key.replace('scene','')+'"]');if(!s)return;['back','mid','front'].forEach(depth=>{const slot=s.querySelector('[data-depth="'+depth+'"]'),e=make(c[depth],depth);if(e)slot.appendChild(e)})})})();</script><script>
+<script id="purpo-home-template-engine-v4">(async()=>{document.documentElement.classList.add('purpo-loading');try{const r=await fetch('content/home.json',{cache:'no-store'});if(!r.ok)throw Error('home.json '+r.status);const d=await r.json(),make=(x,k)=>{if(!x||!x.src)return null;const v=x.type==='video',e=document.createElement(v?'video':'img');e.className='layer '+k;e.src=x.src;e.setAttribute('aria-hidden','true');if(v){e.autoplay=true;e.muted=true;e.loop=true;e.playsInline=true;e.preload='auto'}else e.alt='';return e};Object.entries(d).forEach(([key,c])=>{const s=document.querySelector('[data-template-scene="'+key.replace('scene','')+'"]');if(!s)return;['back','mid','front'].forEach(k=>{const q=s.querySelector('[data-depth="'+k+'"]'),e=make(c[k],k);if(q&&e)q.appendChild(e)})});window.PURPO_HOME_READY=true;document.dispatchEvent(new Event('purpo-home-ready'))}catch(e){console.error(e)}finally{document.documentElement.classList.remove('purpo-loading')}})();</script><script>function PURPO_START(){
 (()=> {
  const scenes=[...document.querySelectorAll('.scene')],nav=document.getElementById('siteNav'),vig=document.getElementById('uiVignette'),black=document.getElementById('blackout'),motionBtn=document.getElementById('motionEnable');
  let index=0,locked=false,tx=0,ty=0,cx=0,cy=0,raf=0,touching=false,startX=0,startY=0,startPan=0,axis=null,gyroX=0,gyroY=0,lastAuto=performance.now(),autoDir=1,manualUntil=0;
@@ -130,4 +131,5 @@ html{scroll-snap-type:y mandatory}
  addEventListener('resize',()=>{const ls=limits();pans.forEach((v,i)=>pans[i]=clamp(v,-ls[i],ls[i]));scrollTo(0,index*innerHeight)},{passive:true});
  paint();scrollTo(0,0);
 })();
-</script></body></html>
+}
+if(window.PURPO_HOME_READY)PURPO_START();else document.addEventListener('purpo-home-ready',PURPO_START,{once:true});</script></body></html>

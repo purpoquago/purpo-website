@@ -1,0 +1,53 @@
+{
+  "scene1": {
+    "back": {
+      "type": "image",
+      "src": "assets/background.jpg"
+    },
+    "mid": {
+      "type": "image",
+      "src": "assets/middleground.png"
+    },
+    "front": {
+      "type": "image",
+      "src": "assets/foreground.png"
+    },
+    "feature": {
+      "left": null,
+      "right": null
+    }
+  },
+  "scene2": {
+    "back": {
+      "type": "image",
+      "src": "assets/scene2/background.jpg"
+    },
+    "mid": {
+      "type": "image",
+      "src": "assets/scene2/middleground.png"
+    },
+    "front": {
+      "type": "image",
+      "src": "assets/scene2/foreground.png"
+    },
+    "feature": {
+      "left": null,
+      "right": null
+    }
+  },
+  "scene3": {
+    "back": {
+      "type": "video",
+      "src": "assets/scene3/road-loop-bg.webm"
+    },
+    "mid": null,
+    "front": {
+      "type": "video",
+      "src": "assets/scene3/road-loop-FG.webm"
+    },
+    "feature": {
+      "left": null,
+      "right": null
+    }
+  }
+}
