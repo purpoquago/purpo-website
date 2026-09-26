@@ -84,7 +84,7 @@ html{scroll-snap-type:y mandatory}
   })
  }
  window.PURPO_RENDER_HOME=renderHome;
- window.addEventListener('message',e=>{if(e.origin!==location.origin||!e.data||e.data.type!=='PURPO_CMS_PREVIEW')return;renderHome(e.data.payload)});
+ function isolateCMSScene(selected){document.querySelectorAll('[data-template-scene]').forEach(el=>{const match='scene'+el.getAttribute('data-template-scene')===selected;el.style.setProperty('display',match?'block':'none','important');el.style.setProperty('visibility',match?'visible':'hidden','important');el.style.setProperty('opacity',match?'1':'0','important');el.style.setProperty('transform','none','important')});window.scrollTo(0,0)}window.addEventListener('message',e=>{if(e.origin!==location.origin||!e.data||e.data.type!=='PURPO_CMS_PREVIEW')return;renderHome(e.data.payload);isolateCMSScene(e.data.selectedScene||'scene1')});
  (async()=>{document.documentElement.classList.add('purpo-loading');try{const r=await fetch('content/home.json',{cache:'no-store'});if(!r.ok)throw Error('home.json '+r.status);let d=await r.json();renderHome(d);window.PURPO_HOME_READY=true;document.dispatchEvent(new Event('purpo-home-ready'))}catch(e){console.error(e)}finally{document.documentElement.classList.remove('purpo-loading')}})();
 })();
 </script><script>function PURPO_START(){
