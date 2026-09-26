@@ -65,7 +65,8 @@
               "fitTo": "50",
               "alignTo": "50",
               "color": "#ff3452",
-              "label": "VISIT PAGE"
+              "label": "VISIT PAGE",
+              "url": "https://purpo-website.ban-jo-son.workers.dev/fade-away/"
             }
           ]
         }
@@ -77,6 +78,67 @@
     }
   },
   "scene3": {
+    "back": {
+      "type": "image",
+      "src": "https://media.purpo.ph/cms/02e61bdc-6635-49a4-a561-03662555848d.webp"
+    },
+    "mid": null,
+    "front": null,
+    "shade": {
+      "enabled": false,
+      "opacity": 35
+    },
+    "feature": {
+      "columns": [
+        {
+          "rows": [
+            {
+              "type": "image",
+              "size": "100",
+              "src": "https://media.purpo.ph/cms/a0c36c44-d135-47fc-8620-bd99fdc3b501.jpg"
+            }
+          ]
+        },
+        {
+          "rows": [
+            {
+              "type": "image",
+              "size": "100",
+              "src": "https://media.purpo.ph/cms/350d14c6-6584-4284-91c8-12f991e23ed8.png"
+            },
+            {
+              "type": "text",
+              "content": "OUT NOW ON ALL STREAMING PLATFORMS",
+              "style": "subhead",
+              "align": "center",
+              "fitTo": "100",
+              "alignTo": "50",
+              "color": "#120940"
+            },
+            {
+              "type": "link1",
+              "align": "center",
+              "fitTo": "100",
+              "alignTo": "100",
+              "color": "#120940",
+              "label": "SPOTIFY",
+              "url": "https://open.spotify.com/track/1dQF1FNFQuNLsIHx49Thua?si=c043bac361234455"
+            },
+            {
+              "type": "link2",
+              "align": "right",
+              "fitTo": "50",
+              "alignTo": "100",
+              "color": "#120940",
+              "label": "VISIT PAGE>",
+              "url": "https://purpo-website.ban-jo-son.workers.dev/sa-gitna-ng-lahat/"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "scene4": {
     "back": {
       "type": "image",
       "src": "assets/scene2/background.jpg"
@@ -97,7 +159,7 @@
       "opacity": 35
     }
   },
-  "scene4": {
+  "scene5": {
     "back": {
       "type": "video",
       "src": "assets/scene3/road-loop-bg.webm"
