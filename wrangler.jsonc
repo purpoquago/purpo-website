@@ -1,7 +1,9 @@
 {
   "name": "purpo-website",
+  "main": "./src/worker.js",
   "compatibility_date": "2026-09-15",
   "assets": {
-    "directory": "./public"
+    "directory": "./public",
+    "binding": "ASSETS"
   }
 }
