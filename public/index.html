@@ -24,12 +24,12 @@ html{scroll-snap-type:y mandatory}
  .scene{--pan:0px}
  .scene .layer{
    inset:auto!important;top:-5vh!important;left:50%!important;
-   width:155vw!important;height:110vh!important;
+   width:auto!important;min-width:100vw!important;max-width:none!important;height:110dvh!important;
    object-fit:cover!important;transform-origin:center!important
  }
- .depth-slot.back>.layer{transform:translate3d(calc(-50% + var(--pan, 0px) + var(--dx-back, 0px)),var(--dy-back, 0px),0)}
- .depth-slot.mid>.layer{transform:translate3d(calc(-50% + var(--pan, 0px) + var(--dx-mid, 0px)),var(--dy-mid, 0px),0)}
- .depth-slot.front>.layer{transform:translate3d(calc(-50% + var(--pan, 0px) + var(--dx-front, 0px)),var(--dy-front, 0px),0)}
+ .depth-slot.back>.layer{transform:translate3d(calc(-50% + var(--pan-back, 0px)),var(--dy-back, 0px),0)}
+ .depth-slot.mid>.layer{transform:translate3d(calc(-50% + var(--pan-mid, 0px)),var(--dy-mid, 0px),0)}
+ .depth-slot.front>.layer{transform:translate3d(calc(-50% + var(--pan-front, 0px)),var(--dy-front, 0px),0)}
 }
 
 .motion-enable{display:none;position:fixed;z-index:120;left:50%;bottom:22px;transform:translateX(-50%);border:1px solid rgba(255,255,255,.72);border-radius:999px;padding:9px 13px;background:rgba(0,0,0,.42);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);color:#fff;font:600 11px/1 system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase}
@@ -99,27 +99,19 @@ html{scroll-snap-type:y mandatory}
 (()=> {
  const scenes=[...document.querySelectorAll('.scene')],nav=document.getElementById('siteNav'),vig=document.getElementById('uiVignette'),black=document.getElementById('blackout'),motionBtn=document.getElementById('motionEnable');
  const track=document.querySelector('.scroll-track');if(track){track.replaceChildren(...scenes.map(()=>{const anchor=document.createElement('div');anchor.className='snap-anchor';return anchor}));track.style.height=(scenes.length*100)+'vh'}
- let index=0,locked=false,tx=0,ty=0,cx=0,cy=0,raf=0,touching=false,startX=0,startY=0,startPan=0,axis=null,featureScrollHost=null,featureScrollGesture=false,gyroX=0,gyroY=0,lastAuto=performance.now(),autoDir=1,manualUntil=0;
- const pans=Array(scenes.length).fill(0),clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),mobile=()=>matchMedia('(max-width:800px),(hover:none) and (pointer:coarse)').matches;  const scenePanLimit=(scene)=>{
-    if(!scene)return 0;
-    const media=[...scene.querySelectorAll('.depth-slot>.layer')];
-    if(!media.length)return 0;
-    /* All layers share one master pan. Use the widest rendered layer so the
-       composition reaches its true horizontal edges without per-scene tuning. */
-    const widest=Math.max(...media.map(el=>el.getBoundingClientRect().width||0));
-    return Math.max(0,(widest-innerWidth)/2 - (mobile()?32:0));
-  };
-  const limits=()=>scenes.map(scene=>scenePanLimit(scene));
+ let index=0,locked=false,tx=0,ty=0,cx=0,cy=0,raf=0,touching=false,startX=0,startY=0,startPan=0,axis=null,featureScrollHost=null,featureScrollGesture=false,gyroX=0,gyroY=0,lastAuto=performance.now(),autoDir=-1,manualUntil=0;
+ const pans=Array(scenes.length).fill(1),clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),mobile=()=>matchMedia('(max-width:800px),(hover:none) and (pointer:coarse)').matches;
+ const layerPanLimit=el=>Math.max(0,(el.getBoundingClientRect().width-innerWidth)/2);
  function req(){if(!raf)raf=requestAnimationFrame(tick)}
  function tick(now){raf=0;
-   if(mobile()){const dt=Math.min(40,now-lastAuto);lastAuto=now,lim=limits()[index],speed=(2*lim/26000);pans[index]+=autoDir*speed*dt;if(pans[index]>=lim){pans[index]=lim;autoDir=-1}if(pans[index]<=-lim){pans[index]=-lim;autoDir=1}}else lastAuto=now;
+   if(mobile()){const dt=Math.min(40,now-lastAuto);lastAuto=now;pans[index]+=autoDir*(2/26000)*dt;if(pans[index]>=1){pans[index]=1;autoDir=-1}if(pans[index]<=-1){pans[index]=-1;autoDir=1}}else lastAuto=now;
    cx+=(tx+gyroX-cx)*.12;cy+=(ty+gyroY-cy)*.12;
-   scenes.forEach((s,i)=>{s.style.setProperty('--mx',cx.toFixed(4));s.style.setProperty('--my',cy.toFixed(4));s.style.setProperty('--pan',(pans[i]||0).toFixed(1)+'px');[['back',8],['mid',16],['front',24]].forEach(([name,amount])=>{s.style.setProperty('--dx-'+name,(cx*amount).toFixed(1)+'px');s.style.setProperty('--dy-'+name,(cy*amount*.6).toFixed(1)+'px')})});
+   scenes.forEach((s,i)=>{s.style.setProperty('--mx',cx.toFixed(4));s.style.setProperty('--my',cy.toFixed(4));[['back',8],['mid',16],['front',24]].forEach(([name,amount])=>{const el=s.querySelector('.depth-slot.'+name+'>.layer');if(mobile()&&i===index&&el){const lim=layerPanLimit(el);s.style.setProperty('--pan-'+name,clamp(pans[i]*lim+cx*amount,-lim,lim).toFixed(1)+'px')}s.style.setProperty('--dx-'+name,(cx*amount).toFixed(1)+'px');s.style.setProperty('--dy-'+name,(cy*amount*.6).toFixed(1)+'px')})});
    if(mobile()||Math.abs(tx+gyroX-cx)>.001||Math.abs(ty+gyroY-cy)>.001)req()
  }
  function depth(x,y){tx=clamp((x/innerWidth-.5)*2,-1,1);ty=clamp((y/innerHeight-.5)*2,-1,1);req()}
  function ui(y){const near=y<=innerHeight*.18;nav.classList.toggle('ui-dimmed',!near);vig.style.opacity=near?'1':'0'}
- function paint(){scenes.forEach((s,i)=>{const on=i===index;s.classList.toggle('active',on);s.style.opacity=on?'1':'0';s.style.visibility=on?'visible':'hidden'});black.style.opacity='0';autoDir=1;if(mobile())pans[index]=-limits()[index];lastAuto=performance.now();req()}
+ function paint(){scenes.forEach((s,i)=>{const on=i===index;s.classList.toggle('active',on);s.style.opacity=on?'1':'0';s.style.visibility=on?'visible':'hidden'});black.style.opacity='0';autoDir=-1;if(mobile())pans[index]=1;lastAuto=performance.now();req()}
  function go(next){next=clamp(next,0,scenes.length-1);if(next===index||locked)return;locked=true;black.style.transition='opacity .2s ease';black.style.opacity='1';setTimeout(()=>{index=next;paint();black.style.opacity='1';scrollTo({top:index*innerHeight,behavior:'auto'});requestAnimationFrame(()=>black.style.opacity='0');setTimeout(()=>locked=false,430)},210)}
  function orient(e){if(!mobile())return;const g=typeof e.gamma==='number'?e.gamma:0,b=typeof e.beta==='number'?e.beta:45;gyroX=clamp(g/20,-.85,.85);gyroY=clamp((b-45)/28,-.65,.65);req()}
  async function enableMotion(){try{if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){if(await DeviceOrientationEvent.requestPermission()!=='granted')return}addEventListener('deviceorientation',orient,{passive:true});motionBtn.classList.remove('show');req()}catch(_){}}
@@ -132,7 +124,7 @@ html{scroll-snap-type:y mandatory}
  addEventListener('touchend',e=>{if(!mobile()||!touching)return;touching=false;const t=e.changedTouches[0];if(!t)return;const dy=t.clientY-startY;if(!featureScrollGesture&&axis==='y'&&Math.abs(dy)>=55)go(index+(dy<0?1:-1));axis=null;featureScrollHost=null;featureScrollGesture=false;lastAuto=performance.now();req()},{passive:true});
  addEventListener('touchcancel',()=>{touching=false;axis=null;featureScrollHost=null;featureScrollGesture=false;lastAuto=performance.now();req()},{passive:true});
  addEventListener('pointermove',e=>{if(!mobile()&&(e.pointerType==='mouse'||e.pointerType==='pen')){depth(e.clientX,e.clientY);ui(e.clientY)}},{passive:true});
- addEventListener('resize',()=>{const ls=limits();pans.forEach((v,i)=>pans[i]=clamp(v,-ls[i],ls[i]));scrollTo(0,index*innerHeight)},{passive:true});
+ addEventListener('resize',()=>{scrollTo(0,index*innerHeight);req()},{passive:true});
  paint();scrollTo(0,0);
 })();
 }
