@@ -13,11 +13,70 @@
       "src": "assets/foreground.png"
     },
     "feature": {
-      "left": null,
-      "right": null
+      "columns": [
+        {
+          "rows": [
+            {
+              "type": "text",
+              "content": "Sa wakas,\nandito na tayo\n\nikaw muli, \nang huli\nat ang una,\nsa'king tabi",
+              "style": "header",
+              "align": "center",
+              "color": "#ffffff",
+              "alignTo": "100",
+              "fitTo": "100"
+            }
+          ]
+        }
+      ]
+    },
+    "shade": {
+      "enabled": true,
+      "opacity": 54
     }
   },
   "scene2": {
+    "back": {
+      "type": "video",
+      "src": "https://media.purpo.ph/cms/8d0040fc-36c7-4640-8a90-2646af6a2ad4.mp4"
+    },
+    "mid": null,
+    "front": null,
+    "feature": {
+      "columns": [
+        {
+          "rows": [
+            {
+              "type": "image",
+              "size": "100",
+              "src": "https://media.purpo.ph/cms/b04728a0-f81a-4b19-9eeb-514773a92ff5.png"
+            },
+            {
+              "type": "text",
+              "content": "The Fade Away EP Experience",
+              "style": "body",
+              "align": "center",
+              "fitTo": "100",
+              "alignTo": "100",
+              "color": "#ffffff"
+            },
+            {
+              "type": "link1",
+              "align": "center",
+              "fitTo": "50",
+              "alignTo": "50",
+              "color": "#ff3452",
+              "label": "VISIT PAGE"
+            }
+          ]
+        }
+      ]
+    },
+    "shade": {
+      "enabled": false,
+      "opacity": 35
+    }
+  },
+  "scene3": {
     "back": {
       "type": "image",
       "src": "assets/scene2/background.jpg"
@@ -31,11 +90,14 @@
       "src": "assets/scene2/foreground.png"
     },
     "feature": {
-      "left": null,
-      "right": null
+      "columns": []
+    },
+    "shade": {
+      "enabled": false,
+      "opacity": 35
     }
   },
-  "scene3": {
+  "scene4": {
     "back": {
       "type": "video",
       "src": "assets/scene3/road-loop-bg.webm"
@@ -46,8 +108,24 @@
       "src": "assets/scene3/road-loop-FG.webm"
     },
     "feature": {
-      "left": null,
-      "right": null
+      "columns": [
+        {
+          "rows": [
+            {
+              "type": "text",
+              "content": "This is where we put text and check how it flows",
+              "style": "header",
+              "align": "right",
+              "fitTo": "50",
+              "alignTo": "100"
+            }
+          ]
+        }
+      ]
+    },
+    "shade": {
+      "enabled": false,
+      "opacity": 35
     }
   }
 }
