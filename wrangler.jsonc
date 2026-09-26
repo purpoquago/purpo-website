@@ -2,16 +2,6 @@
   "name": "purpo-website",
   "main": "./src/worker.js",
   "compatibility_date": "2026-09-15",
-
-  "assets": {
-    "directory": "./public",
-    "binding": "ASSETS"
-  },
-
-  "r2_buckets": [
-    {
-      "binding": "PURPO_MEDIA",
-      "bucket_name": "purpo-media"
-    }
-  ]
+  "assets": {"directory": "./public","binding": "ASSETS"},
+  "r2_buckets": [{"binding": "PURPO_MEDIA","bucket_name": "purpo-media"}]
 }
