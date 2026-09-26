@@ -5,11 +5,16 @@
 *{box-sizing:border-box}html,body{margin:0;width:100%;min-height:100%;background:#111}html{scroll-behavior:auto}body{overflow-x:hidden;overscroll-behavior-x:none;font-family:system-ui,sans-serif}.scroll-track{height:820vh}.stage{position:fixed;inset:0;overflow:hidden;background:#111;perspective:1200px}.scene{--mx:0;--my:0;position:absolute;inset:0;overflow:hidden;opacity:0;visibility:hidden;will-change:opacity}.scene.active{visibility:visible}.layer{position:absolute;inset:-3%;width:106%;height:106%;object-fit:cover;object-position:center;pointer-events:none;user-select:none;will-change:transform,opacity;transform-origin:center}
 .blackout{position:absolute;inset:0;background:#000;z-index:20;opacity:0;pointer-events:none;will-change:opacity}.ui-vignette{position:fixed;z-index:90;left:0;right:0;top:0;height:180px;pointer-events:none;background:linear-gradient(to bottom,rgba(0,0,0,.5),rgba(0,0,0,.12) 45%,transparent);opacity:1;transition:opacity .45s ease}.site-nav{position:fixed;z-index:100;top:0;left:0;width:100%;display:flex;justify-content:space-between;align-items:flex-start;gap:30px;padding:22px 34px 0;opacity:1;transition:opacity .45s ease,transform .45s ease;pointer-events:none}.site-nav.ui-dimmed{opacity:.10;transform:translateY(-4px)}.site-nav a{pointer-events:auto}.nav-left{display:flex;align-items:flex-start}.logo-link{display:block;width:168px}.logo-link img{display:block;width:100%;height:auto}.menu{display:flex;align-items:center;margin-top:7px}.nav-item{position:relative;display:block;text-decoration:none;height:44px}.nav-item+.nav-item{margin-left:46px}.nav-item+.nav-item:before{content:"";position:absolute;left:-24px;top:4px;width:2px;height:34px;background:rgba(0,0,0,.48);transform:rotate(4deg)}.nav-art{position:relative;display:block;width:100%;height:100%}.nav-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;transition:opacity .18s ease,transform .18s ease,filter .18s ease}.nav-art .base{opacity:1}.nav-art .pink{opacity:0}.nav-item:hover .base,.nav-item:focus-visible .base{opacity:0}.nav-item:hover .pink,.nav-item:focus-visible .pink{opacity:1}.hover-pink{filter:brightness(0) saturate(100%) invert(45%) sepia(94%) saturate(3922%) hue-rotate(310deg) brightness(101%) contrast(101%)}.nav-sa{width:286px}.nav-fade{width:185px}.nav-malilig{width:148px}.nav-visuals{width:116px}.nav-about{width:98px}
 .feature-media.size-100{width:100%;max-width:100%}.feature-media.size-50{width:50%;max-width:50%}.feature-media.size-25{width:25%;max-width:25%}.feature-align-zone{display:flex}.feature-align-zone.alignzone-100{width:100%}.feature-align-zone.alignzone-50{width:50%;margin-left:auto;margin-right:auto}.feature-align-zone.alignzone-25{width:25%;margin-left:auto;margin-right:auto}.feature-align-zone.feature-align-left{justify-content:flex-start}.feature-align-zone.feature-align-center{justify-content:center}.feature-align-zone.feature-align-right{justify-content:flex-end}.feature-envelope{display:block;min-width:0}.feature-envelope.fit-100{width:100%}.feature-envelope.fit-50{width:50%}.feature-envelope.fit-25{width:25%}.purpo-cms-preview-mode,.purpo-cms-preview-mode body{width:100%!important;height:100%!important;overflow:hidden!important;overscroll-behavior:none!important}.purpo-cms-preview-mode [data-template-scene] [data-depth]{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;overflow:hidden!important}.purpo-cms-preview-mode [data-template-scene] [data-depth]>.layer{width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;object-fit:cover!important}.purpo-cms-preview-mode .feature-layer{max-height:100dvh!important;overflow:hidden!important}@media(max-width:800px),(hover:none) and (pointer:coarse){.purpo-cms-preview-mode .feature-layer{display:flex!important;flex-direction:column!important;overflow:hidden!important}.purpo-cms-preview-mode .feature-column{width:100%!important;flex:0 0 auto}}@media(max-width:800px),(hover:none) and (pointer:coarse){.scroll-track{height:760vh}.layer{inset:-8%;width:116%;height:116%;object-position:center}.site-nav{padding:16px 16px 0;gap:12px}.logo-link{width:112px}.menu{flex-direction:column;align-items:flex-end;gap:4px;margin:0}.nav-item{height:34px;margin:0}.nav-item+.nav-item{margin-left:0}.nav-item+.nav-item:before{display:none}.nav-art img{object-position:right center}.nav-sa{width:188px}.nav-fade{width:122px}.nav-malilig{width:98px}.nav-visuals{width:76px}.nav-about{width:64px}.ui-vignette{height:220px;background:linear-gradient(to bottom,rgba(0,0,0,.52),rgba(0,0,0,.14) 52%,transparent)}}
-@media(prefers-reduced-motion:reduce){.layer{transform:none!important}}
+@media(prefers-reduced-motion:reduce){.depth-slot>.layer{transform:none!important}}
+@media(prefers-reduced-motion:reduce) and (max-width:800px),(prefers-reduced-motion:reduce) and (hover:none) and (pointer:coarse){.depth-slot>.layer{transform:translateX(-50%)!important}}
 
 /* V5: complete compositions + discrete scene snapping */
 .scene{transition:opacity .34s ease;--pan:0px}
 .scene .mid,.scene .fg{opacity:1!important}
+/* Tie the parallax values from PURPO_START to the rendered CMS layers. */
+.depth-slot.back>.layer{transform:translate3d(calc(var(--pan, 0px) + var(--dx-back, 0px)),var(--dy-back, 0px),0)}
+.depth-slot.mid>.layer{transform:translate3d(calc(var(--pan, 0px) + var(--dx-mid, 0px)),var(--dy-mid, 0px),0)}
+.depth-slot.front>.layer{transform:translate3d(calc(var(--pan, 0px) + var(--dx-front, 0px)),var(--dy-front, 0px),0)}
 .scroll-track{height:300vh}
 html{scroll-snap-type:y mandatory}
 .snap-anchor{height:100vh;scroll-snap-align:start;scroll-snap-stop:always}
@@ -22,6 +27,9 @@ html{scroll-snap-type:y mandatory}
    width:155vw!important;height:110vh!important;
    object-fit:cover!important;transform-origin:center!important
  }
+ .depth-slot.back>.layer{transform:translate3d(calc(-50% + var(--pan, 0px) + var(--dx-back, 0px)),var(--dy-back, 0px),0)}
+ .depth-slot.mid>.layer{transform:translate3d(calc(-50% + var(--pan, 0px) + var(--dx-mid, 0px)),var(--dy-mid, 0px),0)}
+ .depth-slot.front>.layer{transform:translate3d(calc(-50% + var(--pan, 0px) + var(--dx-front, 0px)),var(--dy-front, 0px),0)}
 }
 
 .motion-enable{display:none;position:fixed;z-index:120;left:50%;bottom:22px;transform:translateX(-50%);border:1px solid rgba(255,255,255,.72);border-radius:999px;padding:9px 13px;background:rgba(0,0,0,.42);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);color:#fff;font:600 11px/1 system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase}
@@ -98,14 +106,14 @@ html{scroll-snap-type:y mandatory}
     /* All layers share one master pan. Use the widest rendered layer so the
        composition reaches its true horizontal edges without per-scene tuning. */
     const widest=Math.max(...media.map(el=>el.getBoundingClientRect().width||0));
-    return Math.max(0,(widest-innerWidth)/2);
+    return Math.max(0,(widest-innerWidth)/2 - (mobile()?32:0));
   };
   const limits=()=>scenes.map(scene=>scenePanLimit(scene));
  function req(){if(!raf)raf=requestAnimationFrame(tick)}
  function tick(now){raf=0;
    if(mobile()){const dt=Math.min(40,now-lastAuto);lastAuto=now,lim=limits()[index],speed=(2*lim/28000);pans[index]+=autoDir*speed*dt;if(pans[index]>=lim){pans[index]=lim;autoDir=-1}if(pans[index]<=-lim){pans[index]=-lim;autoDir=1}}else lastAuto=now;
    cx+=(tx+gyroX-cx)*.12;cy+=(ty+gyroY-cy)*.12;
-   scenes.forEach((s,i)=>{s.style.setProperty('--mx',cx.toFixed(4));s.style.setProperty('--my',cy.toFixed(4));s.style.setProperty('--pan',(pans[i]||0).toFixed(1)+'px')});
+   scenes.forEach((s,i)=>{s.style.setProperty('--mx',cx.toFixed(4));s.style.setProperty('--my',cy.toFixed(4));s.style.setProperty('--pan',(pans[i]||0).toFixed(1)+'px');[['back',8],['mid',16],['front',24]].forEach(([name,amount])=>{s.style.setProperty('--dx-'+name,(cx*amount).toFixed(1)+'px');s.style.setProperty('--dy-'+name,(cy*amount*.6).toFixed(1)+'px')})});
    if(mobile()||Math.abs(tx+gyroX-cx)>.001||Math.abs(ty+gyroY-cy)>.001)req()
  }
  function depth(x,y){tx=clamp((x/innerWidth-.5)*2,-1,1);ty=clamp((y/innerHeight-.5)*2,-1,1);req()}
