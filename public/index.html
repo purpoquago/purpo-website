@@ -57,7 +57,31 @@ html{scroll-snap-type:y mandatory}
   <a class="nav-item nav-about" href="#about" aria-label="About"><span class="nav-art"><img class="base" src="assets/ui/about-white.png" alt=""><img class="pink hover-pink" src="assets/ui/about-white.png" alt=""></span></a>
  </div>
 </nav>
-<script id="purpo-home-template-engine-v4">(async()=>{document.documentElement.classList.add('purpo-loading');try{const r=await fetch('content/home.json',{cache:'no-store'});if(!r.ok)throw Error('home.json '+r.status);let d=await r.json();try{const p=sessionStorage.getItem('purpo-cms-preview');if(p)d=JSON.parse(p)}catch(_){}const make=(x,k)=>{if(!x||!x.src)return null;const v=x.type==='video',e=document.createElement(v?'video':'img');e.className='layer '+k;e.src=x.src;e.setAttribute('aria-hidden','true');if(v){e.autoplay=true;e.muted=true;e.loop=true;e.playsInline=true;e.preload='auto'}else e.alt='';return e},al=x=>'feature-align-'+(x||'left');Object.entries(d).forEach(([key,c])=>{const s=document.querySelector('[data-template-scene="'+key.replace('scene','')+'"]');if(!s)return;['back','mid','front'].forEach(k=>{const q=s.querySelector('[data-depth="'+k+'"]'),e=make(c[k],k);if(q&&e)q.appendChild(e)});const host=s.querySelector('.feature-layer');if(!host)return;host.innerHTML='';let cols=c.feature&&Array.isArray(c.feature.columns)?c.feature.columns:[];if(!cols.length&&c.feature)cols=['left','right'].map(k=>c.feature[k]).filter(Boolean).map(x=>({rows:[x]}));cols=cols.slice(0,4);host.style.setProperty('--feature-cols',Math.max(cols.length,1));cols.forEach(col=>{const ce=document.createElement('div');ce.className='feature-column';(Array.isArray(col.rows)?col.rows:[]).slice(0,5).forEach(x=>{if(!x)return;const row=document.createElement('div');row.className='feature-row '+x.type;if(x.type==='image'&&x.src){const im=document.createElement('img');im.className='feature-media';im.src=x.src;im.alt='';if(x.link){const a=document.createElement('a');a.href=x.link;a.appendChild(im);row.appendChild(a)}else row.appendChild(im)}else if(x.type==='text'){const t=document.createElement('div');t.className='feature-text '+(x.style||'body')+' '+al(x.align);t.textContent=x.content||'';row.appendChild(t)}else if(x.type==='link1'||x.type==='link2'){row.classList.add('feature-link-row',al(x.align));const a=document.createElement('a');a.className=x.type==='link1'?'feature-link1':'feature-link2';a.href=x.url||'#';a.textContent=x.label||'';row.appendChild(a)}ce.appendChild(row)});host.appendChild(ce)})});window.PURPO_HOME_READY=true;document.dispatchEvent(new Event('purpo-home-ready'))}catch(e){console.error(e)}finally{document.documentElement.classList.remove('purpo-loading')}})();</script><script>function PURPO_START(){
+<script id="purpo-home-template-engine-v4">
+(()=>{
+ const make=(x,k)=>{if(!x||!x.src)return null;const v=x.type==='video',e=document.createElement(v?'video':'img');e.className='layer '+k;e.src=x.src;e.setAttribute('aria-hidden','true');if(v){e.autoplay=true;e.muted=true;e.loop=true;e.playsInline=true;e.preload='auto'}else e.alt='';return e};
+ const al=x=>'feature-align-'+(x||'left');
+ function renderHome(d){
+  Object.entries(d||{}).forEach(([key,c])=>{
+   const s=document.querySelector('[data-template-scene="'+key.replace('scene','')+'"]');if(!s)return;
+   ['back','mid','front'].forEach(k=>{const q=s.querySelector('[data-depth="'+k+'"]');if(!q)return;q.innerHTML='';const e=make(c[k],k);if(e)q.appendChild(e)});
+   const host=s.querySelector('.feature-layer');if(!host)return;host.innerHTML='';
+   let cols=c.feature&&Array.isArray(c.feature.columns)?c.feature.columns:[];
+   if(!cols.length&&c.feature)cols=['left','right'].map(k=>c.feature[k]).filter(Boolean).map(x=>({rows:[x]}));
+   cols=cols.slice(0,4);host.style.setProperty('--feature-cols',Math.max(cols.length,1));
+   cols.forEach(col=>{const ce=document.createElement('div');ce.className='feature-column';
+    (Array.isArray(col.rows)?col.rows:[]).slice(0,5).forEach(x=>{if(!x)return;const row=document.createElement('div');row.className='feature-row '+x.type;
+     if(x.type==='image'&&x.src){const im=document.createElement('img');im.className='feature-media';im.src=x.src;im.alt='';if(x.link){const a=document.createElement('a');a.href=x.link;a.appendChild(im);row.appendChild(a)}else row.appendChild(im)}
+     else if(x.type==='text'){const t=document.createElement('div');t.className='feature-text '+(x.style||'body')+' '+al(x.align);t.textContent=x.content||'';row.appendChild(t)}
+     else if(x.type==='link1'||x.type==='link2'){row.classList.add('feature-link-row',al(x.align));const a=document.createElement('a');a.className=x.type==='link1'?'feature-link1':'feature-link2';a.href=x.url||'#';a.textContent=x.label||'';row.appendChild(a)}
+     ce.appendChild(row)});host.appendChild(ce)})
+  })
+ }
+ window.PURPO_RENDER_HOME=renderHome;
+ window.addEventListener('message',e=>{if(e.origin!==location.origin||!e.data||e.data.type!=='PURPO_CMS_PREVIEW')return;renderHome(e.data.payload)});
+ (async()=>{document.documentElement.classList.add('purpo-loading');try{const r=await fetch('content/home.json',{cache:'no-store'});if(!r.ok)throw Error('home.json '+r.status);let d=await r.json();renderHome(d);window.PURPO_HOME_READY=true;document.dispatchEvent(new Event('purpo-home-ready'))}catch(e){console.error(e)}finally{document.documentElement.classList.remove('purpo-loading')}})();
+})();
+</script><script>function PURPO_START(){
 (()=> {
  const scenes=[...document.querySelectorAll('.scene')],nav=document.getElementById('siteNav'),vig=document.getElementById('uiVignette'),black=document.getElementById('blackout'),motionBtn=document.getElementById('motionEnable');
  let index=0,locked=false,tx=0,ty=0,cx=0,cy=0,raf=0,touching=false,startX=0,startY=0,startPan=0,axis=null,gyroX=0,gyroY=0,lastAuto=performance.now(),autoDir=1,manualUntil=0;
