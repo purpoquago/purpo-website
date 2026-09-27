@@ -6314,16 +6314,16 @@ updateSideRailState();
 <script id="fa-mobile-v43-12-hold-nav-script">
 (()=>{
 const mobile=()=>matchMedia("(max-width:800px), (hover:none) and (pointer:coarse)").matches;
-const map={"#page2":"p2s1","#page3":"p3s2","#page5":"p5s1","#page6":"p6s1","#page8":"p8s1","#page9":"p9s1","#page11":"p11s1","#page12":"p12s1","#page13":"p13s1","#page14":"p14s1","#page15":"p15s1","#page16":"p16s1","#page18":"p18s1","#page19":"p19s1"};
+const map={"#page2":"p2s2","#page3":"p3s1","#page5":"p5s2","#page6":"p6s2","#page8":"p8s2","#page9":"p9s2","#page11":"p11s2","#page12":"p12s2","#page13":"p13s2","#page14":"p14s2","#page15":"p15s2","#page16":"p16s2","#page18":"p18s2","#page19":"p19s2"};
 const fallbackSrc=[
- {label:"TRACKLIST",state:"p1s2",song:false},{label:"FADE AWAY HOTEL",state:"p2s1",song:false},
- {label:"JUST PASSING THROUGH",state:"p3s2",song:false},{label:"FADE AWAY",state:"p5s1",song:true},
- {label:"A VISITOR FROM THE SOUTH",state:"p6s1",song:false},{label:"STUCK ON REWIND",state:"p8s1",song:true},
- {label:"CORRESPONDENT FEATURE",state:"p9s1",song:false},{label:"ALRIGHT",state:"p11s1",song:true},
- {label:"BAR & RESTAURANT",state:"p12s1",song:false},{label:"UNREACHABLE",state:"p13s1",song:true},
- {label:"COURTYARD POOL",state:"p14s1",song:false},{label:"AGAIN",state:"p15s1",song:true},
- {label:"RECORD OF AN EXPLORER",state:"p16s1",song:false},{label:"EPILOGUE",state:"p18s1",song:false},
- {label:"CREDITS",state:"p19s1",song:false}
+ {label:"TRACKLIST",state:"p1s2",song:false},{label:"FADE AWAY HOTEL",state:"p2s2",song:false},
+ {label:"JUST PASSING THROUGH",state:"p3s1",song:false},{label:"FADE AWAY",state:"p5s2",song:true},
+ {label:"A VISITOR FROM THE SOUTH",state:"p6s2",song:false},{label:"STUCK ON REWIND",state:"p8s2",song:true},
+ {label:"CORRESPONDENT FEATURE",state:"p9s2",song:false},{label:"ALRIGHT",state:"p11s2",song:true},
+ {label:"BAR & RESTAURANT",state:"p12s2",song:false},{label:"UNREACHABLE",state:"p13s2",song:true},
+ {label:"COURTYARD POOL",state:"p14s2",song:false},{label:"AGAIN",state:"p15s2",song:true},
+ {label:"RECORD OF AN EXPLORER",state:"p16s2",song:false},{label:"EPILOGUE",state:"p18s2",song:false},
+ {label:"CREDITS",state:"p19s2",song:false}
 ];
 const rail=document.getElementById("sideRail");
 const railSrc=rail?[...rail.querySelectorAll("a")].map(a=>({label:(a.querySelector(".rail-label")?.textContent||"").trim(),state:map[a.getAttribute("href")],song:a.classList.contains("rail-song")})).filter(x=>x.state):[];
