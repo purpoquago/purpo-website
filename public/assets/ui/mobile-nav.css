@@ -1,0 +1,19 @@
+/* Shared PURPO mobile navigation. Desktop page headers remain untouched. */
+.purpo-mobile-nav{display:none}
+@media(max-width:800px),(hover:none) and (pointer:coarse){
+  .site-nav{visibility:hidden!important;pointer-events:none!important}
+  .purpo-mobile-nav{display:block;position:fixed;z-index:2147483500;top:calc(env(safe-area-inset-top, 0px) + 10px);left:16px;width:108px;overflow:visible;font-family:Arial,sans-serif;isolation:isolate}
+  .purpo-mobile-nav button{font:inherit}
+  .purpo-mobile-nav__toggle{display:block;width:108px;padding:0;border:0;background:transparent;cursor:pointer;filter:drop-shadow(0 2px 7px rgba(0,0,0,.7))}
+  .purpo-mobile-nav__toggle img{display:block;width:100%;height:auto}
+  .purpo-mobile-nav__toggle:focus-visible,.purpo-mobile-nav__panel a:focus-visible,.purpo-mobile-nav__sound:focus-visible{outline:2px solid #ffdb70;outline-offset:4px}
+  .purpo-mobile-nav__panel{position:absolute;top:calc(100% + 7px);left:0;width:min(288px,calc(100vw - 32px));max-height:calc(100dvh - env(safe-area-inset-top, 0px) - 98px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:13px 17px 16px;background:rgba(12,6,29,.94);border:1px solid rgba(255,255,255,.36);box-shadow:0 14px 35px rgba(0,0,0,.5);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+  .purpo-mobile-nav__panel[hidden]{display:none!important}
+  .purpo-mobile-nav__panel::-webkit-scrollbar{display:none}
+  .purpo-mobile-nav__item{display:flex;align-items:center;min-height:48px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.22);text-decoration:none;color:#fff}
+  .purpo-mobile-nav__item img{display:block;width:auto;height:auto;max-width:100%;max-height:26px;object-fit:contain}
+  .purpo-mobile-nav__item[aria-current="page"] img{filter:brightness(0) saturate(100%) invert(78%) sepia(64%) saturate(807%) hue-rotate(345deg) brightness(105%)}
+  .purpo-mobile-nav__item.is-unavailable{opacity:.48;cursor:default}
+  .purpo-mobile-nav__sound{display:flex;align-items:center;min-height:42px;padding:7px 0 13px;border:0;border-bottom:1px solid rgba(255,255,255,.22);background:transparent;cursor:pointer}
+  .purpo-mobile-nav__sound img{display:block;max-width:143px;height:25px;object-fit:contain;object-position:left}
+}
