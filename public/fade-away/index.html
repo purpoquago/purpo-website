@@ -1783,6 +1783,8 @@ html.snap-mode{
 /* There is intentionally no content after the final sticky scene. */
 html,body{overscroll-behavior-y:none}
 
+/* Keep at least two paragraph lines on either side of native column breaks. */
+.page4-spread p,.page4-adaptive p,.page6-editorial p,.page7-spread p,.page7-short-layout p{orphans:2;widows:2}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -4131,36 +4133,84 @@ body.fa-holdnav-active{-webkit-user-select:none!important;user-select:none!impor
 <script defer src="/assets/ui/mobile-nav.js"></script>
 <style id="fa-fit-framework">
 /* Shared reading sizes and short-screen behavior. Artwork keeps its own scale. */
-:root{--fa-body:clamp(16px,1.05vw,18px);--fa-caption:clamp(13px,.86vw,15px);--fa-reader-top:clamp(72px,12vh,120px);--fa-reader-bottom:clamp(28px,6vh,70px)}
+:root{--fa-body:clamp(16px,1.05vw,18px);--fa-p4-body:clamp(13px,.92vw,18px);--fa-caption:clamp(13px,.86vw,15px);--fa-reader-top:clamp(72px,12vh,120px);--fa-reader-bottom:clamp(28px,6vh,70px)}
+.page4-adaptive{display:none;opacity:0}
+.page3-page4-quote{display:none}
 @media (min-width:801px) and (hover:hover) and (pointer:fine){
   .page3-body,.page4-copy,.page6-copy,.page9-copy,.page12-copy,.page14-copy,.p12-article{font-size:var(--fa-body)}
+  .page4-layer .page4-copy{font-size:var(--fa-p4-body)}
+  .page6-editorial .page6-copy{font-size:var(--fa-p4-body)}
   .page4-photo-block figcaption,.page14-caption{font-size:var(--fa-caption)}
   /* The snap scene stays fixed; the article itself can be read to its end. */
   .page3-article,.page6-editorial,.page9-editorial,.page14-copy{
     box-sizing:border-box;max-height:calc(100vh - var(--fa-reader-top) - var(--fa-reader-bottom));
     overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#d4c7a8 transparent;
   }
-  .page3-article{top:var(--fa-reader-top);padding:0 10px 12px 0}
-  .page6-editorial{top:var(--fa-reader-top);padding:0 10px 12px 0}
+  .page3-article{top:calc(50% - 6vh);transform:translateY(-50%);padding:0 10px 12px 0;scrollbar-width:none}
+  .page3-article::-webkit-scrollbar{display:none}
+  .page6-editorial{top:50%;transform:translateY(-50%);max-height:calc(100dvh - 2 * var(--fa-reader-top));padding:0 10px 12px 0}
   .page9-editorial{bottom:var(--fa-reader-bottom);padding:0 10px 12px 0}
-  .page14-copy{top:67%;max-height:calc(100vh - 67vh - var(--fa-reader-bottom));padding-right:10px}
+  .page14-copy{top:67%;max-height:none;overflow:visible;padding-right:0}
+  .page14-layer{overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
+  .page14-layer::-webkit-scrollbar{display:none}
   .p12-content{top:auto;bottom:var(--fa-reader-bottom);height:min(32vh,300px)}
   .page4-layer{overflow-y:auto;align-items:flex-start}
-  .page4-spread{flex:none;min-height:min(88vh,950px);height:auto;grid-template-rows:auto auto;padding-bottom:24px}
+  .page4-spread{flex:none;min-height:0;height:auto;grid-template-rows:auto;padding-bottom:24px;align-items:start}
+  .page4-right{grid-column:4;grid-row:1;display:flex;flex-direction:column;gap:clamp(18px,3vh,28px);min-width:0}
+  .page4-right .page4-photo-block,.page4-right .page4-lower{grid-column:auto;grid-row:auto;margin:0}
+  .page4-right .page4-lower{align-self:auto}
 }
-@media (min-width:801px) and (max-height:800px) and (hover:hover) and (pointer:fine){
-  .page3-article,.page6-editorial{top:var(--fa-reader-top)}
-  .page14-header{top:51%}.page14-copy{top:58%;max-height:calc(100vh - 58vh - var(--fa-reader-bottom))}
+@media (min-width:801px) and (max-height:800px){
+  .page3-layer{display:flex;align-items:safe center;box-sizing:border-box;padding:var(--fa-reader-top) 0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:none}
+  .page3-layer::-webkit-scrollbar{display:none}
+  .page3-layer::after{content:"";position:fixed;inset:0;z-index:2;background:rgba(0,0,0,.30);opacity:var(--p3-article-dim,0);pointer-events:none}
+  .page3-article{position:relative;z-index:3;left:auto;top:auto;width:38%;max-height:none;overflow:visible;padding:0;margin:0 0 0 7%;flex:none;align-self:safe center;transform:none}
+  .page3-page4-quote{display:block;position:fixed;z-index:3;left:75%;top:50%;width:45vw;height:55vh;object-fit:contain;transform:translate(-50%,-50%);pointer-events:none;opacity:0}
+  .page14-header{top:51%}.page14-copy{top:58%;max-height:none}
   .page14-caption{top:auto;bottom:2%}
+  .page4-layer{overflow:hidden;display:block;padding:0}
+  .page4-spread{display:none}
+  .page4-adaptive{display:flex;flex-direction:column;width:calc(100vw - 48px);height:calc(100dvh - 100px);margin:62px 24px 38px;overflow-x:hidden;overflow-y:auto;overscroll-behavior-y:contain;scrollbar-width:thin;scrollbar-color:#8b837b transparent}
+  .page4-adaptive-panel{flex:0 0 100%;height:100%;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));grid-template-rows:minmax(0,1fr) minmax(0,1fr);gap:18px;box-sizing:border-box;padding:0 24px}
+  .page4-adaptive-photo{grid-column:4/7;grid-row:1;min-height:0;margin:0;overflow:hidden}
+  .page4-adaptive-photo img{display:block;width:100%;height:73%;object-fit:cover}
+  .page4-adaptive-photo figcaption{font:italic var(--fa-caption)/1.18 "EB Garamond",Georgia,serif;margin:7px 8px 0}
+  .page4-adaptive-frame{min-height:0;min-width:0;overflow:hidden;font:var(--fa-p4-body)/1.22 "EB Garamond",Georgia,serif}
+  .page4-adaptive-frame p{margin:0 0 .85em}
+  .page4-adaptive-frame .dropcap::first-letter{float:left;font-size:3.1em;line-height:.76;padding:.08em .07em 0 0}
+  .page4-adaptive-frame.frame-a{grid-column:1;grid-row:1/3}
+  .page4-adaptive-frame.frame-b{grid-column:2;grid-row:1/3}
+  .page4-adaptive-frame.frame-c{grid-column:3;grid-row:1/3}
+  .page4-adaptive-frame.frame-d{grid-column:4;grid-row:2}
+  .page4-adaptive-frame.frame-e{grid-column:5;grid-row:2}
+  .page4-adaptive-frame.frame-f{grid-column:6;grid-row:2}
+  .page4-adaptive-panel.continuation .page4-adaptive-frame{grid-row:1/3}
+  .page4-adaptive-panel.continuation .frame-a{grid-column:1}
+  .page4-adaptive-panel.continuation .frame-b{grid-column:2}
+  .page4-adaptive-panel.continuation .frame-c{grid-column:3}
+  .page4-adaptive-panel.continuation .frame-d{grid-column:4}
+  .page4-adaptive-panel.continuation .frame-e{grid-column:5}
+  .page4-adaptive-panel.continuation .frame-f{grid-column:6}
   /* Editorial spreads become scrollable reading layouts on short laptops. */
   .page7-layer,.page10-layer,.page16-layer,.page17-layer{overflow-y:auto;overscroll-behavior:contain}
-  .page7-spread{position:relative;left:auto;top:auto;transform:none!important;width:min(1100px,92vw);height:auto;margin:var(--fa-reader-top) auto var(--fa-reader-bottom);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}
-  .page7-left,.page7-right-col{font-size:var(--fa-body);line-height:1.28;padding:0}
-  .page7-inset{height:700px;grid-row:span 2}
+  .page7-spread{position:relative;left:auto;top:auto;transform:none!important;width:calc(100vw - 96px);height:auto;margin:62px auto 38px;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));grid-template-rows:auto auto;column-gap:18px;row-gap:clamp(60px,10vh,100px)}
+  .page7-left,.page7-right-col{font-size:var(--fa-p4-body);line-height:1.28;padding:0;min-width:0}
+  .page7-left{grid-column:1/3;grid-row:1}
+  .page7-inset{grid-column:3/5;grid-row:1;height:100%;min-height:700px}
+  .page7-right-col:nth-child(3){grid-column:5/7;grid-row:1}
+  .page7-left,.page7-right-col:nth-child(3){column-count:2;column-gap:18px;column-fill:balance}
+  .page7-right-col:nth-child(4){grid-column:2/4;grid-row:2}
+  .page7-right-col:nth-child(5){grid-column:4/6;grid-row:2}
   .page7-inset-copy{font-size:var(--fa-caption);line-height:1.2}
   .page10-canvas{position:relative;left:auto;top:auto;transform:none!important;width:min(1100px,92vw);height:auto;margin:var(--fa-reader-top) auto var(--fa-reader-bottom);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
   .page10-item,.page10-card{position:relative;left:auto;right:auto;top:auto;bottom:auto;width:100%;height:auto}
-  .page10-header{max-width:460px}.page10-quote{font-size:22px;align-self:center}
+  .page10-header{max-width:460px;grid-column:1/3;grid-row:1}
+  .page10-card1{grid-column:1;grid-row:2}
+  .page10-card4{grid-column:2;grid-row:2}
+  .page10-quote{grid-column:1;grid-row:3;width:min(300px,100%);justify-self:center;align-self:center;font-size:26px}
+  .page10-card3{grid-column:2;grid-row:3}
+  .page10-card2{grid-column:1;grid-row:4}
+  .page10-card5{grid-column:2;grid-row:4}
   .page10-card.landscape,.page10-card3{width:100%;height:auto;aspect-ratio:520/412}
   .page10-card3{aspect-ratio:500/625}
   .page10-card figcaption,.page10-card3-caption{font-size:var(--fa-caption)}
@@ -4172,11 +4222,77 @@ body.fa-holdnav-active{-webkit-user-select:none!important;user-select:none!impor
   .page16-journals .journal-entry,.page17-columns .journal-entry{position:static!important;width:auto!important;height:auto!important;margin:0!important;font-size:inherit!important;line-height:inherit!important}
   .page17-master{padding:0}
 }
+.page16-short-caption{display:none}
+.page16-short-layout{display:none}
+.page17-short-caption,.page17-short-layout{display:none}
+@media (min-width:1280px) and (max-height:800px){
+  .page16-short-caption{display:block;position:absolute;z-index:2;right:7%;top:12%;width:min(365px,30vw);font:italic 16px/1.2 "EB Garamond",Georgia,serif;text-align:center;color:#fff;text-shadow:0 1px 3px #000}
+  .page16-layer{overflow:hidden}
+  .page16-layer .page16-content{display:none!important}
+  .page16-short-layout{display:block;position:absolute;inset:0;z-index:3;opacity:0;pointer-events:none;color:#fff;background:rgba(0,0,0,.5)}
+  .page16-short-page{position:absolute;left:24px;top:62px;width:calc(100% - 48px);height:calc(100dvh - 100px);display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:18px;box-sizing:border-box}
+  .page16-short-title{position:absolute;left:0;top:0;width:calc(50% - 9px);height:60px;object-fit:contain;object-position:left top}
+  .page16-short-frame{min-width:0;min-height:0;height:100%;overflow:hidden;font:clamp(12px,.9vw,15px)/1.16 "EB Garamond",Georgia,serif}
+  .page16-short-frame:nth-of-type(-n+3){box-sizing:border-box;padding-top:72px}
+  .page16-short-frame h3{font:400 clamp(13px,1vw,16px)/1.1 "Alfa Slab One",Impact,serif;color:#f05780;margin:0 0 5px}
+  .page16-short-frame h3:not(:first-child){margin-top:18px}
+  .page16-short-frame p{margin:0 0 8px}
+  .page16-short-frame.is-overflowing{overflow-y:auto;scrollbar-width:none}
+  .page16-short-frame.is-overflowing::-webkit-scrollbar{display:none}
+  .page17-layer{overflow:hidden}
+  .page17-dim{background:rgba(0,0,0,.5)}
+  .page17-content{display:none}
+  .page17-short-caption{display:none}
+  .page17-short-layout{display:block;position:absolute;inset:0;z-index:3;opacity:0;pointer-events:none;color:#fff}
+  .page17-short-page{position:absolute;left:24px;top:62px;width:calc(100% - 48px);height:calc(100dvh - 100px);display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:18px;box-sizing:border-box;opacity:1}
+  .page17-short-page[data-page="2"]{opacity:0}
+  .page17-layer.is-short-page2 .page17-short-page[data-page="1"]{opacity:0}
+  .page17-layer.is-short-page2 .page17-short-page[data-page="2"]{opacity:1}
+  .page17-short-title{display:none}
+  .page17-short-frame{min-width:0;min-height:0;height:100%;overflow:hidden;font:clamp(12px,.9vw,15px)/1.16 "EB Garamond",Georgia,serif}
+  .page17-short-frame.is-overflowing{overflow-y:auto;scrollbar-width:none}
+  .page17-short-frame.is-overflowing::-webkit-scrollbar{display:none}
+  .page17-short-frame h3,.page17-short-frame h4{font:400 clamp(13px,1vw,16px)/1.1 "Alfa Slab One",Impact,serif;color:#f05780;margin:0 0 5px}
+  .page17-short-frame h3:not(:first-child){margin-top:18px}
+  .page17-short-frame p{margin:0 0 8px}
+  .page17-short-frame .publisher-note-box{background:rgba(0,0,0,.38);padding:12px;box-sizing:border-box;font-style:italic}
+  .page17-short-frame .publisher-note-box h4{color:#fff;font-style:normal}
+  .page17-short-fade{position:fixed;inset:0;z-index:9999;background:#07111f;opacity:0;pointer-events:none}
+}
+.page7-short-layout{display:none}
+.page7-snap-fade{display:none;position:fixed;inset:0;z-index:9999;background:#f7f5f1;opacity:0;pointer-events:none}
+@media (min-width:1280px) and (max-height:800px){
+  .page7-snap-fade{display:block}
+  .page7-spread{display:none}
+  .page7-short-layout{display:block;width:calc(100vw - 96px);margin:62px auto 38px;padding-bottom:30dvh;opacity:0}
+  .page7-short-first{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) minmax(0,1.2fr) minmax(0,1fr);gap:18px;height:calc(100dvh - 100px);box-sizing:border-box}
+  .page7-short-copy,.page7-short-follow{font:var(--fa-p4-body)/1.28 "EB Garamond",Georgia,serif;color:#161616}
+  .page7-short-copy{grid-column:1/4;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;min-width:0;min-height:0;overflow:hidden}
+  .page7-short-frame{box-sizing:border-box;min-width:0;min-height:0;height:100%;overflow:hidden;display:flow-root}
+  .page7-short-frame p{margin:0 0 .6em}
+  .page7-short-copy strong,.page7-short-follow strong{font-weight:800;color:#284840}
+  .page7-short-inset{grid-column:4;position:relative;min-width:0;height:100%;overflow:hidden}
+  .page7-short-inset picture{display:contents}
+  .page7-short-inset .page7-inset-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+  .page7-short-inset-text{grid-column:5;min-width:0;margin-left:-18px;padding:22px 19px;background:#2e554c;color:#f4f0e7;font:var(--fa-caption)/1.2 "EB Garamond",Georgia,serif;overflow-y:auto;scrollbar-width:none;display:flex;flex-direction:column}
+  .page7-short-inset-text::-webkit-scrollbar{display:none}
+  .page7-short-inset-text-inner{margin-block:auto}
+  .page7-short-inset-text p{margin:0 0 .7em}
+  .page7-short-inset-text strong{font-weight:800;color:#a2dad2}
+  .page7-short-continuation{height:calc(100dvh - 100px);margin-top:100px}
+  .page7-short-follow{width:min(1080px,100%);height:100%;margin:0 auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;overflow:hidden}
+  .page7-short-follow[data-columns="2"]{width:min(720px,100%);grid-template-columns:repeat(2,minmax(0,1fr))}
+  .page7-short-follow[data-columns="1"]{width:min(346px,100%);grid-template-columns:minmax(0,1fr)}
+  .page7-short-follow[data-columns="2"] .page7-short-frame:nth-child(3),
+  .page7-short-follow[data-columns="1"] .page7-short-frame:nth-child(n+2){display:none}
+}
 @media (max-width:800px), (hover:none) and (pointer:coarse){
+  .page16-short-caption{display:none!important}
   /* The existing mobile readers retain their authored placement and scroll ranges. */
   body.fa-m-p3s1 .page3-body{font-size:16px!important;line-height:1.38!important}
   body.fa-m-p19s2 .page19-credits{font-size:14px!important;line-height:1.38!important}
   body.fa-m-p14s2 .page14-copy{touch-action:pan-y!important;overscroll-behavior:contain!important}
+  .page4-right{display:none!important}
 }
 </style>
 </head>
@@ -4359,6 +4475,7 @@ body.fa-holdnav-active{-webkit-user-select:none!important;user-select:none!impor
           <p>Mickey, a newbie explorer, chimed in—her voice bright and curious, untouched by the weight the others carried.</p>
         </div>
 
+        <div class="page4-right">
         <figure class="page4-photo-block page4-reveal">
           <img src="assets/page4-photo.png" alt="The original Fade Away Hotel">
           <figcaption>The original Fade Away Hotel, pictured here before its remodeling in the late 1980s. This is the only known surviving photo of the original building before it was replaced by the structure that stands today. Situated on the eastern edge of Metro Manila, the modest and unremarkable hotel served as a quiet stopover for travelers heading toward the Sierra Madre mountain range. An additional wing and the pool were added in the mid ‘90s. With the pool came a shift in design — the owners reoriented the entire layout to face inward.</figcaption>
@@ -4383,6 +4500,7 @@ body.fa-holdnav-active{-webkit-user-select:none!important;user-select:none!impor
             <p>The Fade Away stayed behind me—quiet, comfortingly intact, exactly as I found it.</p>
             <p>No one is meant to stay here.<br>But for one night, it feels like you could.</p>
           </div>
+        </div>
         </div>
       <article class="fa-v18-desktop-duplicate page4-mobile-article"><p class="fa-desktop-hide-p4-duplicate dropcap">There’s no check-in process and strangely, no receptionist. Just a taped sign that reads: LEAVE PAYMENT and WAIT.</p><p>I slid a few bills on the desk—enough for a small room, probably. Lit a cigarette and waited outside. A couple of minutes later, I heard footsteps and the sound of drawers opening. When I came back, a single brass key with a red tag sat atop the reception desk: Room 6.</p><p>The hallway lights were working—dim and old, but steady. I passed the bar on the way up. No bartender. The stools were all there, but in disarray. Bottles long gone. The performer’s stage lit by a single spotlight, as if waiting for someone to step out from behind the curtain.</p><p>Room 6 was clean. Sparse. Concrete walls covered in vintage wallpaper. The AC hummed softly from a unit mounted above the window. A curtain pulled tight against the dusk. There was an old TV set that worked, but no channels were running—I had no reason to turn it on. No telephone. Just a mirror, a nightstand, and a power outlet that buzzed a bit when I plugged in my laptop. The sheets were crisp. Someone—or something—keeps this place running.</p><p>Dinner was whatever I was able to purchase from a roadside caravan a few 40 kms back: An assortment of bottled preserves, stale bread, a warm bottle of water. The restaurant here shut down a long time ago, like everything else after the Silence. The closest restaurant was 3 hours away so guests are expected to bring their own food.</p><p>Around 9, I went for a walk. The pool was dry but eerily pristine, like it hadn’t been used in years—but hadn’t decayed either. The laundromat still worked, though no one was there. Someone had left clothes spinning, at least giving a sense of life to the empty place.</p><p>I met a group hanging outside Room 13. A mixed bunch, drawn here by the legendary mystique of the motel. They came with an overflowing supply of beer and pizza. One last party before exploring the void, I guess.</p><p>Aice, was a veteran explorer of the city and is very familiar of the motel’s history.</p><p>“The motel’s a bit far from the usual entry point into the city,” he said. “You’ve got to take a detour—it adds maybe 30 or 40 kilometers to the trip. It’s a hassle, especially with how bad the roads are. But I’ve come to love the place. So I always include it in the itinerary.”</p><p>“This place wasn’t always this quiet,” he continued. “Back before the Great Silence, the motel was a last-minute kind of spot—wrong turns, trysts, afterparties that got out of hand. No one actually plans to come here, but you end up here if you want the party to never end.”</p><p>“We accidentally found this place more than a decade ago. My buddies and I lost our jobs thanks to some brilliant government fuckery. So we drove out of the city that night and ended up here. Best layoff of my life. Haha.”</p><p>Aice then veered into stories from his party days in the city before the Great Silence—which probably warrant an article of their own.</p><p>Mickey, a newbie explorer, chimed in—her voice bright and curious, untouched by the weight the others carried.</p><figure class="page4-mobile-photo">
           <img src="assets/page4-photo.png" alt="The original Fade Away Hotel">
@@ -4694,8 +4812,64 @@ const page2 = document.getElementById("page2");
 const page2Items = [...document.querySelectorAll(".page2-reveal")];
 const page3 = document.getElementById("page3");
 const page3Items = [...document.querySelectorAll(".page3-reveal")];
+const page3Quote = document.querySelector(".page4-quote img")?.cloneNode(true);
+if (page3Quote) {
+  page3Quote.className = "page3-page4-quote";
+  page3Quote.alt = "The motel was a last-minute kind of spot";
+  page3.appendChild(page3Quote);
+}
 const page4 = document.getElementById("page4");
 const page4Items = [...document.querySelectorAll(".page4-reveal")];
+const page4Adaptive = document.createElement("div");
+page4Adaptive.className = "page4-adaptive";
+page4Adaptive.dataset.fitVersion = "page4-frames-8";
+page4Adaptive.setAttribute("role", "article");
+page4Adaptive.setAttribute("aria-label", "Fade Away Hotel article across publication columns");
+page4?.appendChild(page4Adaptive);
+const page4Paragraphs = [...page4.querySelectorAll(".page4-copy-a > p,.page4-copy-b > p,.page4-lower .page4-copy > p")]
+  .map(p => ({source:p,words:p.textContent.trim().split(/\s+/),ends:p.textContent.trim().split(/\s+/),dropcap:p.classList.contains("dropcap")}));
+function renderPage4Adaptive(){
+  if (!matchMedia("(min-width:801px) and (max-height:800px)").matches) return;
+  page4Adaptive.replaceChildren();
+  let paragraph=0, word=0, panelNumber=0;
+  while (paragraph < page4Paragraphs.length && panelNumber < 30) {
+    const panel=document.createElement("div");
+    panel.className="page4-adaptive-panel"+(panelNumber ? " continuation" : "");
+    if (!panelNumber) {
+      const photo=page4.querySelector(".page4-photo-block").cloneNode(true);
+      photo.className="page4-adaptive-photo";panel.appendChild(photo);
+    }
+    page4Adaptive.appendChild(panel);
+    const names=["a","b","c","d","e","f"];
+    for (const name of names) {
+      const frame=document.createElement("div");frame.className="page4-adaptive-frame frame-"+name;panel.appendChild(frame);
+      while (paragraph < page4Paragraphs.length) {
+        const item=page4Paragraphs[paragraph], remaining=item.words.length-word;
+        const part=document.createElement("p");
+        if (item.dropcap && word===0) part.className="dropcap";
+        frame.appendChild(part);
+        let low=0,high=remaining;
+        while (low < high) {
+          const mid=Math.ceil((low+high)/2);
+          part.textContent=item.words.slice(word,word+mid).join(" ");
+          if (frame.scrollHeight <= frame.clientHeight+1) low=mid; else high=mid-1;
+        }
+        low=shortParagraphSplit(part,item,word,low,(entry,from,to)=>
+          document.createTextNode(entry.words.slice(from,to).join(" ")));
+        if (!low) {part.remove();break;}
+        part.textContent=item.words.slice(word,word+low).join(" ");
+        word+=low;
+        if (word===item.words.length) {paragraph++;word=0;}
+        else break;
+      }
+      if (paragraph===page4Paragraphs.length) break;
+    }
+    panelNumber++;
+  }
+}
+requestAnimationFrame(renderPage4Adaptive);
+document.fonts?.ready.then(renderPage4Adaptive);
+window.addEventListener("resize",()=>requestAnimationFrame(renderPage4Adaptive),{passive:true});
 const fadeToWhite = document.getElementById("fadeToWhite");
 const page5 = document.getElementById("page5");
 const page5Overlay = document.getElementById("page5Overlay");
@@ -4706,6 +4880,117 @@ const page6Items = [...document.querySelectorAll(".page6-reveal")];
 const page7 = document.getElementById("page7");
 const page7Spread = document.querySelector(".page7-spread");
 const page7Items = [...document.querySelectorAll(".page7-reveal")];
+const page7ShortLayout = document.createElement("div");
+page7ShortLayout.className = "page7-short-layout";
+page7ShortLayout.setAttribute("aria-label", "A Visitor from the South, continued");
+const page7ShortFirst = document.createElement("div");
+page7ShortFirst.className = "page7-short-first";
+const page7ShortCopy = document.createElement("article");
+page7ShortCopy.className = "page7-short-copy";
+const page7ShortContinuation = document.createElement("div");
+page7ShortContinuation.className = "page7-short-continuation";
+const page7ShortFollow = document.createElement("article");
+page7ShortFollow.className = "page7-short-follow";
+const page7OriginalArticles = [...page7Spread.querySelectorAll(".page7-left,.page7-right-col")];
+const page7SourceParagraphs = page7OriginalArticles.flatMap(article=>[...article.querySelectorAll("p")]);
+const page7WordRanges = page7SourceParagraphs.map(source=>{
+  const walker = document.createTreeWalker(source,NodeFilter.SHOW_TEXT);
+  const ends=[];
+  let first=null, node;
+  while ((node=walker.nextNode())){
+    if (!first) first={node,offset:0};
+    for (const match of node.textContent.matchAll(/\S+/g)) ends.push({node,offset:match.index+match[0].length});
+  }
+  return {source,first,ends};
+});
+const page7ShortInset = document.createElement("div");
+page7ShortInset.className = "page7-short-inset";
+const page7OriginalInset = page7Spread.querySelector(".page7-inset");
+page7ShortInset.appendChild(page7OriginalInset.querySelector("picture").cloneNode(true));
+const page7ShortInsetText = document.createElement("article");
+page7ShortInsetText.className = "page7-short-inset-text";
+page7ShortInsetText.tabIndex = 0;
+const page7ShortInsetTextInner = document.createElement("div");
+page7ShortInsetTextInner.className = "page7-short-inset-text-inner";
+page7OriginalInset.querySelectorAll(".page7-inset-copy p").forEach(p=>page7ShortInsetTextInner.appendChild(p.cloneNode(true)));
+page7ShortInsetText.appendChild(page7ShortInsetTextInner);
+page7ShortFirst.append(page7ShortCopy,page7ShortInset,page7ShortInsetText);
+page7ShortContinuation.appendChild(page7ShortFollow);
+page7ShortLayout.append(page7ShortFirst,page7ShortContinuation);
+page7.appendChild(page7ShortLayout);
+const page7SnapFade = document.createElement("div");
+page7SnapFade.className = "page7-snap-fade";
+page7SnapFade.setAttribute("aria-hidden", "true");
+document.body.appendChild(page7SnapFade);
+function renderPage7ShortFlow(){
+  if (!matchMedia("(min-width:1280px) and (max-height:800px)").matches) return;
+  const previousStop = nearestPage7StopIndex();
+  page7ShortLayout.querySelectorAll(".page7-short-continuation").forEach(panel=>{
+    if (panel !== page7ShortContinuation) panel.remove();
+  });
+  let paragraph=0, word=0;
+  function fragment(item,from,to){
+    const range=document.createRange();
+    const start=from ? item.ends[from-1] : item.first;
+    const end=item.ends[to-1];
+    range.setStart(start.node,start.offset);
+    range.setEnd(end.node,end.offset);
+    return range.cloneContents();
+  }
+  function fill(container){
+    const isContinuation=container.classList.contains("page7-short-follow");
+    if (isContinuation) container.dataset.columns="3";
+    const frames=Array.from({length:3},()=>{
+      const frame=document.createElement("div");
+      frame.className="page7-short-frame";
+      return frame;
+    });
+    container.replaceChildren(...frames);
+    for (const frame of frames){
+      while (paragraph < page7WordRanges.length){
+        const item=page7WordRanges[paragraph];
+        if (!item.ends.length){paragraph++;word=0;continue}
+        const part=document.createElement("p");
+        frame.appendChild(part);
+        let low=0,high=item.ends.length-word;
+        while (low<high){
+          const mid=Math.ceil((low+high)/2);
+          part.replaceChildren(fragment(item,word,word+mid));
+          if (frame.scrollHeight<=frame.clientHeight+1) low=mid;
+          else high=mid-1;
+        }
+        low=shortParagraphSplit(part,item,word,low,fragment);
+        if (!low){part.remove();break}
+        part.replaceChildren(fragment(item,word,word+low));
+        word+=low;
+        if (word===item.ends.length){paragraph++;word=0}
+        else break;
+      }
+    }
+    if (isContinuation) container.dataset.columns=String(Math.max(1,frames.filter(frame=>frame.textContent.trim()).length));
+  }
+  fill(page7ShortCopy);
+  let panel=page7ShortContinuation, article=page7ShortFollow, count=0;
+  while (paragraph<page7WordRanges.length && count<20){
+    const before=paragraph+word/10000;
+    fill(article);
+    if (paragraph+word/10000===before) break;
+    count++;
+    if (paragraph<page7WordRanges.length){
+      panel=document.createElement("div");
+      panel.className="page7-short-continuation";
+      article=document.createElement("article");
+      article.className="page7-short-follow";
+      panel.appendChild(article);
+      page7ShortLayout.appendChild(panel);
+    }
+  }
+  const stops=page7ScrollStops();
+  page7.scrollTop=stops[Math.min(previousStop,stops.length-1)];
+}
+requestAnimationFrame(renderPage7ShortFlow);
+document.fonts?.ready.then(renderPage7ShortFlow);
+window.addEventListener("resize",()=>requestAnimationFrame(renderPage7ShortFlow),{passive:true});
 
 const page8 = document.getElementById("page8");
 const page8RackingCanvas = document.getElementById("page8RackingCanvas");
@@ -4734,9 +5019,256 @@ const page15Title = document.getElementById("page15Title");
 const page15Player = document.getElementById("page15Player");
 const page16 = document.getElementById("page16");
 const page16Content = document.getElementById("page16Content");
+const page16ShortCaption=document.createElement("div");
+page16ShortCaption.className="page16-short-caption";
+page16ShortCaption.textContent=document.querySelector(".page16-caption")?.textContent || "";
+const page16ShortLayout=document.createElement("div");
+page16ShortLayout.className="page16-short-layout";
+page16ShortLayout.setAttribute("aria-label","Record of an Explorer, first article spread");
+const page16ShortPage=document.createElement("article");
+page16ShortPage.className="page16-short-page";
+const page16ShortTitle=document.createElement("img");
+page16ShortTitle.className="page16-short-title";
+page16ShortTitle.src="assets/page16-header.png";
+page16ShortTitle.alt="Record of an Explorer, Year Five";
+page16ShortPage.appendChild(page16ShortTitle);
+const page16ShortFrames=Array.from({length:6},()=>{
+  const frame=document.createElement("div");
+  frame.className="page16-short-frame";
+  page16ShortPage.appendChild(frame);
+  return frame;
+});
+page16ShortLayout.appendChild(page16ShortPage);
+page16.insertBefore(page16ShortCaption,page16Content);
+page16.appendChild(page16ShortLayout);
+const page16ShortSources=[...page16Content.querySelectorAll(".page16-intro p,.page16-journal-flow h3,.page16-journal-flow p")].map(source=>{
+  const walker=document.createTreeWalker(source,NodeFilter.SHOW_TEXT);
+  const ends=[];
+  let first=null,node;
+  while((node=walker.nextNode())){
+    if(!first)first={node,offset:0};
+    for(const match of node.textContent.matchAll(/\S+/g))ends.push({node,offset:match.index+match[0].length});
+  }
+  return {source,first,ends};
+});
+// Keep a subheading with at least three lines of the following paragraph.
+function shortHeadingFits(frame,item,next,fragment){
+  const heading=item.source.cloneNode(true);
+  frame.appendChild(heading);
+  const paragraph=next?.source.tagName==="P" && next.ends.length?document.createElement("p"):null;
+  if(paragraph){
+    frame.appendChild(paragraph);
+    const lineHeight=parseFloat(getComputedStyle(paragraph).lineHeight);
+    for(let count=1;count<=next.ends.length;count++){
+      paragraph.replaceChildren(fragment(next,0,count));
+      if(paragraph.getBoundingClientRect().height>=lineHeight*3-1)break;
+    }
+  }
+  const fits=frame.scrollHeight<=frame.clientHeight+1;
+  paragraph?.remove();
+  heading.remove();
+  return fits;
+}
+// Avoid one-line paragraph fragments on either side of a column break.
+function shortParagraphSplit(part,item,start,count,fragment){
+  if(!count || item.source.tagName!=="P" || start+count===item.ends.length)return count;
+  const probe=document.createElement("p");
+  probe.style.cssText="position:absolute;visibility:hidden;pointer-events:none;margin:0";
+  probe.style.width=`${part.getBoundingClientRect().width}px`;
+  part.parentElement.appendChild(probe);
+  const lineHeight=parseFloat(getComputedStyle(part).lineHeight);
+  const lines=(from,to)=>{
+    probe.replaceChildren(fragment(item,from,to));
+    return Math.round(probe.getBoundingClientRect().height/lineHeight);
+  };
+  // Find the latest split whose continuation has at least two lines.
+  if(lines(start+count,item.ends.length)<2){
+    let low=0,high=count;
+    while(low<high){
+      const mid=Math.ceil((low+high)/2);
+      if(lines(start+mid,item.ends.length)>=2)low=mid;
+      else high=mid-1;
+    }
+    count=low;
+  }
+  const minimum=part.previousElementSibling?.tagName==="H3"?3:2;
+  if(count && lines(start,start+count)<minimum)count=0;
+  probe.remove();
+  return count;
+}
+function renderPage16ShortFlow(){
+  if(!matchMedia("(min-width:1280px) and (max-height:800px)").matches)return;
+  page16ShortFrames.forEach(frame=>{frame.replaceChildren();frame.classList.remove("is-overflowing")});
+  let itemIndex=0,word=0;
+  function fragment(item,startIndex,endIndex){
+    const range=document.createRange();
+    const start=startIndex?item.ends[startIndex-1]:item.first;
+    const end=item.ends[endIndex-1];
+    range.setStart(start.node,start.offset);
+    range.setEnd(end.node,end.offset);
+    return range.cloneContents();
+  }
+  for(const frame of page16ShortFrames){
+    while(itemIndex<page16ShortSources.length){
+      const item=page16ShortSources[itemIndex];
+      if(!item.ends.length){itemIndex++;word=0;continue}
+      if(item.source.tagName==="H3" && !shortHeadingFits(frame,item,page16ShortSources[itemIndex+1],fragment))break;
+      const part=document.createElement(item.source.tagName.toLowerCase());
+      frame.appendChild(part);
+      let low=0,high=item.ends.length-word;
+      while(low<high){
+        const mid=Math.ceil((low+high)/2);
+        part.replaceChildren(fragment(item,word,word+mid));
+        if(frame.scrollHeight<=frame.clientHeight+1)low=mid;
+        else high=mid-1;
+      }
+      low=shortParagraphSplit(part,item,word,low,fragment);
+      if(!low || (item.source.tagName==="H3" && low<item.ends.length-word)){
+        const previous=part.previousElementSibling;
+        part.remove();
+        if(item.source.tagName==="P" && !word && previous?.tagName==="H3"){
+          previous.remove();itemIndex--;word=0;
+        }
+        break;
+      }
+      part.replaceChildren(fragment(item,word,word+low));
+      word+=low;
+      if(word===item.ends.length){itemIndex++;word=0}
+      else break;
+    }
+  }
+  if(itemIndex<page16ShortSources.length){
+    const last=page16ShortFrames[5];
+    last.classList.add("is-overflowing");
+    last.tabIndex=0;
+    while(itemIndex<page16ShortSources.length){
+      const item=page16ShortSources[itemIndex++];
+      if(!item.ends.length)continue;
+      const part=document.createElement(item.source.tagName.toLowerCase());
+      part.appendChild(fragment(item,word,item.ends.length));
+      last.appendChild(part);
+      word=0;
+    }
+  }
+}
+requestAnimationFrame(renderPage16ShortFlow);
+document.fonts?.ready.then(renderPage16ShortFlow);
+window.addEventListener("resize",()=>requestAnimationFrame(renderPage16ShortFlow),{passive:true});
 const page17 = document.getElementById("page17");
 const page17Content = document.getElementById("page17Content");
 const page17Dim = document.querySelector(".page17-dim");
+const page17ShortCaption=document.createElement("div");
+page17ShortCaption.className="page17-short-caption";
+page17ShortCaption.textContent=document.querySelector(".page16-caption")?.textContent || "";
+const page17ShortLayout=document.createElement("div");
+page17ShortLayout.className="page17-short-layout";
+page17ShortLayout.setAttribute("aria-label","Record of an Explorer, continuation");
+const page17ShortPages=[1,2].map(number=>{
+  const spread=document.createElement("article");
+  spread.className="page17-short-page";
+  spread.dataset.page=String(number);
+  if(number===1){
+    const title=document.createElement("img");
+    title.className="page17-short-title";
+    title.src="assets/page16-header.png";
+    title.alt="Record of an Explorer, Year Five";
+    spread.appendChild(title);
+  }
+  for(let i=0;i<6;i++){
+    const frame=document.createElement("div");
+    frame.className="page17-short-frame";
+    spread.appendChild(frame);
+  }
+  page17ShortLayout.appendChild(spread);
+  return spread;
+});
+const page17ShortFade=document.createElement("div");
+page17ShortFade.className="page17-short-fade";
+page17ShortFade.setAttribute("aria-hidden","true");
+page17.append(page17ShortCaption,page17ShortLayout);
+document.body.appendChild(page17ShortFade);
+const page17ShortSources=[...page17Content.querySelectorAll(".page17-columns .journal-entry, .page17-columns .page17-note")]
+  .flatMap(entry=>entry.classList.contains("page17-note")?[entry]:[...entry.children]).map(source=>{
+    const walker=document.createTreeWalker(source,NodeFilter.SHOW_TEXT);
+    const ends=[];
+    let first=null,node;
+    while((node=walker.nextNode())){
+      if(!first)first={node,offset:0};
+      for(const match of node.textContent.matchAll(/\S+/g))ends.push({node,offset:match.index+match[0].length});
+    }
+    return {source,first,ends};
+  });
+function renderPage17ShortFlow(){
+  if(!matchMedia("(min-width:1280px) and (max-height:800px)").matches)return;
+  const frames=page17ShortPages.flatMap(page=>[...page.querySelectorAll(".page17-short-frame")]);
+  frames.forEach(frame=>{frame.replaceChildren();frame.classList.remove("is-overflowing");frame.style.display=""});
+  let itemIndex=0,word=0;
+  function fragment(item,startIndex,endIndex){
+    const range=document.createRange();
+    const start=startIndex?item.ends[startIndex-1]:item.first;
+    const end=item.ends[endIndex-1];
+    range.setStart(start.node,start.offset);
+    range.setEnd(end.node,end.offset);
+    return range.cloneContents();
+  }
+  for(const frame of frames){
+    while(itemIndex<page17ShortSources.length){
+      const item=page17ShortSources[itemIndex];
+      if(!item.ends.length){itemIndex++;word=0;continue}
+      if(item.source.tagName==="H3" && !shortHeadingFits(frame,item,page17ShortSources[itemIndex+1],fragment))break;
+      const part=document.createElement(item.source.tagName.toLowerCase());
+      if(item.source.matches(".page17-note"))part.className="publisher-note-box";
+      frame.appendChild(part);
+      let low=0,high=item.ends.length-word;
+      while(low<high){
+        const mid=Math.ceil((low+high)/2);
+        part.replaceChildren(fragment(item,word,word+mid));
+        if(frame.scrollHeight<=frame.clientHeight+1)low=mid;
+        else high=mid-1;
+      }
+      low=shortParagraphSplit(part,item,word,low,fragment);
+      if(!low || (item.source.tagName==="H3" && low<item.ends.length-word)){
+        const previous=part.previousElementSibling;
+        part.remove();
+        if(item.source.tagName==="P" && !word && previous?.tagName==="H3"){
+          previous.remove();itemIndex--;word=0;
+        }
+        break;
+      }
+      part.replaceChildren(fragment(item,word,word+low));
+      word+=low;
+      if(word===item.ends.length){itemIndex++;word=0}
+      else break;
+    }
+  }
+  if(itemIndex<page17ShortSources.length){
+    const last=frames[frames.length-1];
+    last.classList.add("is-overflowing");
+    last.tabIndex=0;
+    while(itemIndex<page17ShortSources.length){
+      const item=page17ShortSources[itemIndex++];
+      if(!item.ends.length)continue;
+      const part=document.createElement(item.source.tagName.toLowerCase());
+      if(item.source.matches(".page17-note"))part.className="publisher-note-box";
+      part.appendChild(fragment(item,word,item.ends.length));
+      last.appendChild(part);
+      word=0;
+    }
+  }
+  const second=page17ShortPages[1];
+  const continuationFrames=frames.slice(6);
+  const occupied=Math.max(1,continuationFrames.filter(frame=>frame.textContent.trim()).length);
+  const fullWidth=page17ShortPages[0].clientWidth;
+  const columnWidth=(fullWidth-5*18)/6;
+  second.style.width=`${occupied*columnWidth+(occupied-1)*18}px`;
+  second.style.left="50%";
+  second.style.transform="translateX(-50%)";
+  second.style.gridTemplateColumns=`repeat(${occupied},minmax(0,1fr))`;
+  continuationFrames.slice(occupied).forEach(frame=>frame.style.display="none");
+}
+requestAnimationFrame(renderPage17ShortFlow);
+document.fonts?.ready.then(renderPage17ShortFlow);
+window.addEventListener("resize",()=>requestAnimationFrame(renderPage17ShortFlow),{passive:true});
 const page18 = document.getElementById("page18");
 const page18Overlay = document.getElementById("page18Overlay");
 const page18Player = document.getElementById("page18Player");
@@ -5156,11 +5688,13 @@ function updateScrollReveal(){
   const page3Content = clamp((progress - 0.895) / (0.995 - 0.895), 0, 1);
   const page3Starts = [0.06, 0.38];
   page3Items.forEach((item, i) => {
-    const local = smoothstep((page3Content - page3Starts[i]) / 0.24);
+    const local = smoothstep((page3Content - page3Starts[Math.min(i,1)]) / 0.24);
     item.style.opacity = local;
     item.style.transform = `translateY(${20 * (1 - local)}px)`;
     item.style.filter = `blur(${1.5 * (1 - local)}px)`;
   });
+  if (page3Quote) page3Quote.style.opacity = smoothstep((page3Content - .38) / .24);
+  if (page3) page3.style.setProperty("--p3-article-dim", smoothstep((page3Content - .38) / .24));
   /* PAGE 3 → WHITE → PAGE 4
      rawProgress is used here so Pages 1–3 remain completely untouched.
   */
@@ -5172,6 +5706,7 @@ function updateScrollReveal(){
 
   // Page 3 stays fully intact until the white transition covers it.
   const page3Exit = smoothstep((rawProgress - 0.840) / (0.865 - 0.840));
+  if (page3) page3.style.pointerEvents = page3Content > .8 && page3Exit < .05 ? "auto" : "none";
   if (rawProgress >= 0.80) {
     page3.style.opacity = 1 - page3Exit;
   }
@@ -5182,6 +5717,7 @@ function updateScrollReveal(){
 
   // Hold the clean Page 4 paper first, then reveal editorial components.
   const page4Content = clamp((rawProgress - 0.925) / (0.995 - 0.925), 0, 1);
+  page4Adaptive.style.opacity = smoothstep((page4Content - .55) / .35);
   const p4Starts = [0.02, 0.14, 0.26, 0.40, 0.58];
   page4Items.forEach((item, i) => {
     const local = smoothstep((page4Content - (p4Starts[i] ?? 0.5)) / 0.22);
@@ -5197,6 +5733,7 @@ function updateScrollReveal(){
   const page4Exit = smoothstep((siteProgress - 0.862) / (0.888 - 0.862));
 
   if (siteProgress >= 0.84 && page4) page4.style.opacity = 1 - page4Exit;
+  if (page4) page4.style.pointerEvents = page4BgIn > .96 && page4Content > .85 && page4Exit < .04 ? "auto" : "none";
   if (page5) {
     page5.style.opacity = page5BgIn;
     page5.style.pointerEvents = page5BgIn > 0.96 ? "auto" : "none";
@@ -5302,6 +5839,7 @@ function updateScrollReveal(){
     item.style.transform = `translateY(${14 * (1 - local)}px)`;
     item.style.filter = `blur(${1 * (1 - local)}px)`;
   });
+  page7ShortLayout.style.opacity = page7Content;
 
 
   /*
@@ -5318,7 +5856,7 @@ function updateScrollReveal(){
     page8.style.opacity = page8BgIn;
     page8.style.pointerEvents = page8BgIn > .96 ? "auto" : "none";
   }
-  if (fullProgress >= .702 && page7) {
+  if (fullProgress > .7025 && page7) {
     page7.style.opacity = 1 - page7Exit;
     page7.style.pointerEvents = "none";
   }
@@ -5622,6 +6160,12 @@ function updateScrollReveal(){
   fadeToBlack.style.opacity=Math.max(parseFloat(fadeToBlack.style.opacity||0),p1516BlackIn*(1-p1516BlackOut));
   const p16Content=smoothstep((siteRunProgress-.861)/(.884-.861));
   if(page16Content){page16Content.style.opacity=p16Content;page16Content.style.translate=`0 ${10*(1-p16Content)}px`;page16Content.style.filter=`blur(${.7*(1-p16Content)}px)`;}
+  const page16ShortScreen=window.matchMedia("(min-width:1280px) and (max-height:800px)").matches;
+  page16ShortCaption.style.opacity=page16ShortScreen ? smoothstep((siteRunProgress-.852)/(.859-.852))*(1-p16Content) : 0;
+  page16ShortLayout.style.opacity=page16ShortScreen?p16Content:0;
+  if(page16ShortScreen){
+    if(page16.scrollTop)page16.scrollTop=0;
+  }
 
   // PAGE 16 → PAGE 17: keep the shared background fully opaque throughout.
   // Only the Page 17 dim treatment crossfades, so Page 1 can never show through.
@@ -5632,9 +6176,13 @@ function updateScrollReveal(){
     page17.style.opacity = page17Active ? 1 : 0;
     page17.style.pointerEvents = page17Active ? "auto" : "none";
   }
-  if(page17Dim){page17Dim.style.opacity=page17In;}
+  const page17ShortScreen=window.matchMedia("(min-width:1280px) and (max-height:800px)").matches;
+  const page17ShortReveal=smoothstep((siteRunProgress-.902)/(.916-.902));
+  if(page17Dim){page17Dim.style.opacity=page17ShortScreen?page17ShortReveal:page17In;}
+  page17ShortCaption.style.opacity=0;
+  page17ShortLayout.style.opacity=page17ShortScreen?page17ShortReveal:0;
   if(siteRunProgress>=.888&&page16){page16.style.opacity=1-page16Exit17;page16.style.pointerEvents="none";}
-  const p17Content=smoothstep((siteRunProgress-.904)/(.930-.904));
+  const p17Content=smoothstep((siteRunProgress-.896)/(.916-.896));
   if(page17Content){page17Content.style.opacity=p17Content;page17Content.style.translate=`0 ${10*(1-p17Content)}px`;page17Content.style.filter=`blur(${.7*(1-p17Content)}px)`;}
 
   // PAGE 17 → PAGE 18 / EPILOGUE
@@ -5821,12 +6369,95 @@ const snapIndicator = document.getElementById("snapIndicator");
   0.998  Page 3 header/body reveal
 */
 
-const snapProgress = [0.000000, 0.042813, 0.059003, 0.091383, 0.107213, 0.121964, 0.152185, 0.166936, 0.180607, 0.205432, 0.220902, 0.252562, 0.336029, 0.357976, 0.433575, 0.458944, 0.559688, 0.590000, 0.621875, 0.650833, 0.668333, 0.702500, 0.725000, 0.759167, 0.773333, 0.805833, 0.829167, 0.859000, 0.884000, 0.930000, 0.968000, 0.995000, 1.000000];
+const snapProgress = [0.000000, 0.042813, 0.059003, 0.091383, 0.107213, 0.121964, 0.152185, 0.166936, 0.180607, 0.205432, 0.220902, 0.252562, 0.336029, 0.357976, 0.433575, 0.458944, 0.559688, 0.590000, 0.621875, 0.650833, 0.668333, 0.702500, 0.725000, 0.759167, 0.773333, 0.805833, 0.829167, 0.859000, 0.884000, 0.916000, 0.968000, 0.995000, 1.000000];
 let snapIndex = 0;
 let snapAnimating = false;
 let wheelAccumulator = 0;
 let lastWheelAt = 0;
 let cinematicReleaseUntil = 0;
+let page7SnapAnimating = false;
+let page7SnapRunToken = 0;
+const page7ContinuationMode = window.matchMedia("(min-width:1280px) and (max-height:800px)");
+const page17ContinuationMode = window.matchMedia("(min-width:1280px) and (max-height:800px)");
+let page17ShortStage=0;
+let page17ShortAnimating=false;
+let page17ShortFadeToken=0;
+function fadePage17ShortTo(stage){
+  const token=++page17ShortFadeToken;
+  page17ShortAnimating=true;
+  const start=performance.now();
+  const outgoing=page17ShortPages[page17ShortStage===3?1:0];
+  const incoming=page17ShortPages[stage===3?1:0];
+  function frame(now){
+    if(token!==page17ShortFadeToken)return;
+    const t=clamp((now-start)/800,0,1);
+    outgoing.style.opacity=1-smoothstep(t);
+    incoming.style.opacity=smoothstep(t);
+    if(t<1)requestAnimationFrame(frame);
+    else {
+      page17.classList.toggle("is-short-page2",stage===3);
+      page17ShortStage=stage;
+      outgoing.style.removeProperty("opacity");
+      incoming.style.removeProperty("opacity");
+      page17ShortAnimating=false;wheelAccumulator=0;
+    }
+  }
+  requestAnimationFrame(frame);
+}
+function advancePage17Short(direction){
+  if(!page17ContinuationMode.matches)return false;
+  const index=nearestSnapIndex();
+  if(index===28&&direction>0){page17ShortStage=2;page17.classList.remove("is-short-page2");animateToSnap(29);return true}
+  if(index===30&&direction<0){page17ShortStage=3;page17.classList.add("is-short-page2");animateToSnap(29);return true}
+  if(index!==29)return false;
+  if(page17ShortStage===0)page17ShortStage=2;
+  if(direction>0){
+    if(page17ShortStage===2){fadePage17ShortTo(3);return true}
+    return false;
+  }
+  if(page17ShortStage===3){fadePage17ShortTo(2);return true}
+  if(page17ShortStage===2){page17ShortStage=0;page17.classList.remove("is-short-page2");animateToSnap(28);return true}
+  page17ShortStage=0;page17.classList.remove("is-short-page2");return false;
+}
+
+function page7ScrollStops(){
+  if (!page7) return [0];
+  const max=Math.max(0,page7.scrollHeight-page7.clientHeight);
+  return [0,...[...page7ShortLayout.querySelectorAll(".page7-short-continuation")].map(panel=>{
+    const top=panel.getBoundingClientRect().top-page7.getBoundingClientRect().top+page7.scrollTop-62;
+    return clamp(top,0,max);
+  })];
+}
+
+function nearestPage7StopIndex(){
+  const stops=page7ScrollStops();
+  return stops.reduce((best,stop,i)=>Math.abs(stop-page7.scrollTop)<Math.abs(stops[best]-page7.scrollTop)?i:best,0);
+}
+
+function snapPage7Continuation(index){
+  if (!page7) return;
+  const token=++page7SnapRunToken;
+  page7SnapAnimating = true;
+  const stops=page7ScrollStops();
+  const to=stops[clamp(index,0,stops.length-1)];
+  const start=performance.now();
+  let switched=false;
+  function frame(now){
+    if (token!==page7SnapRunToken) return;
+    const t=clamp((now-start)/850,0,1);
+    if (t<.43) page7SnapFade.style.opacity=smoothstep(t/.43);
+    else if (t<.53) page7SnapFade.style.opacity="1";
+    else page7SnapFade.style.opacity=1-smoothstep((t-.53)/.47);
+    if (t>=.48 && !switched){page7.scrollTop=to;switched=true}
+    if (t<1) requestAnimationFrame(frame);
+    else {page7.scrollTop=to;page7SnapFade.style.opacity="0";page7SnapAnimating=false;wheelAccumulator=0}
+  }
+  requestAnimationFrame(frame);
+}
+
+function page7IsSnapActive(){
+  return page7ContinuationMode.matches && nearestSnapIndex() === 11;
+}
 
 function scrollYForProgress(progress){
   const start = heroScroll.offsetTop;
@@ -5859,9 +6490,17 @@ function animateToSnap(index){
   index = clamp(index, 0, snapProgress.length - 1);
   if (index === snapIndex && snapAnimating) return;
 
+  page7SnapRunToken++;
+  page7SnapFade.style.opacity="0";
+  if (page7ContinuationMode.matches && page7 && index === 11){
+    const stops=page7ScrollStops();
+    page7.scrollTop = nearestSnapIndex() > 11 ? stops[stops.length-1] : 0;
+  }
+  page7SnapAnimating = false;
   snapIndex = index;
   const from = window.scrollY;
-  const to = scrollYForProgress(snapProgress[index]);
+  const page17Target=snapProgress[index];
+  const to = scrollYForProgress(page17Target);
   const distancePx = Math.abs(to - from);
 
   // Longer scene moves give staggered content enough time to breathe.
@@ -5870,7 +6509,7 @@ function animateToSnap(index){
   // Page 8 RACKING is a dedicated scroll-scrub zone. When a snap crosses it,
   // let the scrub breathe at approximately the source clip's natural duration.
   const fromProgress = clamp((from - heroScroll.offsetTop) / Math.max(heroScroll.offsetHeight - window.innerHeight, 1), 0, 1);
-  const toProgress = snapProgress[index];
+  const toProgress = page17Target;
 
   // One deliberate Page 1 → Page 2 snap: fade into the supplied 5s page-flip movie,
   // let it play at its native timing, then reveal the already-clean Page 2 background.
@@ -5946,10 +6585,54 @@ function animateToSnap(index){
 
 function handleSnapWheel(event){
   if (!snapEnabled.matches) return;
+  if(page17ShortAnimating){event.preventDefault();return}
+  if(page17ContinuationMode.matches && nearestSnapIndex()===28){
+    const overflowFrame=event.target instanceof Element?event.target.closest(".page16-short-frame.is-overflowing"):null;
+    if(overflowFrame && (event.deltaY>0?overflowFrame.scrollTop+overflowFrame.clientHeight<overflowFrame.scrollHeight-2:overflowFrame.scrollTop>2))return;
+  }
+  if(page17ContinuationMode.matches && page17ShortStage===3){
+    const overflowFrame=event.target instanceof Element?event.target.closest(".page17-short-frame.is-overflowing"):null;
+    if(overflowFrame && (event.deltaY>0?overflowFrame.scrollTop+overflowFrame.clientHeight<overflowFrame.scrollHeight-2:overflowFrame.scrollTop>2))return;
+  }
+
+  if (page7IsSnapActive()){
+    const insetReader = event.target instanceof Element ? event.target.closest(".page7-short-inset-text") : null;
+    if (insetReader && insetReader.scrollHeight > insetReader.clientHeight + 2 &&
+        (event.deltaY > 0 ? insetReader.scrollTop + insetReader.clientHeight < insetReader.scrollHeight - 2 : insetReader.scrollTop > 2)){
+      wheelAccumulator = 0;
+      return;
+    }
+    event.preventDefault();
+    if (snapAnimating || page7SnapAnimating || performance.now() < cinematicReleaseUntil) return;
+    const now = performance.now();
+    if (now - lastWheelAt > 180) wheelAccumulator = 0;
+    lastWheelAt = now;
+    wheelAccumulator += event.deltaY;
+    if (Math.abs(wheelAccumulator) < 24) return;
+    const direction = wheelAccumulator > 0 ? 1 : -1;
+    wheelAccumulator = 0;
+    const stopIndex=nearestPage7StopIndex();
+    const stops=page7ScrollStops();
+    if (direction > 0 && stopIndex < stops.length-1){snapPage7Continuation(stopIndex+1);return}
+    if (direction < 0 && stopIndex > 0){snapPage7Continuation(stopIndex-1);return}
+    animateToSnap(11 + direction);
+    return;
+  }
+
+  if (page4?.style.pointerEvents === "auto" && getComputedStyle(page4Adaptive).display !== "none") {
+    const remaining = page4Adaptive.scrollHeight - page4Adaptive.clientHeight - page4Adaptive.scrollTop;
+    if (event.deltaY > 0 ? remaining > 2 : page4Adaptive.scrollTop > 2) {
+      event.preventDefault();
+      wheelAccumulator = 0;
+      page4Adaptive.scrollTop += event.deltaY;
+      return;
+    }
+  }
 
   // Let an article finish scrolling before the next wheel gesture changes snaps.
-  const reader = event.target instanceof Element ? event.target.closest('.page3-article,.page4-layer,.page6-editorial,.page9-editorial,.page14-copy,.p12-article,.page7-layer,.page10-layer,.page16-layer,.page17-layer') : null;
-  if (reader && reader.scrollHeight > reader.clientHeight + 2 &&
+  const reader = event.target instanceof Element ? event.target.closest('.page3-article,.page3-layer,.page4-layer,.page6-editorial,.page9-editorial,.page14-layer,.p12-article,.page7-layer,.page10-layer,.page16-layer,.page17-layer') : null;
+  const readerCanScroll = reader && ["auto","scroll"].includes(getComputedStyle(reader).overflowY);
+  if (readerCanScroll && reader.scrollHeight > reader.clientHeight + 2 &&
       (event.deltaY > 0 ? reader.scrollTop + reader.clientHeight < reader.scrollHeight - 2 : reader.scrollTop > 2)) {
     wheelAccumulator = 0;
     return;
@@ -5980,6 +6663,7 @@ function handleSnapWheel(event){
   wheelAccumulator = 0;
 
   snapIndex = nearestSnapIndex();
+  if(advancePage17Short(direction))return;
   const next = clamp(snapIndex + direction, 0, snapProgress.length - 1);
 
   // Final credits are the hard end of the experience.
@@ -5996,18 +6680,65 @@ window.addEventListener("wheel", handleSnapWheel, {passive:false});
 
 /* Arrow/Page keys use the same discrete beats for easy testing. */
 window.addEventListener("keydown", (event) => {
-  if (!snapEnabled.matches || snapAnimating) return;
+  if (!snapEnabled.matches || snapAnimating || page17ShortAnimating) return;
 
   const down = ["ArrowDown", "PageDown", " "].includes(event.key);
   const up = ["ArrowUp", "PageUp"].includes(event.key);
   if (!down && !up) return;
 
-  const reader = document.activeElement instanceof Element ? document.activeElement.closest('.page3-article,.page4-layer,.page6-editorial,.page9-editorial,.page14-copy,.p12-article,.page7-layer,.page10-layer,.page16-layer,.page17-layer') : null;
-  if (reader && reader.scrollHeight > reader.clientHeight + 2 &&
-      (down ? reader.scrollTop + reader.clientHeight < reader.scrollHeight - 2 : reader.scrollTop > 2)) return;
+  if(page17ContinuationMode.matches && nearestSnapIndex()===28 && document.activeElement?.classList?.contains("page16-short-frame")){
+    const frame=document.activeElement;
+    if(down?frame.scrollTop+frame.clientHeight<frame.scrollHeight-2:frame.scrollTop>2){
+      event.preventDefault();frame.scrollBy({top:(down?1:-1)*frame.clientHeight*.7,behavior:"smooth"});return;
+    }
+  }
+
+  if(page17ContinuationMode.matches && page17ShortStage===3 && document.activeElement?.classList?.contains("is-overflowing")){
+    const frame=document.activeElement;
+    if(down?frame.scrollTop+frame.clientHeight<frame.scrollHeight-2:frame.scrollTop>2){
+      event.preventDefault();frame.scrollBy({top:(down?1:-1)*frame.clientHeight*.7,behavior:"smooth"});return;
+    }
+  }
+
+  if (page7IsSnapActive()){
+    if (document.activeElement === page7ShortInsetText && page7ShortInsetText.scrollHeight > page7ShortInsetText.clientHeight + 2 &&
+        (down ? page7ShortInsetText.scrollTop + page7ShortInsetText.clientHeight < page7ShortInsetText.scrollHeight - 2 : page7ShortInsetText.scrollTop > 2)){
+      event.preventDefault();
+      page7ShortInsetText.scrollBy({top:(down ? 1 : -1) * page7ShortInsetText.clientHeight * .7,behavior:"smooth"});
+      return;
+    }
+    event.preventDefault();
+    if (page7SnapAnimating) return;
+    const stopIndex=nearestPage7StopIndex();
+    const stops=page7ScrollStops();
+    if (down && stopIndex < stops.length-1){snapPage7Continuation(stopIndex+1);return}
+    if (up && stopIndex > 0){snapPage7Continuation(stopIndex-1);return}
+    animateToSnap(down ? 12 : 10);
+    return;
+  }
+
+  if (page4?.style.pointerEvents === "auto" && getComputedStyle(page4Adaptive).display !== "none") {
+    const remaining = page4Adaptive.scrollHeight - page4Adaptive.clientHeight - page4Adaptive.scrollTop;
+    if (down ? remaining > 2 : page4Adaptive.scrollTop > 2) {
+      event.preventDefault();
+      page4Adaptive.scrollBy({top:(down ? 1 : -1) * page4Adaptive.clientHeight * .65,behavior:"smooth"});
+      return;
+    }
+  }
+
+  const focusedReader = document.activeElement instanceof Element ? document.activeElement.closest('.page3-article,.page3-layer,.page4-layer,.page6-editorial,.page9-editorial,.page14-layer,.p12-article,.page7-layer,.page10-layer,.page16-layer,.page17-layer') : null;
+  const reader = focusedReader || (page3 && page3.style.pointerEvents === "auto" ? page3 : null) || (page4 && page4.style.pointerEvents === "auto" ? page4 : null);
+  const readerCanScroll = reader && ["auto","scroll"].includes(getComputedStyle(reader).overflowY);
+  if (readerCanScroll && reader.scrollHeight > reader.clientHeight + 2 &&
+      (down ? reader.scrollTop + reader.clientHeight < reader.scrollHeight - 2 : reader.scrollTop > 2)) {
+    event.preventDefault();
+    reader.scrollBy({top:(down ? 1 : -1) * reader.clientHeight * .75,behavior:"smooth"});
+    return;
+  }
 
   event.preventDefault();
   snapIndex = nearestSnapIndex();
+  if(advancePage17Short(down?1:-1))return;
   animateToSnap(snapIndex + (down ? 1 : -1));
 });
 
@@ -6555,6 +7286,21 @@ body.fa-m-p5s2 .page5-mobile-dim{display:block;background:rgba(0,0,0,.40)}
 }
 </style>
 <div class="fa-mobile-grabquote" aria-hidden="true"><img src="assets/page4-grab-quote.png" alt=""></div>
+<style id="fa-page4-adaptive-final">
+@media (min-width:801px) and (max-height:800px){
+  .page4-layer{display:block!important;overflow:hidden!important;padding:0!important}
+  .page4-spread,.page4-mobile-article{display:none!important}
+  .page4-adaptive{display:flex!important}
+}
+</style>
+<style id="fa-page5-lyrics-height-final">
+@media (min-width:801px){
+  .page5-overlay{max-height:80vh!important;object-fit:contain!important}
+}
+@media (max-width:800px){
+  body.fa-m-p5s2 .page5-overlay{max-height:80dvh!important;object-fit:contain!important}
+}
+</style>
 
 <script id="fadeaway-mobile-v14-controller">
 (()=>{
