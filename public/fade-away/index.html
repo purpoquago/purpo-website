@@ -7576,3 +7576,45 @@ if(n==='p1s2'||n==='p2s2'||n==='p3s1'||n==='p3s2'||n==='p4s1'||n==='p5s2'||n==='
  window.addEventListener('keydown',e=>{if(e.key==='ArrowDown'||e.key==='PageDown'||e.key===' '){e.preventDefault();move(1)}if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();move(-1)}});
 })();
 </script>
+
+<style id="fa-mobile-type-system">
+@media (max-width:800px){
+  :root{--fa-m-body:16px;--fa-m-leading:1.42;--fa-m-caption:14px;--fa-m-caption-leading:1.35;--fa-m-subhead:18px;--fa-m-quote:21px}
+  body.fa-m-p2s2 .page2-intro,
+  body.fa-m-p3s1 .page3-body,
+  body.fa-m-p4s1 .page4-mobile-article p,
+  body.fa-m-p6s2 .page6-copy,
+  body.fa-m-p7s1 .page7-left p,
+  body.fa-m-p7s1 .page7-right-col p,
+  body.fa-m-p7s1 .page7-inset-copy,
+  body.fa-m-p9s2 .page9-copy,
+  body.fa-m-p12s2 .page12-copy,
+  body.fa-m-p12s2 .p12-article,
+  body.fa-m-p14s2 .page14-copy,
+  body.fa-m-p16s3 #p16MobileReader p,
+  body.fa-m-p16s3 #p16MobileReader .page16-intro,
+  body.fa-m-p16s3 #p16MobileReader .journal-entry,
+  body.fa-m-p16s3 #p16MobileReader .page16-journal-flow,
+  body.fa-m-p16s3 #p16MobileReader .page17-columns{
+    font-family:"EB Garamond",Georgia,serif!important;
+    font-size:var(--fa-m-body)!important;line-height:var(--fa-m-leading)!important;
+  }
+  body.fa-m-p2s2 .amenity p,
+  body.fa-m-p4s1 .page4-mobile-photo figcaption,
+  body[class*="fa-m-"] .page10-card figcaption,
+  body[class*="fa-m-"] .page10-card3-caption,
+  body.fa-m-p14s2 .page14-caption,
+  body[class*="fa-m-"] .page16-caption,
+  body.fa-m-p16s3 #p16MobileReader .page17-note,
+  body.fa-m-p16s3 #p16MobileReader .page17-note p,
+  body.fa-m-p19s2 .page19-credits{
+    font-size:var(--fa-m-caption)!important;line-height:var(--fa-m-caption-leading)!important;
+  }
+  body.fa-m-p2s2 .amenity h3,
+  body.fa-m-p16s3 #p16MobileReader .journal-entry h3,
+  body.fa-m-p16s3 #p16MobileReader .page17-note h4{
+    font-size:var(--fa-m-subhead)!important;line-height:1.2!important;
+  }
+  body[class*="fa-m-"] .page10-quote{font-size:var(--fa-m-quote)!important;line-height:1.28!important}
+}
+</style>
